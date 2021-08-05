@@ -112,6 +112,7 @@ window.onload = function() {
         document.getElementById('command-body').className = "panel-body";
         document.getElementById('file-body').className = "panel-body panel-height panel-max-height panel-scroll";
     }
+    tabletGetFileList();
 };
 
 var wsmsg = "";
@@ -652,41 +653,17 @@ var socket_is_settings = false;
 
 function process_socket_response(msg) {
 
-    if ((target_firmware == "grbl-embedded") || (target_firmware == "grbl")) {
-        if (msg.startsWith("<")) {
-            grbl_process_status(msg);
-        } else if (msg.startsWith("[PRB:")) {
-            grbl_GetProbeResult(msg);
-        } else if (msg.startsWith("[GC:")) {
-            console.log(msg);
-        } else if (msg.startsWith("error:") || msg.startsWith("ALARM:") || msg.startsWith("Hold:") || msg.startsWith("Door:")) {
-            grbl_process_msg(msg);
-        } else if (msg.startsWith("Grbl 1.1f [")) {
-            grbl_reset_detected(msg);
-        } else if (socket_is_settings) socket_response += msg;
-
-        if (!socket_is_settings && msg.startsWith("$0=")) {
+    if (target_firmware == "grbl-embedded") {
+        grblHandleMessage(msg);
+        return;
+    }
+    if (target_firmware == "marlin-embedded") {
+        if (socket_is_settings && !(msg.startsWith("echo:Unknown command:") || msg.startsWith("echo:enqueueing"))) socket_response += msg+"\n";
+        if (!socket_is_settings && (msg.startsWith("  G21") || msg.startsWith("  G20") || msg.startsWith("echo:  G21") || msg.startsWith("echo:  G20"))) {
             socket_is_settings = true;
-            socket_response = msg;
-        }
-
-        if (msg.startsWith("ok")) {
-            if (socket_is_settings) {
-                //update settings
-                getESPconfigSuccess(socket_response);
-                socket_is_settings = false;
-            }
-
-        }
-    } else {
-        if (target_firmware == "marlin-embedded") {
-            if (socket_is_settings && !(msg.startsWith("echo:Unknown command:") || msg.startsWith("echo:enqueueing"))) socket_response += msg+"\n";
-            if (!socket_is_settings && (msg.startsWith("  G21") || msg.startsWith("  G20") || msg.startsWith("echo:  G21") || msg.startsWith("echo:  G20"))) {
-                socket_is_settings = true;
-                socket_response = msg + "\n";
-                //to stop waiting for data
-                console.log("Got settings Start");
-            }
+            socket_response = msg + "\n";
+            //to stop waiting for data
+            console.log("Got settings Start");
         }
         if (msg.startsWith("ok T:") || msg.startsWith(" T:")|| msg.startsWith("T:")) {
             if (!graph_started)start_graph_output();
@@ -715,6 +692,6 @@ function process_socket_response(msg) {
                 socket_is_settings = false;
             }
         }
+        return;
     }
-
 }

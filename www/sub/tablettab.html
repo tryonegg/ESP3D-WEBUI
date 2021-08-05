@@ -1,0 +1,525 @@
+<audio id="click" src="Button.wav" autostart="false"></audio>
+<div id="tablettab" class="tabcontent">
+<div id="tablet-listener">
+  <div class="nav-panel">
+    <div class="container-fluid">
+      <div class="row no-gutter">
+        <div class="col-xs-5">
+          <div class="active-state" id="active-state"></div>
+        </div>
+        <div class="col-xs-2">
+          <button type="button" class="btn-tablet btn-default btn-start" id="btn-start" onclick="doLeftButton();">
+            Start
+          </button>
+        </div>
+        <div class="col-xs-2">
+          <button type="button" class="btn-tablet btn-default btn-start" id="btn-pause" onclick="doRightButton();">
+            Pause
+          </button>
+        </div>
+        <div class="col-xs-1 info-button" id="line">
+        </div>
+        <div class="col-xs-1 info-button" id="runtime">
+        </div>
+        <div class="col-xs-1">
+          <div class="btn-group btn-group-justified">
+            <div class="btn-group">
+              <div class="dropdown">
+                <button type="button" class="btn-tablet btn-default dropdown-toggle" id="btn-dropdown" onclick="toggleDropdown()">
+                  <!--- <i class="fa fa-list"></i> --->
+Menu
+                </button>
+                <ul class="dropdown-menu dropdown-menu-right" id="tablet-dropdown-menu" role="menu">
+                  <li>
+                    <a role="menuitem" href="javascript:void(0)" onclick="menuHomeAll()"><i class="fa fa-home"></i>&nbsp;Homing</a>
+                  </li>
+                  <li>
+                    <a role="menuitem" href="javascript:void(0)" onclick="menuHomeA()"><i class="fa fa-home"></i>&nbsp;Home A</a>
+                  </li>
+                  <li>
+                    <a role="menuitem" href="javascript:void(0)" onclick="menuSpindleOff()"><i class="fa fa-power-off"></i>&nbsp;Spindle Off</a>
+                  </li>
+                  <li>
+                    <a role="menuitem" href="javascript:void(0)" onclick="menuUnlock()"><i class="fa fa-unlock-alt"></i>&nbsp;Unlock</a>
+                  </li>
+                  <li>
+                    <a role="menuitem" href="javascript:void(0)" onclick="menuReset()"><i class="fa fa-undo"></i>&nbsp;Reset</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="axis-position">
+    <div class="container-fluid">
+<!--
+            <div class="row no-gutter">
+                <div class="col-xs-2 pos-name" id="mpos-label">
+                    MPos:
+                </div>
+                <div class="col-xs-10">
+                    <div class="col-xs-4">
+                      <input type="number" class="form-control position" id="mpos-x" value="0.0000">
+                    </div>
+                    <div class="col-xs-4">
+                      <input type="number" class="form-control position" id="mpos-y" value="0.0000">
+                    </div>
+                    <div class="col-xs-4">
+                      <input type="number" class="form-control position" id="mpos-z" value="0.0000">
+                    </div>
+                </div>
+            </div>
+-->
+      <div class="row no-gutter">
+        <div class="col-xs-1 pos-name" id="wpos-label">
+          WPos
+        </div>
+        <div class="col-xs-11">
+          <div class="col-xs-2">
+            <div class="col-xs-4 axis-label">X</div>
+            <div class="col-xs-8">
+              <input type="number" class="form-control form-control-tablet position" id="wpos-x" value="0.0000">
+            </div>
+          </div>
+          <div class="col-xs-1">
+            <button type="button" class="btn-tablet btn-default" title="Set X to 0" onclick="zeroAxis('X')">
+              X=0
+            </button>
+          </div>
+          <div class="col-xs-2">
+            <div class="col-xs-4 axis-label">Y</div>
+            <div class="col-xs-8">
+              <input type="number" class="form-control form-control-tablet position" id="wpos-y" value="0.0000">
+            </div>
+          </div>
+          <div class="col-xs-1">
+            <button type="button" class="btn-tablet btn-default" title="Set Y to 0" onclick="zeroAxis('Y')">
+              Y=0
+            </button>
+          </div>
+          <div class="col-xs-2">
+            <div class="col-xs-4 axis-label">Z</div>
+            <div class="col-xs-8">
+              <input type="number" class="form-control form-control-tablet position" id="wpos-z" value="0.0000">
+            </div>
+          </div>
+          <div class="col-xs-1">
+            <button type="button" class="btn-tablet btn-default" title="Set Z to 0" onclick="zeroAxis('Z')">
+              Z=0
+            </button>
+          </div>
+          <div class="col-xs-2">
+            <div class="col-xs-4 axis-label">A</div>
+            <div class="col-xs-8">
+              <input type="number" class="form-control form-control-tablet position" id="wpos-a" value="0.0000">
+            </div>
+          </div>
+          <div class="col-xs-1">
+            <button type="button" class="btn-tablet btn-default" title="Set A to 0" onclick="zeroAxis('A')">
+              A=0
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="row no-gutter">
+      </div>
+      <div class="row no-gutter">
+        <div class="col-xs-1">
+          <button type="button" class="btn-tablet btn-default btn-units" id="units" title="Toggle Units" onclick="toggleUnits()">
+            mm
+          </button>
+        </div>
+
+        <div class="col-xs-11">
+          <div class="col-xs-1 inset">
+            <button type="button" class="btn-tablet btn-default" title="Set X (G10 X0)" onclick="setAxis('X', 'wpos-x')">
+              X=
+            </button>
+          </div>
+          <div class="col-xs-1">
+            <button type="button" class="btn-tablet btn-default" title="Move to X (G0 X0)" onclick="moveAxis('X', 'wpos-x')">
+              &#8594;X
+            </button>
+          </div>
+          <div class="col-xs-1">
+            <button type="button" class="btn-tablet btn-default" title="Goto 0 in X" onclick="goAxis('X', 0)">
+              &#8594;X0
+            </button>
+          </div>
+
+          <div class="col-xs-1 inset">
+            <button type="button" class="btn-tablet btn-default" title="Set Y (G10 Y0)" onclick="setAxis('Y', 'wpos-y')">
+              Y=
+            </button>
+          </div>
+          <div class="col-xs-1">
+            <button type="button" class="btn-tablet btn-default" title="Move to Y (G0 Y0)" onclick="moveAxis('Y', 'wpos-y')">
+              &#8594;Y
+            </button>
+          </div>
+          <div class="col-xs-1">
+            <button type="button" class="btn-tablet btn-default" title="Goto 0 in Y" onclick="goAxis('Y', 0)">
+              &#8594;Y0
+            </button>
+          </div>
+
+          <div class="col-xs-1 inset">
+            <button type="button" class="btn-tablet btn-default" title="Set Z (G10 Z0)" onclick="setAxis('Z', 'wpos-z')">
+              Z=
+            </button>
+          </div>
+          <div class="col-xs-1">
+            <button type="button" class="btn-tablet btn-default" title="Move to Z (G0 Z0)" onclick="moveAxis('Z', 'wpos-z')">
+              &#8594;Z
+            </button>
+          </div>
+          <div class="col-xs-1">
+            <button type="button" class="btn-tablet btn-default" title="Goto 0 in Z" onclick="goAxis('Z', 0)">
+              &#8594;Z0
+            </button>
+          </div>
+          <div class="col-xs-1 inset">
+            <button type="button" class="btn-tablet btn-default" title="Set A (G10 A0)" onclick="setAxis('A', 'wpos-a')">
+              A=
+            </button>
+          </div>
+          <div class="col-xs-1">
+            <button type="button" class="btn-tablet btn-default" title="Move to A (G0 A0)" onclick="moveAxis('A', 'wpos-a')">
+              &#8594;A
+            </button>
+          </div>
+          <div class="col-xs-1">
+            <button type="button" class="btn-tablet btn-default" title="Goto 0 in A" onclick="goAxis('A', 0)">
+              &#8594;A0
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="control-pad" id="control-pad">
+    <div class="container-fluid">
+      <div class="middle-block jog-controls">
+        <div class="row no-gutter">
+          <div class="col-xs-2 info-button" id="distance">
+          </div>
+          <div class="col-xs-2">
+            <button
+               type="button"
+               class="btn-tablet btn-default" id="jog-y-plus"
+               title="Move Y+"
+               onclick="sendMove('Y+')"
+               >
+              Y+
+            </button>
+          </div>
+          <div class="col-xs-2 emptyURHC">
+          </div>
+          <div class="col-xs-2">
+            <button
+               type="button"
+               class="btn-tablet btn-default" id="jog-z-plus"
+               title="Move Z+"
+               onclick="sendMove('Z+')"
+               >
+              Z+
+            </button>
+          </div>
+
+          <div class="col-xs-1">
+            <button
+               type="button"
+               class="btn-tablet btn-default set-distance"
+               title="Jog by 0.001"
+               onclick="btnSetDistance()"
+               id="jog00"
+              >
+              0.001
+            </button>
+	  </div>
+          <div class="col-xs-1">
+            <button
+               type="button"
+               class="btn-tablet btn-default set-distance"
+               title="Jog by 0.01"
+               onclick="btnSetDistance()"
+               id="jog01"
+               >
+              0.01
+            </button>
+	  </div>
+          <div class="col-xs-1">
+            <button
+               type="button"
+               class="btn-tablet btn-default set-distance"
+               title="Jog by 0.1"
+               onclick="btnSetDistance()"
+               id="jog02"
+               >
+              0.1
+            </button>
+	  </div>
+          <div class="col-xs-1">
+            <button
+               type="button"
+               class="btn-tablet btn-default set-distance"
+               title="Jog by 1"
+               onclick="btnSetDistance()"
+               id="jog03"
+               >
+              1
+            </button>
+	  </div>
+        </div>
+
+        <div class="row no-gutter">
+          <div class="col-xs-2">
+            <button
+               type="button"
+               class="btn-tablet btn-default" id="jog-x-minus"
+               title="Move X-"
+               onclick="sendMove('X-')"
+               >
+              X-
+            </button>
+          </div>
+          <div class="col-xs-2 info-button" id="spindle">
+          </div>
+          <div class="col-xs-2">
+            <button
+               type="button"
+               class="btn-tablet btn-default" id="jog-x-plus"
+               title="Move X+"
+               onclick="sendMove('X+')"
+               >
+              X+
+            </button>
+          </div>
+          <div class="col-xs-2">
+            <select class="form-control form-control-tablet" id="jog-distance">
+              <option>0.00025</option>
+              <option>0.0005</option>
+              <option>0.001</option>
+              <option>0.003</option>
+              <option>0.005</option>
+              <option>0.01</option>
+              <option>0.03</option>
+              <option>0.05</option>
+              <option>0.1</option>
+              <option>0.3</option>
+              <option>0.5</option>
+              <option>1</option>
+              <option>3</option>
+              <option>5</option>
+              <option>10</option>
+              <option>30</option>
+            </select>
+          </div>
+
+          <div class="col-xs-1">
+            <button
+               type="button"
+               class="btn-tablet btn-default set-distance"
+               title="Jog by 0.003"
+               onclick="btnSetDistance()"
+               id="jog10"
+               >
+              0.003
+            </button>
+	  </div>
+          <div class="col-xs-1">
+            <button
+               type="button"
+               class="btn-tablet btn-default set-distance"
+               title="Jog by 0.03"
+               onclick="btnSetDistance()"
+               id="jog11"
+               >
+              0.03
+            </button>
+	  </div>
+          <div class="col-xs-1">
+            <button
+               type="button"
+               class="btn-tablet btn-default set-distance"
+               title="Jog by 0.3"
+               onclick="btnSetDistance()"
+               id="jog12"
+               >
+              0.3
+            </button>
+	  </div>
+          <div class="col-xs-1">
+            <button
+               type="button"
+               class="btn-tablet btn-default set-distance"
+               title="Jog by 3"
+               onclick="btnSetDistance()"
+               id="jog13"
+               >
+              3
+            </button>
+	  </div>
+        </div>
+
+        <div class="row no-gutter">
+          <div class="col-xs-2 info-button" id="extruder-temperature">
+          </div>
+          <div class="col-xs-2">
+            <button
+               type="button"
+               class="btn-tablet btn-default" id="jog-y-minus"
+               title="Move Y-"
+               onclick="sendMove('Y-')"
+               >
+              Y-
+            </button>
+          </div>
+          <div class="col-xs-2 info-button" id="emptyLLHC">
+          </div>
+          <div class="col-xs-2">
+            <button
+               type="button"
+               class="btn-tablet btn-default" id="jog-z-minus"
+               title="Move Z-"
+               onclick="sendMove('Z-')"
+               >
+              Z-
+            </button>
+          </div>
+
+          <div class="col-xs-1">
+            <button
+               type="button"
+               class="btn-tablet btn-default set-distance"
+               title="Jog by 0.005"
+               onclick="btnSetDistance()"
+               id="jog20"
+               >
+              0.005
+            </button>
+	  </div>
+          <div class="col-xs-1">
+            <button
+               type="button"
+               class="btn-tablet btn-default set-distance"
+               title="Jog by 0.05"
+               onclick="btnSetDistance()"
+               id="jog21"
+               >
+              0.05
+            </button>
+	  </div>
+          <div class="col-xs-1">
+            <button
+               type="button"
+               class="btn-tablet btn-default set-distance"
+               title="Jog by 0.5"
+               onclick="btnSetDistance()"
+               id="jog22"
+               >
+              0.5
+            </button>
+	  </div>
+          <div class="col-xs-1">
+            <button
+               type="button"
+               class="btn-tablet btn-default set-distance"
+               title="Jog by 5"
+               onclick="btnSetDistance()"
+               id="jog23"
+               >
+              5
+            </button>
+	  </div>
+        </div>
+      </div>
+    </div>
+    <div class="mdi">
+      <div class="container-fluid">
+        <div class="row no-gutter">
+          <div class="col-xs-5">
+            <div class="col-xs-10">
+              <input type="text" class="form-control form-control-tablet" id="mditext0" placeholder="GCode Command" onFocus="inputFocused()" onBlur="inputBlurred()">
+            </div>
+            <div class="col-xs-2">
+              <button
+                 type="button"
+                 class="btn-tablet btn-default mdi-go"
+                 title="Submit GCode Command"
+                 onclick="MDI('mditext0')"
+                 >
+                MDI
+              </button>
+            </div>
+            <div class="col-xs-10">
+              <input type="text" class="form-control form-control-tablet" id="mditext1" placeholder="GCode Command" onFocus="inputFocused()" onBlur="inputBlurred()">
+            </div>
+            <div class="col-xs-2">
+              <button
+                 type="button"
+                 class="btn-tablet btn-default mdi-go"
+                 title="Submit GCode Command"
+                 onclick="MDI('mditext1')"
+                 >
+                MDI
+              </button>
+            </div>
+            <div class="row no-gutter">
+              <!-- this creates some vertical space above the file selector -->
+            </div>
+            <div class="col-xs-8">
+              <select class="form-control form-control-tablet" id="filelist" onchange="loadGCode()">
+		<option>Load GCode File</option>
+              </select>
+            </div>
+            <div class="col-xs-2">
+              <button
+                 type="button"
+                 class="btn-tablet btn-default refresh"
+                 title="Refresh File List"
+                 onclick="getFileList()"
+                 >
+                Rfrsh
+              </button>
+	    </div>
+            <div class="col-xs-2">
+              <button
+                 type="button"
+                 class="btn-tablet btn-default load"
+                 title="Reload File"
+                 onclick="loadGCode()"
+                 >
+                Load
+              </button>
+            </div>
+          </div>
+          <div class="col-xs-4">
+            <textarea class="gcode" id="gcode" rows="8" placeholder="GCode File Display" spellcheck="false" readonly>
+            </textarea>
+          </div>
+          <div class="col-xs-3">
+	    <canvas id="small-toolpath" class="previewer" width="100%" height="100%"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid">
+      <div class="row no-gutter">
+        <div class="col-xs-12">
+          <div class="serial" id="serial0">serial messages</div>
+        </div>
+        <div class="col-xs-12">
+          <div class="serial" id="serial1">serial messages</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="hidden" data-route="toolpath" id="toolpath">
+</div>

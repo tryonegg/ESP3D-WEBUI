@@ -1,0 +1,315 @@
+#tablettab {
+  padding: 5px;
+  font-size: 14px;
+}
+.btn-tablet {
+  border-radius: 4px;
+  border-style: outset;
+}
+.btn-tablet,
+.form-control-tablet {
+  padding-left: 2px;
+  font-size: 10px;
+}
+.row.no-gutter [class*="col-"] {
+    padding-right: 0;
+    padding-left: 0;
+}
+#tablettab .dropdown {
+  display: block;
+}
+
+.btn-tablet[disabled] {
+  opacity: .6;
+}
+.control-pad .form-control[disabled] {
+  opacity: .4;
+}
+.middle-block {
+    top: 100%;
+    left: 0;
+    z-index: 100;
+}
+.jog-controls {
+    display: block;
+}
+.run-controls {
+    display: none;
+}
+> * {
+  margin-bottom: 5px;
+}
+> *:last-child {
+  margin-bottom: 0;
+}
+.dropdown-menu>li>a .fa {
+  width: 16px;
+}
+.axis-position .row {
+  padding-bottom: 5px;
+}
+.nav-panel .container-fluid {
+  padding-bottom: 12px;
+}
+.axis-position .container-fluid {
+  background-color: azure;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+.control-pad .container-fluid {
+  background-color: lightyellow;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+.nav-panel .btn-tablet {
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+  padding-bottom: 5px;
+}
+.nav-panel .row [class^="col-"],
+.nav-panel .row [class*=" col-"] {
+  padding-right: 5px;
+}
+.nav-panel .row [class^="col-"]:last-child,
+.nav-panel .row [class*=" col-"]:last-child {
+  padding-right: 0;
+}
+.active-state {
+#  border: 1px solid #ccc;
+#  border-radius: 4px;
+#  background-color: #f6f686;
+  padding: 5px 10px;
+  text-align: center;
+}
+.pos-name {
+  text-align: center;
+}
+.info-button {
+  text-align: center;
+  padding: 5px 10px;
+}
+.axis-label {
+  text-align: center;
+  font-size: 20px;
+  padding: 0 8px;
+}
+.position {
+  width: 95%;
+  text-align: right;
+}
+.load {
+  font-size: 12px;
+  width: 99%;
+  resize: none;
+}
+.fileslist {
+    padding-top: 20px;
+}
+textarea {
+  font-size: 12px;
+  width: 99%;
+  resize: none;
+}
+.axis-position .btn-tablet {
+  width: 90%;
+  text-align: center;
+}
+
+.btn-units {
+   text-align: left;
+}
+
+.rotate-45deg {
+  transform: rotate(45deg);
+}
+.rotate-45deg:before {
+  transform: rotate(45deg);
+}
+.rotate--45deg {
+  transform: rotate(-45deg);
+}
+.rotate--45deg:before {
+  transform: rotate(-45deg);
+}
+.rotate-90deg {
+  transform: rotate(90deg);
+}
+.rotate-90deg:before {
+  transform: rotate(90deg);
+}
+.rotate--90deg {
+  transform: rotate(-90deg);
+}
+.rotate--90deg:before {
+  transform: rotate(-90deg);
+}
+
+.control-pad .row [class^="col-"],
+.control-pad .row [class*=" col-"] {
+  padding-right: 5px;
+}
+.control-pad .row [class^="col-"]:last-child,
+.control-pad .row [class*=" col-"]:last-child {
+  padding-right: 0;
+}
+.control-pad .row {
+  padding-bottom: 5px;
+}
+.control-pad .row:last-child {
+  padding-bottom: 5px;
+}
+.control-pad .btn-tablet {
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+.axis-position .inset {
+  padding-left: 15px;
+}
+
+.mdi .container-fluid {
+  background-color: lavenderblush;
+  padding-top: 12px;
+  padding-bottom: 0px;
+}
+
+@media (min-width: 512px) {
+  .btn-tablet,
+  .form-control-tablet {
+    font-size: 12px;
+  }
+}
+@media (min-width: 640px) {
+  .btn-tablet,
+  .form-control-tablet {
+    font-size: 14px;
+  }
+}
+@media (min-width: 736px) {
+  {
+    font-size: 14px;
+  }
+  .dropdown-menu {
+    min-width: 180px;
+  }
+  .dropdown-menu>li>a .fa {
+    width: 14px;
+  }
+  .axis-label {
+    font-size: 24px;
+    text-align: center;
+  }
+  .dropdown-menu {
+    font-size: 14px;
+  }
+  .btn-tablet,
+  .form-control {
+    font-size: 14px;
+    height: 30px;
+  }
+  #jog-distance {
+    text-align-last: right;
+  }
+  textarea {
+    font-size: 9px;
+  }
+  #small-toolpath {
+      width: 180px;
+      height: 100px;
+  }
+}
+
+@media (min-width: 768px) {
+  #tablettab {
+    font-size: 15px;
+  }
+  .dropdown-menu {
+    min-width: 180px;
+  }
+  .dropdown-menu>li>a .fa {
+    width: 15px;
+  }
+  .axis-label {
+    font-size: 24px;
+    text-align: center;
+  }
+  .dropdown-menu {
+    font-size: 15px;
+  }
+  .btn-tablet,
+  .form-control-tablet {
+    font-size: 15px;
+    height: 30px;
+  }
+  #jog-distance {
+    text-align-last: right;
+  }
+  textarea {
+    font-size: 11px;
+  }
+  #small-toolpath {
+      width: 230px;
+      height: 130px;
+  }
+}
+@media (min-width: 992px) {
+  #tablettab {
+    font-size: 20px;
+  }
+  .dropdown-menu {
+    min-width: 200px;
+  }
+  .dropdown-menu>li>a .fa {
+    width: 20px;
+  }
+  .axis-label {
+    font-size: 28px;
+    text-align: center;
+  }
+  .dropdown-menu {
+    font-size: 20px;
+  }
+  .btn-tablet,
+  .form-control-tablet {
+    font-size: 20px;
+    height: 40px;
+  }
+  textarea {
+    font-size: 12px;
+  }
+  #small-toolpath {
+      width: 250px;
+      height: 130px;
+  }
+}
+@media (min-width: 1200px) {
+  #tablettab {
+    font-size: 28px;
+  }
+  .dropdown-menu {
+    min-width: 220px;
+  }
+  .dropdown-menu>li>a .fa {
+    width: 28px;
+  }
+  .axis-label {
+    font-size: 32px;
+    text-align: center;
+  }
+  .dropdown-menu {
+    font-size: 28px;
+  }
+  .btn-tablet,
+  .form-control-tablet {
+    font-size: 28px;
+    height: 52px;
+  }
+  textarea {
+    font-size: 14px;
+  }
+  #small-toolpath {
+      width: 300px;
+      height: 160px;
+  }
+}
