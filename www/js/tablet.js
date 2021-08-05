@@ -7,8 +7,8 @@ function beep(vol, freq, duration){
     v=aud.createConstantSource()
     u=aud.createGain()
     v.connect(u)
-//    v.frequency.value=freq
-//    v.type='square'
+    //    v.frequency.value=freq
+    //    v.type='square'
     u.connect(aud.destination)
     u.gain.value=vol*0.1
     v.start(aud.currentTime)
@@ -35,10 +35,26 @@ moveTo = function(location) {
     sendCommand(cmd);
 }
 
-MDI = function(field) {
+MDIcmd = function(value) {
     tabletClick();
-    mdicmd = id(field).value;
-    sendCommand(mdicmd);
+    sendCommand(value);
+}
+
+MDI = function(field) {
+    MDIcmd(id(field).value);
+}
+
+toggleFullscreen = function() {
+    var messages = id('messages');
+
+    if (document.fullscreenElement) {
+        document.exitFullscreen();
+        messages.rows = 2;
+    } else {
+        document.documentElement.requestFullscreen();
+        messages.rows = 4;
+    }
+    messages.scrollTop = messages.scrollHeight;
 }
 
 inputFocused = function() {
@@ -51,16 +67,12 @@ inputBlurred = function() {
 
 zeroAxis = function(axis) {
     tabletClick();
-    sendCommand('G10 L20 P1 ' + axis + '0');
+    setAxisByValue(axis, 0);
 }
 
 toggleUnits = function() {
     tabletClick();
-    if (modal.units == 'G21') {
-	sendCommand('G20');
-    } else {
-	sendCommand('G21');
-    }
+    sendCommand(modal.units == 'G21' ? 'G20' : 'G21');
     // The button label will be fixed by the response to $G
     sendCommand('$G');
 }
@@ -90,8 +102,17 @@ goAxis = function(axis, coordinate) {
 }
 
 moveAxis = function(axis, field) {
-    coordinate = id(field).value;
-    goAxis(axis, coordinate)
+    goAxis(axis, id(field).value);
+}
+
+setAxisByValue = function(axis, coordinate) {
+    tabletClick();
+    var cmd = 'G10 L20 P0 ' + axis + coordinate;
+    sendCommand(cmd);
+}
+
+setAxis = function(axis, field) {
+    setAxisByValue(axis, id(field).value);
 }
 
 setAxis = function(axis, field) {
@@ -179,9 +200,9 @@ function tabletShowMessage(msg) {
     if (msg.startsWith('<') || msg.startsWith('ok') || msg.startsWith('\n') || msg.startsWith('\r')) {
         return;
     }
-    serial1 = id("serial1");
-    id("serial0").innerText = serial1.innerText;
-    serial1.innerText = msg;
+    var messages = id('messages');
+    messages.value += "\n" + msg;
+    messages.scrollTop = messages.scrollHeight;
 }
 
 var setJogSelector = function(units) {
@@ -260,6 +281,8 @@ function setRunnable() {
     }
 }
 
+var grblReportingUnits = 0;
+
 function tabletGrblState(grbl, mpos, wpos, ovr, modal) {
     var stateName = grbl.stateName;
 
@@ -273,7 +296,6 @@ function tabletGrblState(grbl, mpos, wpos, ovr, modal) {
     //  rapidOverride = ovr.rapid/100.0;
     //  spindleOverride = ovr.spindle/100.0;
 
-    var grblReportingUnits = 0;
     var mmPerInch = 25.4;
     switch (modal.units) {
         case 'G20':
@@ -357,7 +379,10 @@ function tabletGrblState(grbl, mpos, wpos, ovr, modal) {
 	if (seconds < 10)
 	    seconds = '0' + seconds;
 	runTime = minutes + ':' + seconds;
+    } else {
+        runTime = "0:00";
     }
+
     setText('runtime', runTime);
 
     setText('wpos-label', modal.wcs);
@@ -513,6 +538,7 @@ function toggleDropdown() {
     id('tablet-dropdown-menu').classList.toggle('show');
 }
 function hideMenu() { toggleDropdown(); }
+function menuFullscreen() { toggleFullscreen(); hideMenu(); }
 function menuReset() { grbl_reset(); hideMenu(); }
 function menuUnlock() { sendCommand('$X'); hideMenu(); }
 function menuHomeAll() { sendCommand('$H'); hideMenu(); }
@@ -528,7 +554,7 @@ cycleDistance = function(up) {
     }
 }
 clickon = function(name) {
-//    $('[data-route="workspace"] .btn').removeClass('active');
+    //    $('[data-route="workspace"] .btn').removeClass('active');
     var button = id(name);
     button.classList.add('active');
     button.dispatchEvent(new Event('click'));
@@ -537,16 +563,16 @@ var shiftDown = false;
 var ctrlDown = false;
 var altDown = false;
 function jogClick(name) {
-//    if (shiftDown || altDown) {
-//	var distanceElement = id('jog-distance');
-//	var distance = distanceElement.value;
-//	var factor = shiftDown ? 10 : 0.1;
-//	distanceElement.val(distance * factor);
-//	clickon(name);
-//	distanceElement.val(distance);
-//    } else {
-	clickon(name);
-//    }
+    //    if (shiftDown || altDown) {
+    //	var distanceElement = id('jog-distance');
+    //	var distance = distanceElement.value;
+    //	var factor = shiftDown ? 10 : 0.1;
+    //	distanceElement.val(distance * factor);
+    //	clickon(name);
+    //	distanceElement.val(distance);
+    //    } else {
+    clickon(name);
+    //    }
 }
 
 // Reports whether a text input box has focus - see the next comment
@@ -637,8 +663,23 @@ function handleKeyUp(event) {
 
 setJogSelector('mm');
 
+function mdiEnterKey(event) {
+    if (event.key === 'Enter') {
+        MDIcmd(event.target.value);
+        event.target.blur();
+    }
+}
+
+id('mditext0').addEventListener('keyup', mdiEnterKey);
+id('mditext1').addEventListener('keyup', mdiEnterKey);
+
 // I tried to add the listener to the tablettab element but it did not work.
 // The event was not received.  Maybe something about focus? So I added it
 // to window and then checked to see if the tablet is active in the handler.
 window.addEventListener('keydown', handleKeyDown);
 window.addEventListener('keyup', handleKeyUp);
+
+numpad.attach({target: "wpos-x", axis: "X"});
+numpad.attach({target: "wpos-y", axis: "Y"});
+numpad.attach({target: "wpos-z", axis: "Z"});
+numpad.attach({target: "wpos-a", axis: "A"});

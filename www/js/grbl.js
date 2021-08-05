@@ -506,6 +506,7 @@ var collectHandler = undefined;
 var collectedSettings = null;
 
 function grblHandleMessage(msg) {
+    tabletShowMessage(msg);
     // Block data collection
     if (collecting) {
         if (msg.startsWith('[MSG: EndData]')) {
