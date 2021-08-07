@@ -409,7 +409,7 @@ function grbl_process_status(response) {
     show_grbl_status(grbl.stateName, grbl.message);
     show_grbl_SD(grbl.sdName, grbl.sdPercent);
     show_grbl_probe_status(grbl.pins && (grbl.pins.indexOf('P') != -1));
-    tabletGrblState(grbl, MPOS, WPOS, OVR, modal);
+    tabletGrblState(grbl);
 }
 
 function grbl_reset() {
@@ -465,7 +465,7 @@ var modalModes = [
 ];
 
 function grblGetModal(msg) {
-    var modes = msg.replace("[MSG:", '').replace(']', '').split(' ');
+    var modes = msg.replace("[GC:", '').replace(']', '').split(' ');
     modal.parking = undefined;  // Otherwise there is no way to turn it off
     modal.program = '';  // Otherwise there is no way to turn it off
     modes.forEach(function(mode) {
@@ -506,7 +506,8 @@ var collectHandler = undefined;
 var collectedSettings = null;
 
 function grblHandleMessage(msg) {
-    tabletShowMessage(msg);
+    tabletShowMessage(msg, collecting);
+
     // Block data collection
     if (collecting) {
         if (msg.startsWith('[MSG: EndData]')) {

@@ -149,10 +149,10 @@ function startSocket() {
             var bytes = new Uint8Array(e.data);
             for (var i = 0; i < bytes.length; i++) {
                 msg += String.fromCharCode(bytes[i]);
-                if ((bytes[i] == 10) || (bytes[i] == 13)) {
-                    wsmsg += msg;
+                if (bytes[i] == 10) {
+                    wsmsg += msg.replace('\r\n', '\n');
                     Monitor_output_Update(wsmsg);
-                    process_socket_response(wsmsg);
+                process_socket_response(wsmsg);
                     //msg = wsmsg.replace("\n", "");
                     //wsmsg = msg.replace("\r", "");
                     if (!((wsmsg.startsWith("ok T:") || wsmsg.startsWith("X:") || wsmsg.startsWith("FR:") ||wsmsg.startsWith("echo:E0 Flow"))))console.log(wsmsg);

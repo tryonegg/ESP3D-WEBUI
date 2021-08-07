@@ -584,7 +584,7 @@ p {
     line-height: 1.4;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 720px) {
     .lead {
         font-size: 21px;
     }
@@ -782,7 +782,7 @@ dd {
     margin-left: 0;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 720px) {
     .dl-horizontal dt {
         float: left;
         width: 160px;
@@ -938,7 +938,7 @@ pre code {
     padding-right: 15px;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 720px) {
     .container {
         width: 750px;
     }
@@ -1241,7 +1241,7 @@ pre code {
     margin-left: 0%;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 720px) {
 
     .col-sm-1,
     .col-sm-2,
@@ -2679,7 +2679,7 @@ select[multiple].input-lg {
     color: #737373;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 720px) {
     .form-inline .form-group {
         display: inline-block;
         margin-bottom: 0;
@@ -2759,7 +2759,7 @@ select[multiple].input-lg {
     margin-right: -15px;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 720px) {
     .form-horizontal .control-label {
         text-align: right;
         margin-bottom: 0;
@@ -2771,14 +2771,14 @@ select[multiple].input-lg {
     right: 15px;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 720px) {
     .form-horizontal .form-group-lg .control-label {
         padding-top: 11px;
         font-size: 18px;
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 720px) {
     .form-horizontal .form-group-sm .control-label {
         padding-top: 6px;
         font-size: 12px;
@@ -3809,7 +3809,7 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
     left: auto;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 720px) {
     .nav-tabs.nav-justified>li {
         display: table-cell;
         width: 1%;
@@ -3831,7 +3831,7 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
     border: 1px solid #dddddd;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 720px) {
     .nav-tabs.nav-justified>li>a {
         border-bottom: 1px solid #dddddd;
         border-radius: 4px 4px 0 0;
@@ -3890,7 +3890,7 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
     left: auto;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 720px) {
     .nav-justified>li {
         display: table-cell;
         width: 1%;
@@ -3916,7 +3916,7 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
     border: 1px solid #dddddd;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 720px) {
     .nav-tabs-justified>li>a {
         border-bottom: 1px solid #dddddd;
         border-radius: 4px 4px 0 0;
@@ -3950,13 +3950,13 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
     border: 1px solid transparent;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 720px) {
     .navbar {
         border-radius: 4px;
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 720px) {
     .navbar-header {
         float: left;
     }
@@ -3976,7 +3976,7 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
     overflow-y: auto;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 720px) {
     .navbar-collapse {
         width: auto;
         border-top: 0;
@@ -4024,7 +4024,7 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
     margin-left: -15px;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 720px) {
 
     .container>.navbar-header,
     .container-fluid>.navbar-header,
@@ -4040,7 +4040,7 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
     border-width: 0 0 1px;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 720px) {
     .navbar-static-top {
         border-radius: 0;
     }
@@ -4054,7 +4054,7 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
     z-index: 1030;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 720px) {
 
     .navbar-fixed-top,
     .navbar-fixed-bottom {
@@ -4075,10 +4075,13 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
 
 .navbar-brand {
     float: left;
-    padding: 15px 15px;
+    padding: 5px 15px;
     font-size: 18px;
     line-height: 20px;
-    height: 50px;
+    /* height: 40px; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .navbar-brand:hover,
@@ -4090,7 +4093,7 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
     display: block;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 720px) {
 
     .navbar>.container .navbar-brand,
     .navbar>.container-fluid .navbar-brand {
@@ -4126,7 +4129,7 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
     margin-top: 4px;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 720px) {
     .navbar-toggle {
         display: none;
     }
@@ -4169,7 +4172,7 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 720px) {
     .navbar-nav {
         float: left;
         margin: 0;
@@ -4197,7 +4200,7 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
     margin-bottom: 8px;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 720px) {
     .navbar-form .form-group {
         display: inline-block;
         margin-bottom: 0;
@@ -4268,7 +4271,7 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 720px) {
     .navbar-form {
         width: auto;
         border: 0;
@@ -4315,7 +4318,7 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
     margin-bottom: 15px;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 720px) {
     .navbar-text {
         float: left;
         margin-left: 15px;
@@ -4323,7 +4326,7 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 720px) {
     .navbar-left {
         float: left !important;
     }
@@ -5980,7 +5983,7 @@ button.list-group-item-danger.active:focus {
     }
 }
 
-@media (min-width: 768px) and (max-width: 991px) {
+@media (min-width: 720px) and (max-width: 991px) {
     .visible-sm {
         display: block !important;
     }
@@ -5999,19 +6002,19 @@ button.list-group-item-danger.active:focus {
     }
 }
 
-@media (min-width: 768px) and (max-width: 991px) {
+@media (min-width: 720px) and (max-width: 991px) {
     .visible-sm-block {
         display: block !important;
     }
 }
 
-@media (min-width: 768px) and (max-width: 991px) {
+@media (min-width: 720px) and (max-width: 991px) {
     .visible-sm-inline {
         display: inline !important;
     }
 }
 
-@media (min-width: 768px) and (max-width: 991px) {
+@media (min-width: 720px) and (max-width: 991px) {
     .visible-sm-inline-block {
         display: inline-block !important;
     }
@@ -6097,7 +6100,7 @@ button.list-group-item-danger.active:focus {
     }
 }
 
-@media (min-width: 768px) and (max-width: 991px) {
+@media (min-width: 720px) and (max-width: 991px) {
     .hidden-sm {
         display: none !important;
     }

@@ -1,13 +1,7 @@
 /* Style the tab */
 div.tab {
     overflow: hidden;
-    border-left: 1px solid #ccc;
-    border-right: 1px solid #ccc;
-    border-top: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
-    background-color: #f1f1f1;
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
+    display: inline-block;
 }
 
 
@@ -21,7 +15,7 @@ div.tab button {
     border-right: 1px solid #f1f1f1;
     outline: none;
     cursor: pointer;
-    padding: 12px 14px;
+    padding: 8px 10px;
     transition: 0.3s;
     color: #337AB7;
 }
@@ -44,8 +38,8 @@ div.tab button.active {
     border-bottom: 1px solid #fff;
     border-left: 1px solid #ccc;
     border-right: 1px solid #ccc;
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
     color: #555555;
 }
 

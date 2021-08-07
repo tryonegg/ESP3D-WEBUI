@@ -196,8 +196,8 @@ sendMove = function(cmd) {
 
     fn && fn();
 };
-function tabletShowMessage(msg) {
-    if (msg.startsWith('<') || msg.startsWith('ok') || msg.startsWith('\n') || msg.startsWith('\r')) {
+function tabletShowMessage(msg, collecting) {
+    if (collecting || msg.startsWith('<') || msg.startsWith('ok') || msg.startsWith('\n') || msg.startsWith('\r')) {
         return;
     }
     var messages = id('messages');
@@ -283,7 +283,7 @@ function setRunnable() {
 
 var grblReportingUnits = 0;
 
-function tabletGrblState(grbl, mpos, wpos, ovr, modal) {
+function tabletGrblState(grbl) {
     var stateName = grbl.stateName;
 
     // Unit conversion factor - depends on both $13 setting and parser units
@@ -292,9 +292,9 @@ function tabletGrblState(grbl, mpos, wpos, ovr, modal) {
     //  spindleSpeed = grbl.spindleSpeed;
     //  spindleDirection = grbl.spindle;
     //
-    //  feedOverride = ovr.feed/100.0;
-    //  rapidOverride = ovr.rapid/100.0;
-    //  spindleOverride = ovr.spindle/100.0;
+    //  feedOverride = OVR.feed/100.0;
+    //  rapidOverride = OVR.rapid/100.0;
+    //  spindleOverride = OVR.spindle/100.0;
 
     var mmPerInch = 25.4;
     switch (modal.units) {
@@ -304,13 +304,6 @@ function tabletGrblState(grbl, mpos, wpos, ovr, modal) {
         case 'G21':
             factor = grblReportingUnits === 0 ? 1.0 : mmPerInch;
             break;
-    }
-
-    if (mpos) {
-        mpos.forEach( function(p) { p *= factor; } );
-    }
-    if (wpos) {
-        wpos.forEach( function(p) { p *= factor; } );
     }
 
     // if (cnc.filename == '') {
@@ -408,18 +401,18 @@ function tabletGrblState(grbl, mpos, wpos, ovr, modal) {
             scrollToLine(grbl.lineNumber);
         }
     }
-    // root.displayer.reDrawTool(modal, mpos);
+    displayer.reDrawTool(modal, MPOS);
 
     var digits = modal.units == 'G20' ? 4 : 3;
 
-    if (wpos) {
-        wpos.forEach( function(pos, index) {
-            setValue('wpos-'+axisNames[index], Number(pos).toFixed(index > 2 ? 2 : digits));
+    if (WPOS) {
+        WPOS.forEach( function(pos, index) {
+            setValue('wpos-'+axisNames[index], Number(pos*factor).toFixed(index > 2 ? 2 : digits));
         });
     }
 
-    //    mpos.forEach( function(pos, index) {
-    //        setValue('mpos-'+axisNames[index], Number(pos).toFixed(index > 2 ? 2 : digits));
+    //    MPOS.forEach( function(pos, index) {
+    //        setValue('mpos-'+axisNames[index], Number(pos*factor).toFixed(index > 2 ? 2 : digits));
     //    });
 }
 
@@ -471,7 +464,7 @@ function showGCode(gcode) {
 
     id('gcode').value = gcode;
     if (gCodeLoaded) {
-        root.displayer.showToolpath(gcode, WPOS, MPOS);
+        displayer.showToolpath(gcode, WPOS, MPOS);
     }
     // XXX this needs to take into account error states
     setRunnable();
@@ -523,11 +516,11 @@ function loadGCode() {
     if (filename === '..') {
         watchPath = watchPath.slice(0, -1).replace(/[^/]*$/,'');
         filename = '';
-        getFileList();
+        tabletGetFileList();
     } else if (filename.endsWith('/')) {
         watchPath = watchPath + filename;
         filename = '';
-        getFileList();
+        tabletGetFileList();
     } else {
         gCodeFilename = watchPath + filename;
         collectHandler = showGCode;
@@ -673,9 +666,11 @@ function mdiEnterKey(event) {
 id('mditext0').addEventListener('keyup', mdiEnterKey);
 id('mditext1').addEventListener('keyup', mdiEnterKey);
 
-// I tried to add the listener to the tablettab element but it did not work.
-// The event was not received.  Maybe something about focus? So I added it
-// to window and then checked to see if the tablet is active in the handler.
+// The listener could be added to the tablettab element by setting tablettab's
+// contentEditable property.  The problem is that it is too easy for tablettab
+// to lose focus, in which case it does not receive keys.  The solution is to
+// delegate the event to window and then have the handler check to see if the
+// tablet is active.
 window.addEventListener('keydown', handleKeyDown);
 window.addEventListener('keyup', handleKeyUp);
 
@@ -683,3 +678,5 @@ numpad.attach({target: "wpos-x", axis: "X"});
 numpad.attach({target: "wpos-y", axis: "Y"});
 numpad.attach({target: "wpos-z", axis: "Z"});
 numpad.attach({target: "wpos-a", axis: "A"});
+
+id('tablettablink').addEventListener('DOMActivate', toggleFullscreen, false);
