@@ -383,7 +383,7 @@ function stopGCode() {
     grbl_reset();
 }
 
-function grbl_process_status(response) {
+function grblProcessStatus(response) {
     var grbl = parseGrblStatus(response);
 
     // Record persistent values of data
@@ -418,7 +418,7 @@ function grbl_reset() {
     SendRealtimeCmd(String.fromCharCode(0x18));
 }
 
-function grbl_GetProbeResult(response) {
+function grblGetProbeResult(response) {
     console.log("yes");
     var tab1 = response.split(":");
     if (tab1.length > 2) {
@@ -508,6 +508,18 @@ var collectedSettings = null;
 function grblHandleMessage(msg) {
     tabletShowMessage(msg, collecting);
 
+    // We handle these two before collecting data because they can be
+    // sent at any time, maybe requested by a timer.
+    if (msg.startsWith('<')) {
+        grblProcessStatus(msg);
+        return;
+    }
+    if (msg.startsWith('[GC:')) {
+        grblGetModal(msg);
+        console.log(msg);
+        return;
+    }
+
     // Block data collection
     if (collecting) {
         if (msg.startsWith('[MSG: EndData]')) {
@@ -554,17 +566,8 @@ function grblHandleMessage(msg) {
     if (msg.startsWith('ok')) {
         return;
     }
-    if (msg.startsWith('<')) {
-        grbl_process_status(msg);
-        return;
-    }
     if (msg.startsWith('[PRB:')) {
-        grbl_GetProbeResult(msg);
-        return;
-    }
-    if (msg.startsWith('[GC:')) {
-        grblGetModal(msg);
-        console.log(msg);
+        grblGetProbeResult(msg);
         return;
     }
     if (msg.startsWith('[MSG:')) {

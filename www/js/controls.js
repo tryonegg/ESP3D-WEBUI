@@ -141,7 +141,7 @@ function Control_get_position_value(label, result_data) {
 
 function process_Position(response) {
     if ((target_firmware == "grbl") || (target_firmware == "grbl-embedded")) {
-        process_grbl_position(response);
+        grblProcessStatus(response);
     } else {
         document.getElementById('control_x_position').innerHTML = Control_get_position_value("X:", response);
         document.getElementById('control_y_position').innerHTML = Control_get_position_value("Y:", response);

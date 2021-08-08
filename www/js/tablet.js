@@ -96,14 +96,14 @@ jogTo = function(location) {
     sendCommand(cmd);
 }
 
-goAxis = function(axis, coordinate) {
+goAxisByValue = function(axis, coordinate) {
     tabletClick();
     moveTo(axis + coordinate);
 }
 
-moveAxis = function(axis, field) {
-    goAxis(axis, id(field).value);
-}
+// moveAxis = function(axis, field) {
+//     goAxisByValue(axis, id(field).textContent);
+// }
 
 setAxisByValue = function(axis, coordinate) {
     tabletClick();
@@ -111,9 +111,9 @@ setAxisByValue = function(axis, coordinate) {
     sendCommand(cmd);
 }
 
-setAxis = function(axis, field) {
-    setAxisByValue(axis, id(field).value);
-}
+// setAxis = function(axis, field) {
+//     setAxisByValue(axis, id(field).value);
+// }
 
 setAxis = function(axis, field) {
     tabletClick();
@@ -232,6 +232,18 @@ var setJogSelector = function(units) {
         option.selected = (v == selected);
         selector.appendChild(option);
     });
+}
+function removeJogDistance(option, oldIndex) {
+    selector = id('jog-distance');
+    selector.removeChild(option);
+    selector.selectedIndex = oldIndex;
+}
+function addJogDistance(distance) {
+    selector = id('jog-distance');
+    var option = document.createElement("option");
+    option.textContent=distance;
+    option.selected = true;
+    return selector.appendChild(option);
 }
 
 var runTime = 0;
@@ -407,12 +419,12 @@ function tabletGrblState(grbl) {
 
     if (WPOS) {
         WPOS.forEach( function(pos, index) {
-            setValue('wpos-'+axisNames[index], Number(pos*factor).toFixed(index > 2 ? 2 : digits));
+            setTextContent('wpos-'+axisNames[index], Number(pos*factor).toFixed(index > 2 ? 2 : digits));
         });
     }
 
     //    MPOS.forEach( function(pos, index) {
-    //        setValue('mpos-'+axisNames[index], Number(pos*factor).toFixed(index > 2 ? 2 : digits));
+    //        setTextContent('mpos-'+axisNames[index], Number(pos*factor).toFixed(index > 2 ? 2 : digits));
     //    });
 }
 
@@ -452,8 +464,13 @@ function gotFiles(data) {
     });
 }
 
-function tabletGetFileList() {
+function getFileList() {
     SendFileHttp('/upload', null, null, gotFiles, null);
+}
+
+function tabletInit() {
+    requestModes();
+    getFileList();
 }
 
 function showGCode(gcode) {
@@ -516,11 +533,11 @@ function loadGCode() {
     if (filename === '..') {
         watchPath = watchPath.slice(0, -1).replace(/[^/]*$/,'');
         filename = '';
-        tabletGetFileList();
+        getFileList();
     } else if (filename.endsWith('/')) {
         watchPath = watchPath + filename;
         filename = '';
-        tabletGetFileList();
+        getFileList();
     } else {
         gCodeFilename = watchPath + filename;
         collectHandler = showGCode;
@@ -538,6 +555,8 @@ function menuHomeAll() { sendCommand('$H'); hideMenu(); }
 function menuHomeA() { sendCommand('$HA'); hideMenu(); }
 function menuSpindleOff() { sendCommand('M5'); hideMenu(); }
 
+function requestModes() { sendCommand('$G'); }
+
 cycleDistance = function(up) {
     var sel = id('jog-distance');
     var newIndex = sel.selectedIndex + (up ? 1 : -1);
@@ -552,20 +571,46 @@ clickon = function(name) {
     button.classList.add('active');
     button.dispatchEvent(new Event('click'));
 }
-var shiftDown = false;
 var ctrlDown = false;
-var altDown = false;
+var oldIndex = null;;
+var newChild = null;
+
+function shiftUp() {
+    if (!newChild) {
+        return;
+    }
+    removeJogDistance(newChild, oldIndex);
+    newChild = null;
+}
+function altUp() {
+    if (!newChild) {
+        return;
+    }
+    removeJogDistance(newChild, oldIndex);
+    newChild = null;
+}
+
+function shiftDown() {
+    if (newChild) {
+        return;
+    }
+    var sel = id('jog-distance');
+    var distance = sel.value;
+    oldIndex = sel.selectedIndex;
+    newChild = addJogDistance(distance * 10);
+}
+function altDown() {
+    if (newChild) {
+        return;
+    }
+    var sel = id('jog-distance');
+    var distance = sel.value;
+    oldIndex = sel.selectedIndex;
+    newChild = addJogDistance(distance / 10);
+}
+
 function jogClick(name) {
-    //    if (shiftDown || altDown) {
-    //	var distanceElement = id('jog-distance');
-    //	var distance = distanceElement.value;
-    //	var factor = shiftDown ? 10 : 0.1;
-    //	distanceElement.val(distance * factor);
-    //	clickon(name);
-    //	distanceElement.val(distance);
-    //    } else {
     clickon(name);
-    //    }
 }
 
 // Reports whether a text input box has focus - see the next comment
@@ -613,13 +658,13 @@ function handleKeyDown(event) {
 	    clickon('btn-pause');
 	    break;
 	case "Shift":
-	    shiftDown = true;
+            shiftDown();
 	    break;
 	case "Control":
 	    ctrlDown = true;
 	    break;
 	case "Alt":
-	    altDown = true;
+	    altDown();
 	    break;
 	case "=": // = is unshifted + on US keyboards
 	case "+":
@@ -643,13 +688,13 @@ function handleKeyUp(event) {
     }
     switch(event.key) {
 	case "Shift":
-	    shiftDown = false;
+	    shiftUp();
 	    break;
 	case "Control":
 	    ctrlDown = false;
 	    break;
 	case "Alt":
-	    altDown = false;
+	    altUp();
 	    break;
     }
 }

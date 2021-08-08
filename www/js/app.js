@@ -112,7 +112,7 @@ window.onload = function() {
         document.getElementById('command-body').className = "panel-body";
         document.getElementById('file-body').className = "panel-body panel-height panel-max-height panel-scroll";
     }
-    tabletGetFileList();
+    tabletInit();
 };
 
 var wsmsg = "";

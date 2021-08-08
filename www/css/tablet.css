@@ -1,34 +1,36 @@
-#tablettab {
+.tablettab {
   padding: 5px;
   font-size: 14px;
 }
-.btn-tablet {
+.tablettab .btn {
   border-radius: 4px;
   border-style: outset;
+  width: 95%;
 }
-.btn-tablet,
-.form-control-tablet {
+.tablettab .btn,
+.tablettab .form-control {
   padding-left: 2px;
   font-size: 10px;
 }
 .row.no-gutter [class*="col-"] {
-    padding-right: 0;
-    padding-left: 0;
+  padding-right: 0;
+  padding-left: 0;
 }
-#tablettab .dropdown {
+.tablettab .dropdown {
+  position: inherit;
   display: block;
 }
 
-.btn-tablet[disabled] {
+.tablettab .btn[disabled] {
   opacity: .6;
 }
 .control-pad .form-control[disabled] {
   opacity: .4;
 }
 .middle-block {
-    top: 100%;
-    left: 0;
-    z-index: 100;
+  top: 100%;
+  left: 0;
+  z-index: 100;
 }
 .jog-controls {
     display: block;
@@ -42,7 +44,11 @@
 > *:last-child {
   margin-bottom: 0;
 }
-.dropdown-menu>li>a .fa {
+.tablettab .dropdown-menu {
+  position: absolute;
+  right: 0;
+}
+.tablettab .dropdown-menu>li>a .fa {
   width: 16px;
 }
 .axis-position .row {
@@ -61,8 +67,7 @@
   padding-top: 12px;
   padding-bottom: 12px;
 }
-.nav-panel .btn-tablet {
-  width: 100%;
+.tablettab .nav-panel .btn {
   padding-left: 0;
   padding-right: 0;
   padding-bottom: 5px;
@@ -90,13 +95,15 @@
   padding: 5px 10px;
 }
 .axis-label {
-  text-align: center;
   font-size: 20px;
   padding: 0 8px;
+  text-align: right;
 }
 .position {
-  width: 95%;
+  width: 90%;
+  float: right;
   text-align: right;
+  background-color: #f0fff0;
 }
 .load {
   font-size: 12px;
@@ -111,8 +118,7 @@ textarea {
   width: 99%;
   resize: none;
 }
-.axis-position .btn-tablet {
-  width: 90%;
+.tablettab .axis-position .btn {
   text-align: center;
 }
 
@@ -159,7 +165,7 @@ textarea {
 .control-pad .row:last-child {
   padding-bottom: 5px;
 }
-.control-pad .btn-tablet {
+.control-pad .tablettab .btn {
   width: 100%;
   padding-left: 0;
   padding-right: 0;
@@ -175,14 +181,14 @@ textarea {
 }
 
 @media (min-width: 512px) {
-  .btn-tablet,
-  .form-control-tablet {
+  .tablettab .btn,
+  .tablettab .form-control {
     font-size: 12px;
   }
 }
 @media (min-width: 640px) {
-  .btn-tablet,
-  .form-control-tablet {
+  .tablettab .btn,
+  .tablettab .form-control {
     font-size: 14px;
   }
 }
@@ -190,20 +196,19 @@ textarea {
   {
     font-size: 14px;
   }
-  .dropdown-menu {
+  .tablettab .dropdown-menu {
     min-width: 180px;
   }
-  .dropdown-menu>li>a .fa {
+  .tablettab .dropdown-menu>li>a .fa {
     width: 14px;
   }
   .axis-label {
     font-size: 24px;
-    text-align: center;
   }
-  .dropdown-menu {
-    font-size: 14px;
+  .tablettab .dropdown-menu {
+    font-size: 24px;
   }
-  .btn-tablet,
+  .tablettab .btn,
   .form-control {
     font-size: 14px;
     height: 30px;
@@ -221,24 +226,23 @@ textarea {
 }
 
 @media (min-width: 768px) {
-  #tablettab {
+  .tablettab {
     font-size: 15px;
   }
-  .dropdown-menu {
+  .tablettab .dropdown-menu {
     min-width: 180px;
   }
-  .dropdown-menu>li>a .fa {
+  .tablettab .dropdown-menu>li>a .fa {
     width: 15px;
   }
   .axis-label {
     font-size: 24px;
-    text-align: center;
   }
-  .dropdown-menu {
-    font-size: 15px;
+  .tablettab .dropdown-menu {
+    font-size: 24px;
   }
-  .btn-tablet,
-  .form-control-tablet {
+  .tablettab .btn,
+  .tablettab .form-control {
     font-size: 15px;
     height: 30px;
   }
@@ -254,24 +258,23 @@ textarea {
   }
 }
 @media (min-width: 992px) {
-  #tablettab {
+  .tablettab {
     font-size: 20px;
   }
-  .dropdown-menu {
+  .tablettab .dropdown-menu {
     min-width: 200px;
   }
-  .dropdown-menu>li>a .fa {
+  .tablettab .dropdown-menu>li>a .fa {
     width: 20px;
   }
   .axis-label {
     font-size: 28px;
-    text-align: center;
   }
-  .dropdown-menu {
-    font-size: 20px;
+  .tablettab .dropdown-menu {
+    font-size: 24px;
   }
-  .btn-tablet,
-  .form-control-tablet {
+  .tablettab .btn,
+  .tablettab .form-control {
     font-size: 20px;
     height: 40px;
   }
@@ -284,24 +287,23 @@ textarea {
   }
 }
 @media (min-width: 1200px) {
-  #tablettab {
+  .tablettab {
     font-size: 28px;
   }
-  .dropdown-menu {
+  .tablettab .dropdown-menu {
     min-width: 220px;
   }
-  .dropdown-menu>li>a .fa {
+  .tablettab .dropdown-menu>li>a .fa {
     width: 28px;
   }
   .axis-label {
     font-size: 32px;
-    text-align: center;
   }
-  .dropdown-menu {
+  .tablettab .dropdown-menu {
     font-size: 28px;
   }
-  .btn-tablet,
-  .form-control-tablet {
+  .tablettab .btn,
+  .tablettab .form-control {
     font-size: 28px;
     height: 52px;
   }

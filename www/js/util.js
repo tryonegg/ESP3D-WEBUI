@@ -14,6 +14,12 @@ function getValue(name, val) {
 function intValue(name) {
     return parseInt(getValue(name));
 }
+function getTextContent(name, val) {
+    return id(name).textContent;
+}
+function setTextContent(name, val) {
+    id(name).textContent = val;
+}
 function setHTML(name, val) {
     id(name).innerHTML = val;
 }

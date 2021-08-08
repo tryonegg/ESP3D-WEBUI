@@ -1,5 +1,5 @@
 <audio id="click" src="Button.wav" autostart="false"></audio>
-<div id="tablettab" class="tabcontent">
+<div id="tablettab" class="tabcontent tablettab">
 <div id="tablet-listener">
   <div class="nav-panel">
     <div class="container-fluid">
@@ -8,12 +8,12 @@
           <div class="active-state" id="active-state"></div>
         </div>
         <div class="col-xs-2">
-          <button type="button" class="btn-tablet btn-default btn-start" id="btn-start" onclick="doLeftButton();">
+          <button type="button" class="btn btn-default btn-start" id="btn-start" onclick="doLeftButton();">
             Start
           </button>
         </div>
         <div class="col-xs-2">
-          <button type="button" class="btn-tablet btn-default btn-start" id="btn-pause" onclick="doRightButton();">
+          <button type="button" class="btn btn-default btn-start" id="btn-pause" onclick="doRightButton();">
             Pause
           </button>
         </div>
@@ -24,12 +24,12 @@
         <div class="col-xs-1">
           <div class="btn-group btn-group-justified">
             <div class="btn-group">
-              <div class="dropdown">
-                <button type="button" class="btn-tablet btn-default dropdown-toggle" id="btn-dropdown" onclick="toggleDropdown()">
+              <li class="dropdown">
+                <button type="button" class="btn btn-default dropdown-toggle" id="btn-dropdown" onclick="toggleDropdown()">
                   <!--- <i class="fa fa-list"></i> --->
 Menu
                 </button>
-                <ul class="dropdown-menu dropdown-menu-right" id="tablet-dropdown-menu" role="menu">
+                <ul class="dropdown-menu" id="tablet-dropdown-menu" role="menu">
                   <li>
                     <a role="menuitem" href="javascript:void(0)" onclick="menuFullscreen()"><i class="fa fa-fullscreen"></i>&nbsp;Fullscreen</a>
                   </li>
@@ -49,7 +49,7 @@ Menu
                     <a role="menuitem" href="javascript:void(0)" onclick="menuReset()"><i class="fa fa-undo"></i>&nbsp;Reset</a>
                   </li>
                 </ul>
-              </div>
+              </li>
             </div>
           </div>
 
@@ -82,37 +82,37 @@ Menu
           WPos
         </div>
         <div class="col-xs-11">
-          <div class="col-xs-2">
-            <div class="col-xs-4 axis-label">X</div>
-            <div class="col-xs-8">
-              <input type="number" class="form-control form-control-tablet position" id="wpos-x" value="0.0000">
+          <div class="col-xs-3">
+            <div class="col-xs-3 axis-label">X</div>
+            <div class="col-xs-9">
+              <div class="form-control position" id="wpos-x">
+                0.000
+              </div>
             </div>
           </div>
-          <div class="col-xs-1">
-          </div>
-          <div class="col-xs-2">
-            <div class="col-xs-4 axis-label">Y</div>
-            <div class="col-xs-8">
-              <input type="number" class="form-control form-control-tablet position" id="wpos-y" value="0.0000">
+          <div class="col-xs-3">
+            <div class="col-xs-3 axis-label">Y</div>
+            <div class="col-xs-9">
+              <div class="form-control position" id="wpos-y">
+                0.000
+              </div>
             </div>
           </div>
-          <div class="col-xs-1">
-          </div>
-          <div class="col-xs-2">
-            <div class="col-xs-4 axis-label">Z</div>
-            <div class="col-xs-8">
-              <input type="number" class="form-control form-control-tablet position" id="wpos-z" value="0.0000">
+          <div class="col-xs-3">
+            <div class="col-xs-3 axis-label">Z</div>
+            <div class="col-xs-9">
+              <div class="form-control position" id="wpos-z">
+                0.000
+              </div>
             </div>
           </div>
-          <div class="col-xs-1">
-          </div>
-          <div class="col-xs-2">
-            <div class="col-xs-4 axis-label">A</div>
-            <div class="col-xs-8">
-              <input type="number" class="form-control form-control-tablet position" id="wpos-a" value="0.0000">
+          <div class="col-xs-3">
+            <div class="col-xs-3 axis-label">A</div>
+            <div class="col-xs-9">
+              <div class="form-control position" id="wpos-a">
+                0.000
+              </div>
             </div>
-          </div>
-          <div class="col-xs-1">
           </div>
         </div>
       </div>
@@ -120,62 +120,58 @@ Menu
       </div>
       <div class="row no-gutter">
         <div class="col-xs-1">
-          <button type="button" class="btn-tablet btn-default btn-units" id="units" title="Toggle Units" onclick="toggleUnits()">
+          <button type="button" class="btn btn-default btn-units" id="units" title="Toggle Units" onclick="toggleUnits()">
             mm
           </button>
         </div>
 
         <div class="col-xs-11">
+          <div class="col-xs-1"> </div>
           <div class="col-xs-1 inset">
-            <button type="button" class="btn-tablet btn-default" title="Set X to 0" onclick="zeroAxis('X')">
+            <button type="button" class="btn btn-default" title="Set X to 0" onclick="zeroAxis('X')">
               X=0
             </button>
           </div>
           <div class="col-xs-1">
-            <button type="button" class="btn-tablet btn-default" title="Goto 0 in X" onclick="goAxis('X', 0)">
+            <button type="button" class="btn btn-default" title="Goto 0 in X" onclick="goAxisByValue('X', 0)">
               &#8594;X0
             </button>
           </div>
-          <div class="col-xs-1">
-          </div>
 
+          <div class="col-xs-1"> </div>
           <div class="col-xs-1 inset">
-            <button type="button" class="btn-tablet btn-default" title="Set Y to 0" onclick="zeroAxis('Y')">
+            <button type="button" class="btn btn-default" title="Set Y to 0" onclick="zeroAxis('Y')">
               Y=0
             </button>
           </div>
           <div class="col-xs-1">
-            <button type="button" class="btn-tablet btn-default" title="Goto 0 in Y" onclick="goAxis('Y', 0)">
+            <button type="button" class="btn btn-default" title="Goto 0 in Y" onclick="goAxisByValue('Y', 0)">
               &#8594;Y0
             </button>
           </div>
-          <div class="col-xs-1">
-          </div>
 
+          <div class="col-xs-1"> </div>
           <div class="col-xs-1 inset">
-            <button type="button" class="btn-tablet btn-default" title="Set Z to 0" onclick="zeroAxis('Z')">
+            <button type="button" class="btn btn-default" title="Set Z to 0" onclick="zeroAxis('Z')">
               Z=0
             </button>
           </div>
           <div class="col-xs-1">
-            <button type="button" class="btn-tablet btn-default" title="Goto 0 in Z" onclick="goAxis('Z', 0)">
+            <button type="button" class="btn btn-default" title="Goto 0 in Z" onclick="goAxisByValue('Z', 0)">
               &#8594;Z0
             </button>
           </div>
-          <div class="col-xs-1">
-          </div>
 
+          <div class="col-xs-1"> </div>
           <div class="col-xs-1 inset">
-            <button type="button" class="btn-tablet btn-default" title="Set A to 0" onclick="zeroAxis('A')">
+            <button type="button" class="btn btn-default" title="Set A to 0" onclick="zeroAxis('A')">
               A=0
             </button>
           </div>
           <div class="col-xs-1">
-            <button type="button" class="btn-tablet btn-default" title="Goto 0 in A" onclick="goAxis('A', 0)">
+            <button type="button" class="btn btn-default" title="Goto 0 in A" onclick="goAxisByValue('A', 0)">
               &#8594;A0
             </button>
-          </div>
-          <div class="col-xs-1">
           </div>
         </div>
       </div>
@@ -190,7 +186,7 @@ Menu
           <div class="col-xs-2">
             <button
                type="button"
-               class="btn-tablet btn-default" id="jog-y-plus"
+               class="btn btn-default" id="jog-y-plus"
                title="Move Y+"
                onclick="sendMove('Y+')"
                >
@@ -202,7 +198,7 @@ Menu
           <div class="col-xs-2">
             <button
                type="button"
-               class="btn-tablet btn-default" id="jog-z-plus"
+               class="btn btn-default" id="jog-z-plus"
                title="Move Z+"
                onclick="sendMove('Z+')"
                >
@@ -213,7 +209,7 @@ Menu
           <div class="col-xs-1">
             <button
                type="button"
-               class="btn-tablet btn-default set-distance"
+               class="btn btn-default set-distance"
                title="Jog by 0.001"
                onclick="btnSetDistance()"
                id="jog00"
@@ -224,7 +220,7 @@ Menu
           <div class="col-xs-1">
             <button
                type="button"
-               class="btn-tablet btn-default set-distance"
+               class="btn btn-default set-distance"
                title="Jog by 0.01"
                onclick="btnSetDistance()"
                id="jog01"
@@ -235,7 +231,7 @@ Menu
           <div class="col-xs-1">
             <button
                type="button"
-               class="btn-tablet btn-default set-distance"
+               class="btn btn-default set-distance"
                title="Jog by 0.1"
                onclick="btnSetDistance()"
                id="jog02"
@@ -246,7 +242,7 @@ Menu
           <div class="col-xs-1">
             <button
                type="button"
-               class="btn-tablet btn-default set-distance"
+               class="btn btn-default set-distance"
                title="Jog by 1"
                onclick="btnSetDistance()"
                id="jog03"
@@ -260,7 +256,7 @@ Menu
           <div class="col-xs-2">
             <button
                type="button"
-               class="btn-tablet btn-default" id="jog-x-minus"
+               class="btn btn-default" id="jog-x-minus"
                title="Move X-"
                onclick="sendMove('X-')"
                >
@@ -272,7 +268,7 @@ Menu
           <div class="col-xs-2">
             <button
                type="button"
-               class="btn-tablet btn-default" id="jog-x-plus"
+               class="btn btn-default" id="jog-x-plus"
                title="Move X+"
                onclick="sendMove('X+')"
                >
@@ -280,7 +276,7 @@ Menu
             </button>
           </div>
           <div class="col-xs-2">
-            <select class="form-control form-control-tablet" id="jog-distance">
+            <select class="form-control" id="jog-distance">
               <option>0.00025</option>
               <option>0.0005</option>
               <option>0.001</option>
@@ -303,7 +299,7 @@ Menu
           <div class="col-xs-1">
             <button
                type="button"
-               class="btn-tablet btn-default set-distance"
+               class="btn btn-default set-distance"
                title="Jog by 0.003"
                onclick="btnSetDistance()"
                id="jog10"
@@ -314,7 +310,7 @@ Menu
           <div class="col-xs-1">
             <button
                type="button"
-               class="btn-tablet btn-default set-distance"
+               class="btn btn-default set-distance"
                title="Jog by 0.03"
                onclick="btnSetDistance()"
                id="jog11"
@@ -325,7 +321,7 @@ Menu
           <div class="col-xs-1">
             <button
                type="button"
-               class="btn-tablet btn-default set-distance"
+               class="btn btn-default set-distance"
                title="Jog by 0.3"
                onclick="btnSetDistance()"
                id="jog12"
@@ -336,7 +332,7 @@ Menu
           <div class="col-xs-1">
             <button
                type="button"
-               class="btn-tablet btn-default set-distance"
+               class="btn btn-default set-distance"
                title="Jog by 3"
                onclick="btnSetDistance()"
                id="jog13"
@@ -352,7 +348,7 @@ Menu
           <div class="col-xs-2">
             <button
                type="button"
-               class="btn-tablet btn-default" id="jog-y-minus"
+               class="btn btn-default" id="jog-y-minus"
                title="Move Y-"
                onclick="sendMove('Y-')"
                >
@@ -364,7 +360,7 @@ Menu
           <div class="col-xs-2">
             <button
                type="button"
-               class="btn-tablet btn-default" id="jog-z-minus"
+               class="btn btn-default" id="jog-z-minus"
                title="Move Z-"
                onclick="sendMove('Z-')"
                >
@@ -375,7 +371,7 @@ Menu
           <div class="col-xs-1">
             <button
                type="button"
-               class="btn-tablet btn-default set-distance"
+               class="btn btn-default set-distance"
                title="Jog by 0.005"
                onclick="btnSetDistance()"
                id="jog20"
@@ -386,7 +382,7 @@ Menu
           <div class="col-xs-1">
             <button
                type="button"
-               class="btn-tablet btn-default set-distance"
+               class="btn btn-default set-distance"
                title="Jog by 0.05"
                onclick="btnSetDistance()"
                id="jog21"
@@ -397,7 +393,7 @@ Menu
           <div class="col-xs-1">
             <button
                type="button"
-               class="btn-tablet btn-default set-distance"
+               class="btn btn-default set-distance"
                title="Jog by 0.5"
                onclick="btnSetDistance()"
                id="jog22"
@@ -408,7 +404,7 @@ Menu
           <div class="col-xs-1">
             <button
                type="button"
-               class="btn-tablet btn-default set-distance"
+               class="btn btn-default set-distance"
                title="Jog by 5"
                onclick="btnSetDistance()"
                id="jog23"
@@ -424,12 +420,12 @@ Menu
         <div class="row no-gutter">
           <div class="col-xs-5">
             <div class="col-xs-10">
-              <input type="text" class="form-control form-control-tablet" id="mditext0" placeholder="GCode Command" onFocus="inputFocused()" onBlur="inputBlurred()">
+              <input type="text" class="form-control" id="mditext0" placeholder="GCode Command" onFocus="inputFocused()" onBlur="inputBlurred()">
             </div>
             <div class="col-xs-2">
               <button
                  type="button"
-                 class="btn-tablet btn-default mdi-go"
+                 class="btn btn-default mdi-go"
                  title="Submit GCode Command"
                  onclick="MDI('mditext0')"
                  >
@@ -437,12 +433,12 @@ Menu
               </button>
             </div>
             <div class="col-xs-10">
-              <input type="text" class="form-control form-control-tablet" id="mditext1" placeholder="GCode Command" onFocus="inputFocused()" onBlur="inputBlurred()">
+              <input type="text" class="form-control" id="mditext1" placeholder="GCode Command" onFocus="inputFocused()" onBlur="inputBlurred()">
             </div>
             <div class="col-xs-2">
               <button
                  type="button"
-                 class="btn-tablet btn-default mdi-go"
+                 class="btn btn-default mdi-go"
                  title="Submit GCode Command"
                  onclick="MDI('mditext1')"
                  >
@@ -453,14 +449,14 @@ Menu
               <!-- this creates some vertical space above the file selector -->
             </div>
             <div class="col-xs-8">
-              <select class="form-control form-control-tablet" id="filelist" onchange="loadGCode()">
+              <select class="form-control" id="filelist" onchange="loadGCode()">
 		<option>Load GCode File</option>
               </select>
             </div>
             <div class="col-xs-2">
               <button
                  type="button"
-                 class="btn-tablet btn-default refresh"
+                 class="btn btn-default refresh"
                  title="Refresh File List"
                  onclick="tabletGetFileList()"
                  >
@@ -470,7 +466,7 @@ Menu
             <div class="col-xs-2">
               <button
                  type="button"
-                 class="btn-tablet btn-default load"
+                 class="btn btn-default load"
                  title="Reload File"
                  onclick="loadGCode()"
                  >

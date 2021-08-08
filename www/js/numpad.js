@@ -171,18 +171,18 @@ var numpad = {
 
   // (B6) Recall
   recall: function(){
-    numpad.hdisplay.value = numpad.nowTarget.value;
+    numpad.hdisplay.value = numpad.nowTarget.textContent;
   },
 
   setCoordinate: function(){
-    numpad.nowTarget.value = numpad.hdisplay.value;
-    setAxis(numpad.nowTarget.dataset.axis, numpad.nowTarget.dataset.elementName);
+    numpad.nowTarget.textContent = numpad.hdisplay.value;
+    setAxisByValue(numpad.nowTarget.dataset.axis, numpad.hdisplay.value);
     numpad.hide();
   },
 
   gotoCoordinate: function(){
-    numpad.nowTarget.value = numpad.hdisplay.value;
-    moveAxis(numpad.nowTarget.dataset.axis, numpad.nowTarget.dataset.elementName);
+    numpad.nowTarget.textContent = numpad.hdisplay.value;
+    goAxisByValue(numpad.nowTarget.dataset.axis, numpad.hdisplay.value);
     numpad.hide();
   },
 
