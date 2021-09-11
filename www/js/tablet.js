@@ -441,27 +441,31 @@ var watchPath = '';
 
 function gotFiles(data) {
     var selector = id('filelist');
-    var inRoot = watchPath === '';
-    var legend = inRoot ? 'Load GCode File' : 'In ' + watchPath;
 
     var selectedFile = filename.split('/').slice(-1)[0];
 
     selector.length = 0;
-    addOption(selector, legend, selectedFile == '');
-
-    if (!inRoot) {
-        addOption(selector, '..', false, false);
-    }
     obj = JSON.parse(data);
-    var files = obj.files.sort(function (a, b) {
-        return a.name.localeCompare(b.name);
-    })
-    files.forEach(function(file) {
-        if (file.size == -1) {   // size -1 indicates a directory
-            file.name += '/';
+    if (obj.files) {
+        var inRoot = watchPath === '';
+        var legend = inRoot ? 'Load GCode File' : 'In ' + watchPath;
+        addOption(selector, legend, selectedFile == '');
+
+        if (!inRoot) {
+            addOption(selector, '..', false, false);
         }
-        addOption(selector, file.name, false, file.name == selectedFile);
-    });
+        var files = obj.files.sort(function (a, b) {
+            return a.name.localeCompare(b.name);
+        })
+        files.forEach(function(file) {
+            if (file.size == -1) {   // size -1 indicates a directory
+                file.name += '/';
+            }
+            addOption(selector, file.name, false, file.name == selectedFile);
+        });
+    } else {
+        addOption(selector, "No files found", selectedFile == '');
+    }
 }
 
 function getFileList() {
