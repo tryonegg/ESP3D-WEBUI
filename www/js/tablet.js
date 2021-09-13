@@ -544,8 +544,9 @@ function loadGCode() {
         getFileList();
     } else {
         gCodeFilename = watchPath + filename;
-        collectHandler = showGCode;
-        sendCommand('$sd/show=' + gCodeFilename);
+        fetch('/SD/' + gCodeFilename)
+            .then(response => response.text() )
+            .then(gcode => showGCode(gcode) );
     }
 }
 function toggleDropdown() {
