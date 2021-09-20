@@ -145,7 +145,7 @@ function on_autocheck_status(use_value) {
             if (interval_status != -1) clearInterval(interval_status);
             interval_status = setInterval(function() {
                 get_status()
-            }, interval * 1000);
+            }, interval * 100);
         } else {
             setAutocheck(false);
             setValue('statusInterval_check', 0);
@@ -409,7 +409,7 @@ function grblProcessStatus(response) {
     show_grbl_status(grbl.stateName, grbl.message);
     show_grbl_SD(grbl.sdName, grbl.sdPercent);
     show_grbl_probe_status(grbl.pins && (grbl.pins.indexOf('P') != -1));
-    tabletGrblState(grbl);
+    tabletGrblState(grbl, response);
 }
 
 function grbl_reset() {

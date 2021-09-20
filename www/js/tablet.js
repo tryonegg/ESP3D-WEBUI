@@ -205,6 +205,11 @@ function tabletShowMessage(msg, collecting) {
     messages.scrollTop = messages.scrollHeight;
 }
 
+function tabletShowResponse(response) {
+    var messages = id('messages');
+    messages.value = response;
+}
+
 var setJogSelector = function(units) {
     var buttonDistances = [];
     var menuDistances = [];
@@ -216,8 +221,8 @@ var setJogSelector = function(units) {
         selected = '1';
     } else  {
         // millimeters
-        buttonDistances = [0.01, 0.1, 1, 10, 0.03, 0.3, 3, 30, 0.05, 0.5, 5, 50];
-        menuDistances = [0.005, 0.01, 0.03, 0.05, 0.1, 0.3, 0.5, 1, 3, 5, 10, 30, 50, 100, 300, 1000];
+        buttonDistances = [0.1, 1, 10, 100, 0.3, 3, 30, 300, 0.5, 5, 50, 500];
+        menuDistances = [0.005, 0.01, 0.03, 0.05, 0.1, 0.3, 0.5, 1, 3, 5, 10, 30, 50, 100, 300, 500, 1000];
         selected = '10';
     }
     var buttonNames = ['jog00', 'jog01', 'jog02', 'jog03', 'jog10', 'jog11', 'jog12', 'jog13', 'jog20', 'jog21', 'jog22', 'jog23'];
@@ -294,8 +299,20 @@ function setRunnable() {
 }
 
 var grblReportingUnits = 0;
+var startTime = 0;
 
-function tabletGrblState(grbl) {
+var spindleDirection = ''
+
+function stopAndRecover() {
+    stopGCode();
+    // To stop GRBL you send a reset character, which causes some modes
+    // be reset to their default values.  In particular, it sets G21 mode,
+    // which affects the coordinate display and the jog distances.
+    requestModes();
+}
+
+function tabletGrblState(grbl, response) {
+    // tabletShowResponse(response)
     var stateName = grbl.stateName;
 
     // Unit conversion factor - depends on both $13 setting and parser units
@@ -347,7 +364,7 @@ function tabletGrblState(grbl) {
             break;
         case 'Hold':
             setLeftButton(true, green, 'Resume', resumeGCode);
-            setRightButton(true, red, 'Stop', stopGCode);
+            setRightButton(true, red, 'Stop', stopAndRecover);
             break;
         case 'Jog':
         case 'Home':
@@ -357,25 +374,24 @@ function tabletGrblState(grbl) {
             break;
         case 'Check':
             setLeftButton(true, gray, 'Start', null);
-            setRightButton(true, red, 'Stop', stopGCode);
+            setRightButton(true, red, 'Stop', stopAndRecover);
             break;
     }
 
-    if (grbl.spindleSpeed) {
-        var spindleText = 'Off';
+    if (grbl.spindleDirection) {
         switch (grbl.spindleDirection) {
-            case 'M3': spindleText = 'CW'; break;
-            case 'M4': spindleText = 'CCW'; break;
-            case 'M5': spindleText = 'Off'; break;
-            default:  spindleText = 'Off'; break;
+            case 'M3': spindleDirection = 'CW'; break;
+            case 'M4': spindleDirection = 'CCW'; break;
+            case 'M5': spindleDirection = 'Off'; break;
+            default:  break;
         }
-        setText('spindle', Number(grbl.spindleSpeed) + ' RPM ' + spindleText);
+        setText('spindle-direction', spindleDirection);
     }
-    // Nonzero receivedLines is a good indicator of GCode execution
-    // as opposed to jogging, etc.
-    if (grbl.receivedLines) {
+    if (grbl.spindleSpeed) {
+        setText('spindle-speed', Number(grbl.spindleSpeed) + ' RPM');
+    }
+    if (stateName == 'Run') {
 	var elapsed = new Date().getTime() - startTime;
-	var elapsed = Math.max(elapsedTime, elapsed);
 	if (elapsed < 0)
 	    elapsed = 0;
 	var seconds = Math.floor(elapsed / 1000);
@@ -385,6 +401,7 @@ function tabletGrblState(grbl) {
 	    seconds = '0' + seconds;
 	runTime = minutes + ':' + seconds;
     } else {
+        startTime = new Date().getTime();
         runTime = "0:00";
     }
 
@@ -407,15 +424,13 @@ function tabletGrblState(grbl) {
         setText('active-state', stateText);
     }
 
-    if (grbl.receivedLines && (stateName == 'Run' || stateName == 'Hold' || stateName == 'Stop')) {
-        if (grbl.lineNumber) {
-            setText('line', grbl.lineNumber);
-            scrollToLine(grbl.lineNumber);
-        }
+    if (grbl.lineNumber && (stateName == 'Run' || stateName == 'Hold' || stateName == 'Stop')) {
+        setText('line', grbl.lineNumber);
+        scrollToLine(grbl.lineNumber);
     }
     displayer.reDrawTool(modal, MPOS);
 
-    var digits = modal.units == 'G20' ? 4 : 3;
+    var digits = modal.units == 'G20' ? 4 : 2;
 
     if (WPOS) {
         WPOS.forEach( function(pos, index) {
@@ -423,9 +438,9 @@ function tabletGrblState(grbl) {
         });
     }
 
-    //    MPOS.forEach( function(pos, index) {
-    //        setTextContent('mpos-'+axisNames[index], Number(pos*factor).toFixed(index > 2 ? 2 : digits));
-    //    });
+    MPOS.forEach( function(pos, index) {
+        setTextContent('mpos-'+axisNames[index], Number(pos*factor).toFixed(index > 2 ? 2 : digits));
+    });
 }
 
 function addOption(selector, name, isDisabled, isSelected) {
@@ -468,13 +483,13 @@ function gotFiles(data) {
     }
 }
 
-function getFileList() {
+function tabletGetFileList() {
     SendFileHttp('/upload', null, null, gotFiles, null);
 }
 
 function tabletInit() {
     requestModes();
-    getFileList();
+    tabletGetFileList();
 }
 
 function showGCode(gcode) {
@@ -509,8 +524,7 @@ function scrollToLine(lineNumber) {
     var lineHeight = parseFloat(getComputedStyle(gCodeLines).getPropertyValue('line-height'));
     var gCodeText = gCodeLines.value;
 
-    gCodeLines.scrollTop = (lineNumber-2) * lineHeight;
-    gCodeLines.select();
+    gCodeLines.scrollTop = (lineNumber) * lineHeight;
 
     var start;
     var end;
@@ -518,12 +532,12 @@ function scrollToLine(lineNumber) {
         start = 0;
         end = 1;
     } else {
-        start = (lineNumber == 1) ? 0 : start = nthLineEnd(gCodeText, lineNumber-1) + 1;
+        start = (lineNumber == 1) ? 0 : start = nthLineEnd(gCodeText, lineNumber) + 1;
         end = gCodeText.indexOf("\n", start);
     }
 
-    gCodeLines[0].selectionStart = start;
-    gCodeLines[0].selectionEnd = end;
+    gCodeLines.select();
+    gCodeLines.setSelectionRange(start, end);
 }
 
 function runGCode() {
@@ -537,11 +551,11 @@ function loadGCode() {
     if (filename === '..') {
         watchPath = watchPath.slice(0, -1).replace(/[^/]*$/,'');
         filename = '';
-        getFileList();
+        tabletGetFileList();
     } else if (filename.endsWith('/')) {
         watchPath = watchPath + filename;
         filename = '';
-        getFileList();
+        tabletGetFileList();
     } else {
         gCodeFilename = watchPath + filename;
         fetch('/SD/' + gCodeFilename)
@@ -554,7 +568,7 @@ function toggleDropdown() {
 }
 function hideMenu() { toggleDropdown(); }
 function menuFullscreen() { toggleFullscreen(); hideMenu(); }
-function menuReset() { grbl_reset(); hideMenu(); }
+function menuReset() { stopAndRecover(); hideMenu(); }
 function menuUnlock() { sendCommand('$X'); hideMenu(); }
 function menuHomeAll() { sendCommand('$H'); hideMenu(); }
 function menuHomeA() { sendCommand('$HA'); hideMenu(); }

@@ -112,6 +112,14 @@
   text-align: right;
   background-color: #f0fff0;
 }
+.mposition {
+  font-size: 10px;
+  width: 90%;
+  float: right;
+  text-align: center;
+  color: lightslategray;
+  padding: 6px 12px 6px 12px;
+}
 .load {
   font-size: 12px;
   width: 99%;
@@ -128,6 +136,11 @@ textarea {
 .tablettab .axis-position .btn {
   text-align: center;
 }
+
+.spindle {
+   text-align: center;
+}
+
 
 .btn-units {
    text-align: left;
@@ -192,10 +205,16 @@ textarea {
   .tablettab .form-control {
     font-size: 12px;
   }
+  .tablettab .mposition {
+    font-size: 12px;
+  }
 }
 @media (min-width: 640px) {
   .tablettab .btn,
   .tablettab .form-control {
+    font-size: 14px;
+  }
+  .tablettab .mposition {
     font-size: 14px;
   }
 }
@@ -220,6 +239,10 @@ textarea {
     font-size: 14px;
     height: 30px;
   }
+  .tablettab .mposition {
+    font-size: 14px;
+  }
+
   #jog-distance {
     text-align-last: right;
   }
@@ -253,6 +276,9 @@ textarea {
     font-size: 15px;
     height: 30px;
   }
+  .tablettab .mposition {
+    font-size: 15px;
+  }
   #jog-distance {
     text-align-last: right;
   }
@@ -285,6 +311,10 @@ textarea {
     font-size: 20px;
     height: 40px;
   }
+  .tablettab .mposition {
+    font-size: 20px;
+  }
+
   textarea {
     font-size: 12px;
   }
@@ -314,6 +344,10 @@ textarea {
     font-size: 28px;
     height: 52px;
   }
+  .tablettab .mposition {
+    font-size: 28px;
+  }
+
   textarea {
     font-size: 14px;
   }

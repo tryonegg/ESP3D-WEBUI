@@ -16,7 +16,7 @@ var numpad = {
     numpad.hpad.id = "numPad";
     numpad.hwrap.appendChild(numpad.hpad);
     numpad.hpad.tabindex = "0";
-    numpad.hpad.contentEditable = true;
+    numpad.hpad.contentEditable = false;
     numpad.hpad.addEventListener("keydown", numpad.keypr);
     
     // (A3) DISPLAY
@@ -48,28 +48,24 @@ var numpad = {
       buttonator("", "spacer", null);
     }          
 
-    // First row
-    // 7 to 9
+    // 7 8 9 _ Goto
     for (var i=7; i<=9; i++) { buttonator(i, "num", numpad.digit); }
     buttonator("&#10502;", "del", numpad.delete);
     spacer();
     buttonator("Goto", "goto", numpad.gotoCoordinate);
 
-
-    // Second row
-    // 4 to 6
+    // 4 5 6 C _ _
     for (var i=4; i<=6; i++) { buttonator(i, "num", numpad.digit); }
     buttonator("C", "clr", numpad.reset);
     spacer();
     spacer();
 
-    // Third row
-    // 1 to 3
+    // 1 2 3 +- Set
     for (var i=1; i<=3; i++) { buttonator(i, "num", numpad.digit); }
-    spacer();
+    buttonator("+-", "num", numpad.toggleSign);
     buttonator("Set", "set", numpad.setCoordinate);
 
-
+    // 0 . Get Cancel
     buttonator(0, "zero", numpad.digit);
     buttonator(".", "dot", numpad.dot);
     buttonator("Get", "get", numpad.recall);
@@ -80,58 +76,58 @@ var numpad = {
     document.body.appendChild(numpad.hwrap);
   },
 
-  // (B) BUTTON ACTIONS
-  // (B1) CURRENTLY SELECTED FIELD + MAX LIMIT
-  nowTarget: null, // Current selected input field
-  nowMax: 0, // Current max allowed digits
-  
-  keypr: function(event) {
-          event.preventDefault();
-          switch(event.key) {
-          case "Escape":
-          case "q":
-              numpad.hide();
-              break;
-          case "0":
-          case "1":
-          case "2":
-          case "3":
-          case "4":
-          case "5":
-          case "6":
-          case "7":
-          case "8":
-          case "9":
-              numpad.digitv(event.key);
-              break;
-          case '.':
-              numpad.dot();
-              break;
-          case 'Backspace':
-          case 'Del':
-              numpad.delete();
-              break;
-          case 'x':
-          case 'X':
-              numpad.reset();
-              break;
-          case 'c':
-          case 'C':
-              numpad.reset();
-              break;
-          case 'g':
-          case 'G':
-              numpad.recall();
-              break;
-          case 's':
-          case 'S':
-          case 'Enter':
-              numpad.setCoordinate();
-              break;
-          }
-      },
+    // (B) BUTTON ACTIONS
+    // (B1) CURRENTLY SELECTED FIELD + MAX LIMIT
+    nowTarget: null, // Current selected input field
+    nowMax: 0, // Current max allowed digits
+    
+    keypr: function(event) {
+        event.preventDefault();
+        switch(event.key) {
+            case "Escape":
+            case "q":
+                numpad.hide();
+                break;
+            case "0":
+            case "1":
+            case "2":
+            case "3":
+            case "4":
+            case "5":
+            case "6":
+            case "7":
+            case "8":
+            case "9":
+                numpad.digitv(event.key);
+                break;
+            case '.':
+                numpad.dot();
+                break;
+            case 'Backspace':
+            case 'Del':
+                numpad.delete();
+                break;
+            case 'x':
+            case 'X':
+                numpad.reset();
+                break;
+            case 'c':
+            case 'C':
+                numpad.reset();
+                break;
+            case 'g':
+            case 'G':
+                numpad.recall();
+                break;
+            case 's':
+            case 'S':
+            case 'Enter':
+                numpad.setCoordinate();
+                break;
+        }
+    },
 
-  // (B2) NUMBER (0 TO 9)
+    // (B2) NUMBER (0 TO 9)
 
     digitv: function(n) {
         var current = numpad.hdisplay.value;
@@ -148,19 +144,25 @@ var numpad = {
         numpad.digitv(this.innerHTML);
     },
 
-  // ADD DECIMAL POINT
-  dot: function(){
-    if (numpad.hdisplay.value.indexOf(".") == -1) {
-      if (numpad.hdisplay.value=="0") {
-        numpad.hdisplay.value = "0.";
-      } else {
-        numpad.hdisplay.value += ".";
-      }
-    }
-  },
+    // Change sign
+    toggleSign: function(){
+        numpad.hdisplay.value = -numpad.hdisplay.value;
+    },
 
-  // BACKSPACE
-  delete: function(){
+
+    // ADD DECIMAL POINT
+    dot: function(){
+        if (numpad.hdisplay.value.indexOf(".") == -1) {
+            if (numpad.hdisplay.value=="0") {
+                numpad.hdisplay.value = "0.";
+            } else {
+                numpad.hdisplay.value += ".";
+            }
+        }
+    },
+
+    // BACKSPACE
+    delete: function(){
     var length = numpad.hdisplay.value.length;
     if (length == 1) { numpad.hdisplay.value = 0; }
     else { numpad.hdisplay.value = numpad.hdisplay.value.substring(0, length - 1); }
@@ -233,7 +235,7 @@ var numpad = {
     // (D5) SHOW NUMPAD
     numpad.hwrap.classList.add("open"); 
 
-    numpad.hpad.focus();
+    // numpad.hpad.focus();
   },
 
   // (E) HIDE NUMPAD
