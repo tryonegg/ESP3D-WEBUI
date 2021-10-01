@@ -627,6 +627,7 @@ function files_directSD_list_success(response_text) {
         occupation: voccupation
     });
     files_build_display_filelist();
+    tabletGetFileList();
 }
 
 function files_serial_M20_list_failed(error_code, response) {

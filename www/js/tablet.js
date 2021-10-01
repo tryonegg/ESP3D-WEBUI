@@ -390,8 +390,10 @@ function tabletGrblState(grbl, response) {
     if (grbl.spindleSpeed) {
         setText('spindle-speed', Number(grbl.spindleSpeed) + ' RPM');
     }
+    var now = new Date();
+    setText('time-of-day', now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0'));
     if (stateName == 'Run') {
-	var elapsed = new Date().getTime() - startTime;
+	var elapsed = now.getTime() - startTime;
 	if (elapsed < 0)
 	    elapsed = 0;
 	var seconds = Math.floor(elapsed / 1000);
@@ -401,7 +403,7 @@ function tabletGrblState(grbl, response) {
 	    seconds = '0' + seconds;
 	runTime = minutes + ':' + seconds;
     } else {
-        startTime = new Date().getTime();
+        startTime = now.getTime();
         runTime = "0:00";
     }
 
@@ -416,7 +418,7 @@ function tabletGrblState(grbl, response) {
     if (stateName == 'Run') {
 	var rateText = modal.units == 'G21'
 	             ? Number(grbl.feedrate).toFixed(0) + ' mm/min'
-	             : Number(grbl.feedrate).toFixed(2) + ' in/min';
+	             : Number(grbl.feedrate/25.4).toFixed(2) + ' in/min';
         setText('active-state', rateText);
     } else {
         // var stateText = errorText == 'Error' ? "Error: " + errorMessage : stateName;

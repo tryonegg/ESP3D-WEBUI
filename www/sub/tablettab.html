@@ -4,7 +4,9 @@
   <div class="nav-panel">
     <div class="container-fluid">
       <div class="row no-gutter">
-        <div class="col-xs-5">
+        <div class="col-xs-1 info-button" id="time-of-day">
+        </div>
+        <div class="col-xs-4">
           <div class="active-state" id="active-state"></div>
         </div>
         <div class="col-xs-2">
@@ -480,10 +482,10 @@ Menu
               <button
                  type="button"
                  class="btn btn-default refresh"
-                 title="Refresh File List"
-                 onclick="tabletGetFileList()"
+                 title="Upload New File"
+                 onclick="files_select_upload()"
                  >
-                Rfrsh
+                Upld
               </button>
 	    </div>
             <div class="col-xs-2">

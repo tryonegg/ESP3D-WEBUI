@@ -339,7 +339,9 @@ var offset;
 ToolpathDisplayer.prototype.showToolpath = function(gcode, wpos, mpos) {
     inInches = id('units').innerText != 'mm';
 
-    var factor = inInches ? 25.4 : 1.0;
+    // Assume WPOS in mm
+    // var factor = inInches ? 25.4 : 1.0;
+    factor = 1;
 
     var initialPosition = {
         x: wpos[0] * factor,
@@ -378,7 +380,8 @@ ToolpathDisplayer.prototype.showToolpath = function(gcode, wpos, mpos) {
 ToolpathDisplayer.prototype.reDrawTool = function(modal, mpos) {
     if (toolSave != null) {
         tp.putImageData(toolSave, toolX, toolY);
-        var factor = modal.units === 'G20' ? 25.4 : 1.0;
+        var factor = 1;
+        // var factor = modal.units === 'G20' ? 25.4 : 1.0;
 
         var dpos = {
             x: mpos[0] * factor + offset.x,

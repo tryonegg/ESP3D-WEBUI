@@ -287,7 +287,7 @@ function parseGrblStatus(response) {
     return grbl;
 }
 
-function clickableFromStateName(state) {
+function clickableFromStateName(state, hasSD) {
     var clickable = {
         resume: false,
         pause: false,
@@ -303,7 +303,7 @@ function clickableFromStateName(state) {
             clickable.reset = true;
             break;
         case 'Alarm':
-            if (response.indexOf('|SD:') != -1) {
+            if (hasSD) {
                 //guess print is stopped because of alarm so no need to pause
                 clickable.resume = true;
             }
@@ -333,9 +333,9 @@ function show_grbl_position(wpos, mpos) {
     }
 }
 
-function show_grbl_status(stateName, message) {
+function show_grbl_status(stateName, message, hasSD) {
     if (stateName) {
-        var clickable = clickableFromStateName(stateName);
+        var clickable = clickableFromStateName(stateName, hasSD);
         setHTML('grbl_status', stateName);
         setClickability('sd_resume_btn', clickable.resume);
         setClickability('sd_pause_btn', clickable.pause);
@@ -406,7 +406,7 @@ function grblProcessStatus(response) {
     }
 
     show_grbl_position(WPOS, MPOS);
-    show_grbl_status(grbl.stateName, grbl.message);
+    show_grbl_status(grbl.stateName, grbl.message, grbl.sdName);
     show_grbl_SD(grbl.sdName, grbl.sdPercent);
     show_grbl_probe_status(grbl.pins && (grbl.pins.indexOf('P') != -1));
     tabletGrblState(grbl, response);
