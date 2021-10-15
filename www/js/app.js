@@ -369,7 +369,7 @@ function update_UI_firmware_target() {
         document.getElementById('control_ym_position_row').style.display = 'none';
         document.getElementById('control_zm_position_row').style.display = 'none';
     } else if (target_firmware == "grbl-embedded") {
-        fwName = "GRBL ESP32";
+        fwName = "FluidNC";
         last_grbl_pos = "";
         document.getElementById('configtablink').style.display = 'block';
         document.getElementById('auto_check_control').style.display = 'none';

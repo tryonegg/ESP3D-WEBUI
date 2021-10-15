@@ -500,7 +500,7 @@ function getESPsettingsfailed(error_code, response) {
 }
 
 function restart_esp() {
-    confirmdlg(translate_text_item("Please Confirm"), translate_text_item("Restart ESP3D"), process_restart_esp);
+    confirmdlg(translate_text_item("Please Confirm"), translate_text_item("Restart FluidNC"), process_restart_esp);
 }
 
 

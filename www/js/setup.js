@@ -101,7 +101,7 @@ function enablestep1() {
     document.getElementById("wizard_line1").style.background = "#337AB7";
     document.getElementById("step1link").disabled = "";
     document.getElementById("step1link").className = document.getElementById("step1link").className.replace(" disabled", "");
-    content += "<h4>" + translate_text_item("ESP3D Settings") + "</h4><hr>";
+    content += "<h4>" + translate_text_item("FluidNC Settings") + "</h4><hr>";
     if (!((target_firmware == "grbl-embedded") || (target_firmware == "marlin-embedded"))) {
         index = get_index_from_eeprom_pos(EP_TARGET_FW);
         content += translate_text_item("Save your printer's firmware base:");
