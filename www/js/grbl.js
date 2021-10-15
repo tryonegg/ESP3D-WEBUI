@@ -555,7 +555,7 @@ function grblHandleMessage(msg) {
         }
         return;
     }
-    if (msg.startsWith('$0=')) {
+    if (msg.startsWith('$0=') || msg.startsWith('$10=')) {
         // Start collecting settings
         collectedSettings = msg;
         return;

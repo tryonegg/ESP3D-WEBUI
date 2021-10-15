@@ -189,21 +189,6 @@ function process_config_answer(response_text) {
     var result = true;
     var tlines = response_text.split("\n");
     //console.log(tlines.length);
-    if (tlines.length <= 3) {
-        if ((target_firmware == "smoothieware") && (commandtxt != "cat /sd/config.txt")) {
-            if (!is_override_config) {
-                config_file_name = "/sd/config.txt";
-                commandtxt = "cat " + config_file_name;
-                config_configList = [];
-            }
-            getprinterconfig();
-        } else {
-            //console.log("No config file" );
-            if ((target_firmware == "smoothieware")) document.getElementById('config_status').innerHTML = translate_text_item("File config / config.txt not found!");
-            else document.getElementById('config_status').innerHTML = translate_text_item("Cannot get EEPROM content!");
-            result = false;
-        }
-    } else {
         //console.log("Config has " + tlines.length + " entries");
         var vindex = 0;
         for (var i = 0; i < tlines.length; i++) {
@@ -211,7 +196,6 @@ function process_config_answer(response_text) {
         }
         if (vindex > 0) build_HTML_config_list();
         else result = false;
-    }
 
     return result;
 }
