@@ -151,8 +151,9 @@ function build_control_from_index(index, extra_set_function) {
             }
             //text
             else {
-                content += "<input id='setting_" + i + "_" + sub_element + "' type='text' class='form-control input-min'  value='" + setting_configList[i].defaultvalue + "' onkeyup='setting_checkchange(" + i + "," + sub_element + ")' >";
-            }
+                input_type = setting_configList[i].defaultvalue.startsWith("******") ? "password" : "text";
+                content += "<input id='setting_" + i + "_" + sub_element + "' type='" + input_type + "' class='form-control input-min'  value='" + setting_configList[i].defaultvalue + "' onkeyup='setting_checkchange(" + i + "," + sub_element + ")' >";
+                }
             content += "<span id='icon_setting_" + i + "_" + sub_element + "'class='form-control-feedback ico_feedback'></span>";
             content += "<span class='input-group-addon hide_it' ></span>";
             content += "</div>";
