@@ -371,7 +371,7 @@ function update_UI_firmware_target() {
     } else if (target_firmware == "grbl-embedded") {
         fwName = "FluidNC";
         last_grbl_pos = "";
-        document.getElementById('configtablink').style.display = 'block';
+        document.getElementById('configtablink').style.display = 'none';
         document.getElementById('auto_check_control').style.display = 'none';
         document.getElementById('progress_btn').style.display = 'none';
         document.getElementById('abort_btn').style.display = 'none';
