@@ -28,6 +28,7 @@ var EP_SECONDARY_SD = 852;
 var EP_DIRECT_SD_CHECK = 853;
 var SETTINGS_AP_MODE = 1;
 var SETTINGS_STA_MODE = 2;
+var SETTINGS_FALLBACK_MODE = 3;
 var interval_ping = -1;
 var last_ping = 0;
 var enable_ping = true;
@@ -152,7 +153,7 @@ function startSocket() {
                 if (bytes[i] == 10) {
                     wsmsg += msg.replace('\r\n', '\n');
                     Monitor_output_Update(wsmsg);
-                process_socket_response(wsmsg);
+                    process_socket_response(wsmsg);
                     //msg = wsmsg.replace("\n", "");
                     //wsmsg = msg.replace("\r", "");
                     if (!((wsmsg.startsWith("ok T:") || wsmsg.startsWith("X:") || wsmsg.startsWith("FR:") ||wsmsg.startsWith("echo:E0 Flow"))))console.log(wsmsg);
@@ -188,15 +189,15 @@ function startSocket() {
                     Handle_DHT(tval[1]);
                 }
                 if (tval[0] == 'ERROR') {
-                  esp_error_message = tval[2];
-                  esp_error_code = tval[1];
-                  console.log("ERROR: " + tval[2] + " code:" +  tval[1]);
-                  CancelCurrentUpload();
+                    esp_error_message = tval[2];
+                    esp_error_code = tval[1];
+                    console.log("ERROR: " + tval[2] + " code:" +  tval[1]);
+                    CancelCurrentUpload();
                 }
                 if (tval[0] == 'MSG') {
-                  var error_message = tval[2];
-                  var error_code = tval[1];
-                  console.log("MSG: " + tval[2] + " code:" +  tval[1]);
+                    var error_message = tval[2];
+                    var error_code = tval[1];
+                    console.log("MSG: " + tval[2] + " code:" +  tval[1]);
                 }
             }
 

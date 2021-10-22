@@ -3,50 +3,79 @@
 var active_wizard_page = 0;
 var maz_page_wizard = 5;
 
+function td(value) {
+    return "<td>" + value + "</td>";
+}
+function table(value) {
+    return "<table><tr>" + value + "</tr></table>";
+}
+function heading(label) {
+    return "<h4>" + translate_text_item(label) + "</h4><hr>";
+}
+function item(label, pos, extra) {
+    return translate_text_item(label) + table(build_control_from_pos(pos, extra));
+}
+function wizardDone(element) {
+    id(element).className = id(element).className.replace(" wizard_done", "");
+}
+function disableStep(wizard, step) {
+    id(wizard).style.background = "#e0e0e0";
+    id(step).disabled = true;
+    id(step).className = "steplinks disabled";
+    wizardDone(step);
+}
+function openStep(wizard, step) {
+    id(wizard).style.background = "#337AB7";
+    id(step).disabled = "";
+    id(step).className = id(step).className.replace(" disabled", "");
+}
+function closeStep(step) {
+    if (id(step).className.indexOf(" wizard_done") == -1) {
+        id(step).className += " wizard_done";
+        if (!can_revert_wizard) id(step).className += " no_revert_wizard";
+    }
+}
+function spacer() {
+    return "<hr>\n";
+}
+function div(name) {
+    return "<div id='" + name + "'>";
+}
+function endDiv() {
+    return "</div>";
+}
+
 function setupdlg() {
     setup_is_done = false;
     language_save = language;
-    document.getElementById('main_ui').style.display = 'none';
-    document.getElementById('settings_list_data').innerHTML = "";
+    displayNone('main_ui');
+    id('settings_list_data').innerHTML = "";
     active_wizard_page = 0;
-    //reset page 1
-    document.getElementById("startsteplink").className = document.getElementById("startsteplink").className.replace(" wizard_done", "");
-    document.getElementById("wizard_button").innerHTML = translate_text_item("Start setup");
-    document.getElementById("wizard_line1").style.background = "#e0e0e0";
-    document.getElementById("step1link").disabled = true;
-    document.getElementById("step1link").className = "steplinks disabled";
-    //reset page 2
-    document.getElementById("step1link").className = document.getElementById("step1link").className.replace(" wizard_done", "");
-    document.getElementById("wizard_line2").style.background = "#e0e0e0";
-    document.getElementById("step2link").disabled = true;
-    document.getElementById("step2link").className = "steplinks disabled";
-    //reset page 3
-    document.getElementById("step2link").className = document.getElementById("step2link").className.replace(" wizard_done", "");
-    document.getElementById("wizard_line3").style.background = "#e0e0e0";
-    document.getElementById("step3link").disabled = true;
-    document.getElementById("step3link").className = "steplinks disabled";
+
+    wizardDone("startsteplink");
+
+    id("wizard_button").innerHTML = translate_text_item("Start setup");
+
+    disableStep("wizard_line1", "step1link");
+    disableStep("wizard_line2", "step2link");
+    disableStep("wizard_line3", "step3link");
+
     if (!direct_sd || (target_firmware == "grbl-embedded") || (target_firmware == "marlin-embedded")) {
-        document.getElementById("step3link").style.display = 'none';
-        document.getElementById("wizard_line4").style.display = 'none';
+        displayNone("step3link");
+        displayNone("wizard_line4")
     } else {
-        document.getElementById("step3link").style.display = 'block';
-        document.getElementById("wizard_line4").style.display = 'block';
+        displayBlock("step3link");
+        displayBlock("wizard_line4")
     }
-    //reset page 4
-    document.getElementById("step3link").className = document.getElementById("step3link").className.replace(" wizard_done", "");
-    document.getElementById("wizard_line4").style.background = "#e0e0e0";
-    document.getElementById("endsteplink").disabled = true;
-    document.getElementById("endsteplink").className = "steplinks disabled";
-    var content = "<table><tr><td>";
-    content += get_icon_svg("flag") + "&nbsp;</td><td>";
-    content += build_language_list("language_selection");
-    content += "</td></tr></table>";
-    document.getElementById("setup_langage_list").innerHTML = content;
+    disableStep("wizard_line4", "endsteplink");
+
+    var content = table( td(get_icon_svg("flag") + "&nbsp;") + td(build_language_list("language_selection")));
+    id("setup_langage_list").innerHTML = content;
 
     var modal = setactiveModal('setupdlg.html', setupdone);
     if (modal == null) return;
     showModal();
-    document.getElementById("startsteplink", true).click();
+    id("startsteplink", true).click();
 }
 
 
@@ -55,9 +84,8 @@ function setupdone(response) {
     do_not_build_settings = false;
     build_HTML_setting_list(current_setting_filter);
     translate_text(language_save);
-    document.getElementById('main_ui').style.display = 'block';
+    displayBlock('main_ui');
     closeModal("setup done");
-
 }
 
 function continue_setup_wizard() {
@@ -75,7 +103,7 @@ function continue_setup_wizard() {
         case 3:
             if (!direct_sd || (target_firmware == "grbl-embedded") || (target_firmware == "marlin-embedded")) {
                 active_wizard_page++;
-                document.getElementById("wizard_line3").style.background = "#337AB7";
+                id("wizard_line3").style.background = "#337AB7";
                 enablestep4();
             } else enablestep3();
             break;
@@ -92,159 +120,106 @@ function continue_setup_wizard() {
 
 function enablestep1() {
     var content = "";
-    var index = 0;
-    if (document.getElementById("startsteplink").className.indexOf(" wizard_done") == -1) {
-        document.getElementById("startsteplink").className += " wizard_done";
-        if (!can_revert_wizard) document.getElementById("startsteplink").className += " no_revert_wizard";
-    }
-    document.getElementById("wizard_button").innerHTML = translate_text_item("Continue");
-    document.getElementById("wizard_line1").style.background = "#337AB7";
-    document.getElementById("step1link").disabled = "";
-    document.getElementById("step1link").className = document.getElementById("step1link").className.replace(" disabled", "");
-    content += "<h4>" + translate_text_item("FluidNC Settings") + "</h4><hr>";
+    closeStep("startsteplink")
+    id("wizard_button").innerHTML = translate_text_item("Continue");
+    openStep("wizard_line1", "step1link");
+    content += heading("FluidNC Settings");
     if (!((target_firmware == "grbl-embedded") || (target_firmware == "marlin-embedded"))) {
-        index = get_index_from_eeprom_pos(EP_TARGET_FW);
+
         content += translate_text_item("Save your printer's firmware base:");
-        content += build_control_from_index(index);
+        content += build_control_from_pos(EP_TARGET_FW);
         content += translate_text_item("This is mandatory to get ESP working properly.");
-        content += "<hr>\n";
-        index = get_index_from_eeprom_pos(EP_BAUD_RATE);
+        content += spacer();
+
         content += translate_text_item("Save your printer's board current baud rate:");
-        content += build_control_from_index(index);
+        content += build_control_from_pos(EP_BAUD_RATE);
         content += translate_text_item("Printer and ESP board must use same baud rate to communicate properly.") + "<br>";
-        content += "<hr>\n";
+        content += spacer();
     }
-    index = get_index_from_eeprom_pos(EP_HOSTNAME);
-    content += translate_text_item("Define ESP name:") + "<table><tr><td>";
-    content += build_control_from_index(index);
-    content += "</td></tr></table>";
+    content += item("Define ESP name:", EP_HOSTNAME);
 
-    document.getElementById("step1").innerHTML = content
-    document.getElementById("step1link").click();
-}
-
-function define_esp_role(index) {
-    if (!((setting_configList[index].defaultvalue == SETTINGS_AP_MODE) || (setting_configList[index].defaultvalue == SETTINGS_STA_MODE))) {
-        document.getElementById("setup_STA").style.display = "none";
-        document.getElementById("setup_AP").style.display = "none";
-    }
-    if (setting_configList[index].defaultvalue == SETTINGS_AP_MODE) {
-        document.getElementById("setup_STA").style.display = "none";
-        document.getElementById("setup_AP").style.display = "block";
-    }
-    if (setting_configList[index].defaultvalue == SETTINGS_STA_MODE) {
-        document.getElementById("setup_STA").style.display = "block";
-        document.getElementById("setup_AP").style.display = "none";
-    }
+    id("step1").innerHTML = content
+    id("step1link").click();
 }
 
 function enablestep2() {
     var content = "";
-    if (document.getElementById("step1link").className.indexOf("wizard_done") == -1) {
-        document.getElementById("step1link").className += " wizard_done";
-        if (!can_revert_wizard) document.getElementById("step1link").className += " no_revert_wizard";
-    }
-    document.getElementById("wizard_line2").style.background = "#337AB7";
-    document.getElementById("step2link").disabled = "";
-    document.getElementById("step2link").className = document.getElementById("step2link").className.replace(" disabled", "");
-    index = get_index_from_eeprom_pos(EP_WIFI_MODE);
-    content += "<h4>" + translate_text_item("WiFi Configuration") + "</h4><hr>";
-    content += translate_text_item("Define ESP role:") + "<table><tr><td>";
-    content += build_control_from_index(index, "define_esp_role");
-    content += "</td></tr></table>" + translate_text_item("AP define access point / STA allows to join existing network") + "<br>";
-    content += "<hr>\n";
-    index = get_index_from_eeprom_pos(EP_STA_SSID);
-    content += "<div id='setup_STA'>";
-    content += translate_text_item("What access point ESP need to be connected to:") + "<table><tr><td>";
-    content += build_control_from_index(index);
-    content += "</td></tr></table>" + translate_text_item("You can use scan button, to list available access points.") + "<br>";
-    content += "<hr>\n";
-    index = get_index_from_eeprom_pos(EP_STA_PASSWORD);
-    content += translate_text_item("Password to join access point:") + "<table><tr><td>";
-    content += build_control_from_index(index);
-    content += "</td></tr></table>";
-    content += "</div>";
-    content += "<div id='setup_AP'>";
-    content += translate_text_item("What is ESP access point SSID:") + "<table><tr><td>";
-    index = get_index_from_eeprom_pos(EP_AP_SSID);
-    content += build_control_from_index(index);
-    content += "</td></tr></table>";
-    content += "<hr>\n";
-    index = get_index_from_eeprom_pos(EP_AP_PASSWORD);
-    content += translate_text_item("Password for access point:") + "<table><tr><td>";
-    content += build_control_from_index(index);
-    content += "</td></tr></table>";
+    closeStep("step1link");
+    openStep("wizard_line2", "step2link");
+    content += heading("WiFi Configuration");
+
+    content += item("Define ESP role:", EP_WIFI_MODE, "define_esp_role");
+    content += translate_text_item("AP define access point / STA allows to join existing network") + "<br>";
+    content += spacer();
+
+    content += div("setup_STA");
+
+    content += item("What access point ESP need to be connected to:", EP_STA_SSID);
+    content += translate_text_item("You can use scan button, to list available access points.") + "<br>";
+    content += spacer();
+
+    content += item("Password to join access point:", EP_STA_PASSWORD);
+    content += endDiv();
+
+    content += div("setup_AP");
+
+    content += item("What is ESP access point SSID:", EP_AP_SSID);
+    content += spacer();
+
+    content += item("Password for access point:", EP_AP_PASSWORD);
     if (!((target_firmware == "grbl-embedded") || (target_firmware == "marlin-embedded"))) {
-        content += "<hr>\n";
-        content += translate_text_item("Define security:") + "<table><tr><td>";
-        index = get_index_from_eeprom_pos(EP_AUTH_TYPE);
-        content += build_control_from_index(index);
-        content += "</td></tr></table>";
+        content += spacer();
+        content += item("Define security:", EP_AUTH_TYPE);
     }
-    content += "</div>";
-    document.getElementById("step2").innerHTML = content;
-    define_esp_role(get_index_from_eeprom_pos(EP_WIFI_MODE));
-    document.getElementById("step2link").click();
+
+    content += endDiv();
+
+    id("step2").innerHTML = content;
+    define_esp_role_from_pos(EP_WIFI_MODE);
+    id("step2link").click();
 }
 
 function define_sd_role(index) {
     if (setting_configList[index].defaultvalue == 1) {
-        document.getElementById("setup_SD").style.display = "block";
-        if (target_firmware == "smoothieware") document.getElementById("setup_primary_SD").style.display = "block";
-        else document.getElementById("setup_primary_SD").style.display = "none";
+        displayBlock("setup_SD");
+        if (target_firmware == "smoothieware") displayBlock("setup_primary_SD");
+        else displayNone("setup_primary_SD");;
     } else {
-        document.getElementById("setup_SD").style.display = "none";
-        document.getElementById("setup_primary_SD").style.display = "none";
+        displayNone("setup_SD");
+        displayNone("setup_primary_SD");
     }
 }
 
 function enablestep3() {
     var content = "";
-    if (document.getElementById("step2link").className.indexOf("wizard_done") == -1) {
-        document.getElementById("step2link").className += " wizard_done";
-        if (!can_revert_wizard) document.getElementById("step2link").className += " no_revert_wizard";
-    }
-    document.getElementById("wizard_line3").style.background = "#337AB7";
-    document.getElementById("step3link").disabled = "";
-    document.getElementById("step3link").className = document.getElementById("step3link").className.replace(" disabled", "");
-    index = get_index_from_eeprom_pos(EP_IS_DIRECT_SD);
-    content += "<h4>" + translate_text_item("SD Card Configuration") + "</h4><hr>";
-    content += translate_text_item("Is ESP connected to SD card:") + "<table><tr><td>";
-    content += build_control_from_index(index, "define_sd_role");
-    content += "</td></tr></table>";
-    content += "<hr>\n";
-    content += "<div id='setup_SD'>";
-    index = get_index_from_eeprom_pos(EP_DIRECT_SD_CHECK);
-    content += translate_text_item("Check update using direct SD access:") + "<table><tr><td>";
-    content += build_control_from_index(index);
-    content += "</td></tr></table>";
-    content += "<hr>\n";
-    content += "<div id='setup_primary_SD'>";
-    index = get_index_from_eeprom_pos(EP_PRIMARY_SD);
-    content += translate_text_item("SD card connected to ESP") + "<table><tr><td>";
-    content += build_control_from_index(index);
-    content += "</td></tr></table>";
-    content += "<hr>\n";
-    index = get_index_from_eeprom_pos(EP_SECONDARY_SD);
-    content += translate_text_item("SD card connected to printer") + "<table><tr><td>";
-    content += build_control_from_index(index);
-    content += "</td></tr></table>";
-    content += "<hr>\n";
-    content += "</div>";
-    content += "</div>";
-    document.getElementById("step3").innerHTML = content;
+    closeStep("step2link");
+    openStep("wizard_line3", "step3link");
+    content += heading("SD Card Configuration");
+    content += item("Is ESP connected to SD card:", EP_IS_DIRECT_SD, "define_sd_role");
+    content += spacer();
+
+    content += div("setup_SD");
+    content += item("Check update using direct SD access:", EP_DIRECT_SD_CHECK);
+    content += spacer();
+
+    content += div("setup_primary_SD");
+    content += item("SD card connected to ESP", EP_PRIMARY_SD);
+    content += spacer();
+
+    content += item("SD card connected to printer", EP_SECONDARY_SD);
+    content += spacer();
+    content += endDiv();
+
+    content += endDiv();
+
+    id("step3").innerHTML = content;
     define_sd_role(get_index_from_eeprom_pos(EP_IS_DIRECT_SD));
-    document.getElementById("step3link").click();
+    id("step3link").click();
 }
 
 function enablestep4() {
-    if (document.getElementById("step3link").className.indexOf("wizard_done") == -1) {
-        document.getElementById("step3link").className += " wizard_done";
-        if (!can_revert_wizard) document.getElementById("step3link").className += " no_revert_wizard";
-    }
-    document.getElementById("wizard_button").innerHTML = translate_text_item("Close");
-    document.getElementById("wizard_line4").style.background = "#337AB7";
-    document.getElementById("endsteplink").disabled = "";
-    document.getElementById("endsteplink").className = document.getElementById("endsteplink").className.replace(" disabled", "");
-    document.getElementById("endsteplink").click();
+    closeStep("step3link");
+    id("wizard_button").innerHTML = translate_text_item("Close");
+    openStep("wizard_line4", "endsteplink");
+    id("endsteplink").click();
 }
