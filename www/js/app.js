@@ -494,7 +494,21 @@ function update_UI_firmware_target() {
         fwName = "Unknown";
         document.getElementById('configtablink').style.display = 'none';
     }
-    if ((target_firmware == "grbl-embedded") || target_firmware == "marlin-embedded") {
+    if (target_firmware == "grbl-embedded") {
+        EP_HOSTNAME = "Hostname";
+        EP_STA_SSID = "Sta/SSID";
+        EP_STA_PASSWORD = "Sta/Password";
+        EP_STA_IP_MODE = "Sta/IPMode";
+        EP_STA_IP_VALUE = "Sta/IP";
+        EP_STA_GW_VALUE = "Sta/Gateway";
+        EP_STA_MK_VALUE = "Sta/Netmask";
+        EP_WIFI_MODE = "WiFi/Mode";
+        EP_AP_SSID = "AP/SSID";
+        EP_AP_PASSWORD = "AP/Password";
+        EP_AP_IP_VALUE = "AP/IP";
+        SETTINGS_AP_MODE = 2;
+        SETTINGS_STA_MODE = 1;
+    } else if (target_firmware == "marlin-embedded") {
         EP_HOSTNAME = "ESP_HOSTNAME";
         EP_STA_SSID = "STA_SSID";
         EP_STA_PASSWORD = "STA_PWD";
@@ -502,11 +516,7 @@ function update_UI_firmware_target() {
         EP_STA_IP_VALUE = "STA_IP";
         EP_STA_GW_VALUE = "STA_GW";
         EP_STA_MK_VALUE = "STA_MK";
-        if (target_firmware == "grbl-embedded") {
-            EP_WIFI_MODE = "RADIO_MODE";
-        } else {
-            EP_WIFI_MODE = "WIFI_MODE";
-        }
+        EP_WIFI_MODE = "WIFI_MODE";
         EP_AP_SSID = "AP_SSID";
         EP_AP_PASSWORD = "AP_PWD";
         EP_AP_IP_VALUE = "AP_IP";
