@@ -102,16 +102,16 @@ function browser_is(bname) {
 
 window.onload = function() {
     //to check if javascript is disabled like in anroid preview
-    document.getElementById('loadingmsg').style.display = 'none';
+    id('loadingmsg').style.display = 'none';
     console.log("Connect to board");
     connectdlg();
     //ugly hack for IE
     console.log(navigator.userAgent);
     if (browser_is("IE")) {
-        document.getElementById('control-body').className = "panel-body";
-        document.getElementById('extruder-body').className = "panel-body panel-height";
-        document.getElementById('command-body').className = "panel-body";
-        document.getElementById('file-body').className = "panel-body panel-height panel-max-height panel-scroll";
+        id('control-body').className = "panel-body";
+        id('extruder-body').className = "panel-body panel-height";
+        id('command-body').className = "panel-body";
+        id('file-body').className = "panel-body panel-height panel-max-height panel-scroll";
     }
     tabletInit();
 };
@@ -236,26 +236,26 @@ function ontogglePing(forcevalue) {
 }
 
 function ontoggleLock(forcevalue) {
-    if (typeof forcevalue != 'undefined') document.getElementById('lock_UI').checked = forcevalue;
-    if (document.getElementById('lock_UI').checked) {
-        document.getElementById('lock_UI_btn_txt').innerHTML = translate_text_item("Unlock interface");
-        disable_items(document.getElementById('maintab'), true);
-        disable_items(document.getElementById('configtab'), true);
-        document.getElementById('progress_btn').disabled = false;
-        document.getElementById('clear_monitor_btn').disabled = false;
-        document.getElementById('monitor_enable_verbose_mode').disabled = false;
-        document.getElementById('monitor_enable_autoscroll').disabled = false;
-        document.getElementById('settings_update_fw_btn').disabled = true;
-        document.getElementById('settings_restart_btn').disabled = true;
-        disable_items(document.getElementById('JogUI'), false);
-        document.getElementById('JogUI').style.pointerEvents = 'none';
+    if (typeof forcevalue != 'undefined') id('lock_UI').checked = forcevalue;
+    if (id('lock_UI').checked) {
+        id('lock_UI_btn_txt').innerHTML = translate_text_item("Unlock interface");
+        disable_items(id('maintab'), true);
+        disable_items(id('configtab'), true);
+        id('progress_btn').disabled = false;
+        id('clear_monitor_btn').disabled = false;
+        id('monitor_enable_verbose_mode').disabled = false;
+        id('monitor_enable_autoscroll').disabled = false;
+        id('settings_update_fw_btn').disabled = true;
+        id('settings_restart_btn').disabled = true;
+        disable_items(id('JogUI'), false);
+        id('JogUI').style.pointerEvents = 'none';
     } else {
-        document.getElementById('lock_UI_btn_txt').innerHTML = translate_text_item("Lock interface");
-        disable_items(document.getElementById('maintab'), false);
-        disable_items(document.getElementById('configtab'), false);
-        document.getElementById('settings_update_fw_btn').disabled = false;
-        document.getElementById('settings_restart_btn').disabled = false;
-        document.getElementById('JogUI').style.pointerEvents = 'auto';
+        id('lock_UI_btn_txt').innerHTML = translate_text_item("Lock interface");
+        disable_items(id('maintab'), false);
+        disable_items(id('configtab'), false);
+        id('settings_update_fw_btn').disabled = false;
+        id('settings_restart_btn').disabled = false;
+        id('JogUI').style.pointerEvents = 'auto';
     }
 }
 
@@ -267,11 +267,11 @@ function Handle_DHT(data) {
         return;
     }
     var temp = (convertDHT2Fahrenheit) ? (parseFloat(tdata[0]) * 1.8) + 32 : parseFloat(tdata[0]);
-    document.getElementById('DHT_humidity').innerHTML = parseFloat(tdata[1]).toFixed(2).toString() + "%";
+    id('DHT_humidity').innerHTML = parseFloat(tdata[1]).toFixed(2).toString() + "%";
     var temps = temp.toFixed(2).toString() + "&deg;";
     if (convertDHT2Fahrenheit) temps += "F";
     else temps += "C";
-    document.getElementById('DHT_temperature').innerHTML = temps;
+    id('DHT_temperature').innerHTML = temps;
 }
 //window.addEventListener("resize", OnresizeWindow);
 
@@ -286,7 +286,7 @@ function display_boot_progress(step) {
     current_boot_steps += val;
     //console.log(current_boot_steps);
     //console.log(Math.round((current_boot_steps*100)/total_boot_steps));
-    document.getElementById('load_prg').value = Math.round((current_boot_steps * 100) / total_boot_steps);
+    id('load_prg').value = Math.round((current_boot_steps * 100) / total_boot_steps);
 }
 
 
@@ -300,7 +300,7 @@ function Disable_interface(lostconnection) {
     //clear all waiting commands
     clear_cmd_list();
     //no camera 
-    document.getElementById('camera_frame').src = "";
+    id('camera_frame').src = "";
     //No auto check
     on_autocheck_position(false);
     on_autocheck_temperature(false);
@@ -318,182 +318,182 @@ function Disable_interface(lostconnection) {
 function update_UI_firmware_target() {
     var fwName;
     initpreferences();
-    document.getElementById('control_x_position_label').innerHTML = "X";
-    document.getElementById('control_y_position_label').innerHTML = "Y";
-    document.getElementById('control_z_position_label').innerHTML = "Z";
-    document.getElementById('config_smoothie_nav').style.display = 'none';
+    id('control_x_position_label').innerHTML = "X";
+    id('control_y_position_label').innerHTML = "Y";
+    id('control_z_position_label').innerHTML = "Z";
+    id('config_smoothie_nav').style.display = 'none';
     showAxiscontrols();
     if (target_firmware == "repetier") {
         fwName = "Repetier";
-        document.getElementById('configtablink').style.display = 'block';
-        document.getElementById('auto_check_control').style.display = 'flex';
-        document.getElementById('motor_off_control').style.display = 'table-row';
-        document.getElementById('progress_btn').style.display = 'table-row';
-        document.getElementById('abort_btn').style.display = 'table-row';
-        document.getElementById('grblPanel').style.display = 'none';
-        document.getElementById('zero_xyz_btn').style.display = 'none';
-        document.getElementById('zero_x_btn').style.display = 'none';
-        document.getElementById('zero_y_btn').style.display = 'none';
-        document.getElementById('zero_z_btn').style.display = 'none';
-        document.getElementById('control_xm_position_row').style.display = 'none';
-        document.getElementById('control_ym_position_row').style.display = 'none';
-        document.getElementById('control_zm_position_row').style.display = 'none';
+        id('configtablink').style.display = 'block';
+        id('auto_check_control').style.display = 'flex';
+        id('motor_off_control').style.display = 'table-row';
+        id('progress_btn').style.display = 'table-row';
+        id('abort_btn').style.display = 'table-row';
+        id('grblPanel').style.display = 'none';
+        id('zero_xyz_btn').style.display = 'none';
+        id('zero_x_btn').style.display = 'none';
+        id('zero_y_btn').style.display = 'none';
+        id('zero_z_btn').style.display = 'none';
+        id('control_xm_position_row').style.display = 'none';
+        id('control_ym_position_row').style.display = 'none';
+        id('control_zm_position_row').style.display = 'none';
     } else if (target_firmware == "repetier4davinci") {
         fwName = "Repetier for Davinci";
-        document.getElementById('configtablink').style.display = 'block';
-        document.getElementById('auto_check_control').style.display = 'flex';
-        document.getElementById('motor_off_control').style.display = 'table-row';
-        document.getElementById('progress_btn').style.display = 'table-row';
-        document.getElementById('abort_btn').style.display = 'table-row';
-        document.getElementById('grblPanel').style.display = 'none';
-        document.getElementById('zero_xyz_btn').style.display = 'none';
-        document.getElementById('zero_x_btn').style.display = 'none';
-        document.getElementById('zero_y_btn').style.display = 'none';
-        document.getElementById('zero_z_btn').style.display = 'none';
-        document.getElementById('control_xm_position_row').style.display = 'none';
-        document.getElementById('control_ym_position_row').style.display = 'none';
-        document.getElementById('control_zm_position_row').style.display = 'none';
+        id('configtablink').style.display = 'block';
+        id('auto_check_control').style.display = 'flex';
+        id('motor_off_control').style.display = 'table-row';
+        id('progress_btn').style.display = 'table-row';
+        id('abort_btn').style.display = 'table-row';
+        id('grblPanel').style.display = 'none';
+        id('zero_xyz_btn').style.display = 'none';
+        id('zero_x_btn').style.display = 'none';
+        id('zero_y_btn').style.display = 'none';
+        id('zero_z_btn').style.display = 'none';
+        id('control_xm_position_row').style.display = 'none';
+        id('control_ym_position_row').style.display = 'none';
+        id('control_zm_position_row').style.display = 'none';
     } else if (target_firmware == "smoothieware") {
         fwName = "Smoothieware";
-        document.getElementById('configtablink').style.display = 'block';
-        document.getElementById('config_smoothie_nav').style.display = 'block';
-        document.getElementById('auto_check_control').style.display = 'flex';
-        document.getElementById('motor_off_control').style.display = 'table-row';
-        document.getElementById('progress_btn').style.display = 'table-row';
-        document.getElementById('abort_btn').style.display = 'table-row';
-        document.getElementById('grblPanel').style.display = 'none';
-        document.getElementById('zero_xyz_btn').style.display = 'none';
-        document.getElementById('zero_x_btn').style.display = 'none';
-        document.getElementById('zero_y_btn').style.display = 'none';
-        document.getElementById('zero_z_btn').style.display = 'none';
-        document.getElementById('control_xm_position_row').style.display = 'none';
-        document.getElementById('control_ym_position_row').style.display = 'none';
-        document.getElementById('control_zm_position_row').style.display = 'none';
+        id('configtablink').style.display = 'block';
+        id('config_smoothie_nav').style.display = 'block';
+        id('auto_check_control').style.display = 'flex';
+        id('motor_off_control').style.display = 'table-row';
+        id('progress_btn').style.display = 'table-row';
+        id('abort_btn').style.display = 'table-row';
+        id('grblPanel').style.display = 'none';
+        id('zero_xyz_btn').style.display = 'none';
+        id('zero_x_btn').style.display = 'none';
+        id('zero_y_btn').style.display = 'none';
+        id('zero_z_btn').style.display = 'none';
+        id('control_xm_position_row').style.display = 'none';
+        id('control_ym_position_row').style.display = 'none';
+        id('control_zm_position_row').style.display = 'none';
     } else if (target_firmware == "grbl-embedded") {
         fwName = "FluidNC";
         last_grbl_pos = "";
-        document.getElementById('configtablink').style.display = 'none';
-        document.getElementById('auto_check_control').style.display = 'none';
-        document.getElementById('progress_btn').style.display = 'none';
-        document.getElementById('abort_btn').style.display = 'none';
-        document.getElementById('motor_off_control').style.display = 'none';
-        document.getElementById('tab_title_configuration').innerHTML = "<span translate>GRBL configuration</span>";
-        document.getElementById('tab_printer_configuration').innerHTML = "<span translate>GRBL</span>";
-        document.getElementById('files_input_file').accept = " .g, .gco, .gcode, .txt, .ncc, .G, .GCO, .GCODE, .TXT, .NC";
-        document.getElementById('zero_xyz_btn').style.display = 'block';
-        document.getElementById('zero_x_btn').style.display = 'block';
-        document.getElementById('zero_y_btn').style.display = 'block';
+        id('configtablink').style.display = 'none';
+        id('auto_check_control').style.display = 'none';
+        id('progress_btn').style.display = 'none';
+        id('abort_btn').style.display = 'none';
+        id('motor_off_control').style.display = 'none';
+        id('tab_title_configuration').innerHTML = "<span translate>GRBL configuration</span>";
+        id('tab_printer_configuration').innerHTML = "<span translate>GRBL</span>";
+        id('files_input_file').accept = " .g, .gco, .gcode, .txt, .ncc, .G, .GCO, .GCODE, .TXT, .NC";
+        id('zero_xyz_btn').style.display = 'block';
+        id('zero_x_btn').style.display = 'block';
+        id('zero_y_btn').style.display = 'block';
         if (grblaxis >2) {
-            //document.getElementById('control_z_position_display').style.display = 'block';
-            document.getElementById('control_z_position_label').innerHTML = "Zw";
-            document.getElementById('zero_xyz_btn_txt').innerHTML +="Z";
+            //id('control_z_position_display').style.display = 'block';
+            id('control_z_position_label').innerHTML = "Zw";
+            id('zero_xyz_btn_txt').innerHTML +="Z";
             grblzerocmd += " Z0";
             
         } else {
             hideAxiscontrols();
-            document.getElementById('preferences_control_z_velocity_group').style.display = 'none';
+            id('preferences_control_z_velocity_group').style.display = 'none';
         }
         if (grblaxis >3) {
             
-            document.getElementById('zero_xyz_btn_txt').innerHTML +="A";
+            id('zero_xyz_btn_txt').innerHTML +="A";
             grblzerocmd += " A0";
             build_axis_selection();
-            document.getElementById('preferences_control_a_velocity_group').style.display = 'block';
-            document.getElementById('positions_labels2').style.display = 'inline-grid';
-            document.getElementById('control_a_position_display').style.display = 'block';
+            id('preferences_control_a_velocity_group').style.display = 'block';
+            id('positions_labels2').style.display = 'inline-grid';
+            id('control_a_position_display').style.display = 'block';
         } 
         if (grblaxis >4) {
-            document.getElementById('control_b_position_display').style.display = 'block';
-            document.getElementById('zero_xyz_btn_txt').innerHTML +="B";
+            id('control_b_position_display').style.display = 'block';
+            id('zero_xyz_btn_txt').innerHTML +="B";
             grblzerocmd += " B0";
-            document.getElementById('preferences_control_b_velocity_group').style.display = 'block';
+            id('preferences_control_b_velocity_group').style.display = 'block';
         } 
         if (grblaxis >5) {
-            document.getElementById('control_c_position_display').style.display = 'block';
-            document.getElementById('zero_xyz_btn_txt').innerHTML +="C";
-            document.getElementById('preferences_control_c_velocity_group').style.display = 'block';
+            id('control_c_position_display').style.display = 'block';
+            id('zero_xyz_btn_txt').innerHTML +="C";
+            id('preferences_control_c_velocity_group').style.display = 'block';
             
         } else {
-            document.getElementById('control_c_position_display').style.display = 'none';
+            id('control_c_position_display').style.display = 'none';
         }
-        document.getElementById('grblPanel').style.display = 'flex';
-        document.getElementById('FW_github').href = 'https://github.com/bdring/Grbl_Esp32';
-        document.getElementById('settings_filters').style.display = 'none';
-        document.getElementById('control_x_position_label').innerHTML = "Xw";
-        document.getElementById('control_y_position_label').innerHTML = "Yw";
+        id('grblPanel').style.display = 'flex';
+        id('FW_github').href = 'https://github.com/bdring/Grbl_Esp32';
+        id('settings_filters').style.display = 'none';
+        id('control_x_position_label').innerHTML = "Xw";
+        id('control_y_position_label').innerHTML = "Yw";
         
 
     } else if (target_firmware == "marlin-embedded") {
         fwName = "Marlin ESP32";
-        document.getElementById('configtablink').style.display = 'block';
-        document.getElementById('auto_check_control').style.display = 'flex';
-        document.getElementById('motor_off_control').style.display = 'table-row';
-        document.getElementById('progress_btn').style.display = 'table-row';
-        document.getElementById('abort_btn').style.display = 'table-row';
-        document.getElementById('zero_xyz_btn').style.display = 'none';
-        document.getElementById('zero_x_btn').style.display = 'none';
-        document.getElementById('zero_y_btn').style.display = 'none';
-        document.getElementById('zero_z_btn').style.display = 'none';
-        document.getElementById('grblPanel').style.display = 'none';
-        document.getElementById('FW_github').href = 'https://github.com/MarlinFirmware/Marlin';
-        document.getElementById('settings_filters').style.display = 'none';
-        document.getElementById('control_xm_position_row').style.display = 'none';
-        document.getElementById('control_ym_position_row').style.display = 'none';
-        document.getElementById('control_zm_position_row').style.display = 'none';
+        id('configtablink').style.display = 'block';
+        id('auto_check_control').style.display = 'flex';
+        id('motor_off_control').style.display = 'table-row';
+        id('progress_btn').style.display = 'table-row';
+        id('abort_btn').style.display = 'table-row';
+        id('zero_xyz_btn').style.display = 'none';
+        id('zero_x_btn').style.display = 'none';
+        id('zero_y_btn').style.display = 'none';
+        id('zero_z_btn').style.display = 'none';
+        id('grblPanel').style.display = 'none';
+        id('FW_github').href = 'https://github.com/MarlinFirmware/Marlin';
+        id('settings_filters').style.display = 'none';
+        id('control_xm_position_row').style.display = 'none';
+        id('control_ym_position_row').style.display = 'none';
+        id('control_zm_position_row').style.display = 'none';
     } else if (target_firmware == "marlin") {
         fwName = "Marlin";
-        document.getElementById('configtablink').style.display = 'block';
-        document.getElementById('auto_check_control').style.display = 'flex';
-        document.getElementById('motor_off_control').style.display = 'table-row';
-        document.getElementById('progress_btn').style.display = 'table-row';
-        document.getElementById('abort_btn').style.display = 'table-row';
-        document.getElementById('zero_xyz_btn').style.display = 'none';
-        document.getElementById('zero_x_btn').style.display = 'none';
-        document.getElementById('zero_y_btn').style.display = 'none';
-        document.getElementById('zero_z_btn').style.display = 'none';
-        document.getElementById('grblPanel').style.display = 'none';
-        document.getElementById('control_xm_position_row').style.display = 'none';
-        document.getElementById('control_ym_position_row').style.display = 'none';
-        document.getElementById('control_zm_position_row').style.display = 'none';
+        id('configtablink').style.display = 'block';
+        id('auto_check_control').style.display = 'flex';
+        id('motor_off_control').style.display = 'table-row';
+        id('progress_btn').style.display = 'table-row';
+        id('abort_btn').style.display = 'table-row';
+        id('zero_xyz_btn').style.display = 'none';
+        id('zero_x_btn').style.display = 'none';
+        id('zero_y_btn').style.display = 'none';
+        id('zero_z_btn').style.display = 'none';
+        id('grblPanel').style.display = 'none';
+        id('control_xm_position_row').style.display = 'none';
+        id('control_ym_position_row').style.display = 'none';
+        id('control_zm_position_row').style.display = 'none';
     } else if (target_firmware == "marlinkimbra") {
         fwName = "Marlin Kimbra";
-        document.getElementById('configtablink').style.display = 'block';
-        document.getElementById('auto_check_control').style.display = 'flex';
-        document.getElementById('motor_off_control').style.display = 'table-row';
-        document.getElementById('progress_btn').style.display = 'table-row';
-        document.getElementById('abort_btn').style.display = 'table-row';
-        document.getElementById('zero_xyz_btn').style.display = 'none';
-        document.getElementById('zero_x_btn').style.display = 'none';
-        document.getElementById('zero_y_btn').style.display = 'none';
-        document.getElementById('zero_z_btn').style.display = 'none';
-        document.getElementById('grblPanel').style.display = 'none';
-        document.getElementById('control_xm_position_row').style.display = 'none';
-        document.getElementById('control_ym_position_row').style.display = 'none';
-        document.getElementById('control_zm_position_row').style.display = 'none';
+        id('configtablink').style.display = 'block';
+        id('auto_check_control').style.display = 'flex';
+        id('motor_off_control').style.display = 'table-row';
+        id('progress_btn').style.display = 'table-row';
+        id('abort_btn').style.display = 'table-row';
+        id('zero_xyz_btn').style.display = 'none';
+        id('zero_x_btn').style.display = 'none';
+        id('zero_y_btn').style.display = 'none';
+        id('zero_z_btn').style.display = 'none';
+        id('grblPanel').style.display = 'none';
+        id('control_xm_position_row').style.display = 'none';
+        id('control_ym_position_row').style.display = 'none';
+        id('control_zm_position_row').style.display = 'none';
     } else if (target_firmware == "grbl") {
         fwName = "Grbl";
-        document.getElementById('configtablink').style.display = 'block';
-        document.getElementById('tab_title_configuration').innerHTML = "<span translate>GRBL configuration</span>";
-        document.getElementById('tab_printer_configuration').innerHTML = "<span translate>GRBL</span>";
-        document.getElementById('files_input_file').accept = " .g, .gco, .gcode, .txt, .ncc, .G, .GCO, .GCODE, .TXT, .NC";
-        document.getElementById('auto_check_control').style.display = 'none';
-        document.getElementById('motor_off_control').style.display = 'none';
-        document.getElementById('progress_btn').style.display = 'none';
-        document.getElementById('abort_btn').style.display = 'none';
-        document.getElementById('zero_xyz_btn').style.display = 'block';
-        document.getElementById('zero_x_btn').style.display = 'block';
-        document.getElementById('zero_y_btn').style.display = 'block';
-        document.getElementById('zero_z_btn').style.display = 'block';
-        document.getElementById('grblPanel').style.display = 'flex';
-        document.getElementById('control_x_position_label').innerHTML = "Xw";
-        document.getElementById('control_y_position_label').innerHTML = "Yw";
-        document.getElementById('control_z_position_label').innerHTML = "Zw";
-        document.getElementById('control_xm_position_row').style.display = 'table-row';
-        document.getElementById('control_ym_position_row').style.display = 'table-row';
-        document.getElementById('control_zm_position_row').style.display = 'table-row';
+        id('configtablink').style.display = 'block';
+        id('tab_title_configuration').innerHTML = "<span translate>GRBL configuration</span>";
+        id('tab_printer_configuration').innerHTML = "<span translate>GRBL</span>";
+        id('files_input_file').accept = " .g, .gco, .gcode, .txt, .ncc, .G, .GCO, .GCODE, .TXT, .NC";
+        id('auto_check_control').style.display = 'none';
+        id('motor_off_control').style.display = 'none';
+        id('progress_btn').style.display = 'none';
+        id('abort_btn').style.display = 'none';
+        id('zero_xyz_btn').style.display = 'block';
+        id('zero_x_btn').style.display = 'block';
+        id('zero_y_btn').style.display = 'block';
+        id('zero_z_btn').style.display = 'block';
+        id('grblPanel').style.display = 'flex';
+        id('control_x_position_label').innerHTML = "Xw";
+        id('control_y_position_label').innerHTML = "Yw";
+        id('control_z_position_label').innerHTML = "Zw";
+        id('control_xm_position_row').style.display = 'table-row';
+        id('control_ym_position_row').style.display = 'table-row';
+        id('control_zm_position_row').style.display = 'table-row';
     } else {
         fwName = "Unknown";
-        document.getElementById('configtablink').style.display = 'none';
+        id('configtablink').style.display = 'none';
     }
     if (target_firmware == "grbl-embedded") {
         EP_HOSTNAME = "Hostname";
@@ -538,10 +538,10 @@ function update_UI_firmware_target() {
         SETTINGS_AP_MODE = 1;
         SETTINGS_STA_MODE = 2;
     }
-    if (typeof document.getElementById('fwName') != "undefined") document.getElementById('fwName').innerHTML = fwName;
+    if (typeof id('fwName') != "undefined") id('fwName').innerHTML = fwName;
     //SD image or not
-    if (direct_sd && typeof document.getElementById('showSDused') != "undefined") document.getElementById('showSDused').innerHTML = "<svg width='1.3em' height='1.2em' viewBox='0 0 1300 1200'><g transform='translate(50,1200) scale(1, -1)'><path  fill='#777777' d='M200 1100h700q124 0 212 -88t88 -212v-500q0 -124 -88 -212t-212 -88h-700q-124 0 -212 88t-88 212v500q0 124 88 212t212 88zM100 900v-700h900v700h-900zM500 700h-200v-100h200v-300h-300v100h200v100h-200v300h300v-100zM900 700v-300l-100 -100h-200v500h200z M700 700v-300h100v300h-100z' /></g></svg>";
-    else document.getElementById('showSDused').innerHTML = "";
+    if (direct_sd && typeof id('showSDused') != "undefined") id('showSDused').innerHTML = "<svg width='1.3em' height='1.2em' viewBox='0 0 1300 1200'><g transform='translate(50,1200) scale(1, -1)'><path  fill='#777777' d='M200 1100h700q124 0 212 -88t88 -212v-500q0 -124 -88 -212t-212 -88h-700q-124 0 -212 88t-88 212v500q0 124 88 212t212 88zM100 900v-700h900v700h-900zM500 700h-200v-100h200v-300h-300v100h200v100h-200v300h300v-100zM900 700v-300l-100 -100h-200v500h200z M700 700v-300h100v300h-100z' /></g></svg>";
+    else id('showSDused').innerHTML = "";
     return fwName;
 }
 
@@ -561,14 +561,14 @@ function initUI() {
     //set title using hostname
     Set_page_title();
     //update UI version
-    if (typeof document.getElementById('UI_VERSION') != "undefined") document.getElementById('UI_VERSION').innerHTML = web_ui_version;
+    if (typeof id('UI_VERSION') != "undefined") id('UI_VERSION').innerHTML = web_ui_version;
     //update FW version
-    if (typeof document.getElementById('FW_VERSION') != "undefined") document.getElementById('FW_VERSION').innerHTML = fw_version;
+    if (typeof id('FW_VERSION') != "undefined") id('FW_VERSION').innerHTML = fw_version;
     // Get the element with id="defaultOpen" and click on it
-    document.getElementById("maintablink").click();
+    id("maintablink").click();
     if ((target_firmware == "grbl-embedded") || (target_firmware == "grbl-embedded")) {
-        if (typeof document.getElementById("grblcontroltablink") !== 'undefined') {
-            document.getElementById("grblcontroltablink").click();
+        if (typeof id("grblcontroltablink") !== 'undefined') {
+            id("grblcontroltablink").click();
         }
     }
     //removeIf(production)
@@ -621,7 +621,7 @@ function initUI_4() {
 }
 
 function show_main_UI() {
-    document.getElementById('main_ui').style.display = 'block';
+    id('main_ui').style.display = 'block';
 }
 
 function compareStrings(a, b) {

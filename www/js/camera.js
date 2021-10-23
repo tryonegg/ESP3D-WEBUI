@@ -1,5 +1,5 @@
 function cameraformataddress() {
-    var saddress = document.getElementById('camera_webaddress').value;
+    var saddress = id('camera_webaddress').value;
     var saddressl = saddress.trim().toLowerCase();
     saddress = saddress.trim();
     if (saddress.length > 0) {
@@ -7,21 +7,21 @@ function cameraformataddress() {
             saddress = "http://" + saddress;
         }
     }
-    document.getElementById('camera_webaddress').value = saddress;
+    id('camera_webaddress').value = saddress;
 }
 
 function camera_loadframe() {
-    var saddress = document.getElementById('camera_webaddress').value;
+    var saddress = id('camera_webaddress').value;
     saddress = saddress.trim();
     if (saddress.length == 0) {
-        document.getElementById('camera_frame').src = "";
-        document.getElementById('camera_frame_display').style.display = "none";
-        document.getElementById('camera_detach_button').style.display = "none";
+        id('camera_frame').src = "";
+        id('camera_frame_display').style.display = "none";
+        id('camera_detach_button').style.display = "none";
     } else {
         cameraformataddress();
-        document.getElementById('camera_frame').src = document.getElementById('camera_webaddress').value;
-        document.getElementById('camera_frame_display').style.display = "block";
-        document.getElementById('camera_detach_button').style.display = "table-row";
+        id('camera_frame').src = id('camera_webaddress').value;
+        id('camera_frame_display').style.display = "block";
+        id('camera_detach_button').style.display = "table-row";
     }
 }
 
@@ -35,20 +35,20 @@ function camera_OnKeyUp(event) {
 
 function camera_saveaddress() {
     cameraformataddress();
-    preferenceslist[0].camera_address = HTMLEncode(document.getElementById('camera_webaddress').value);
+    preferenceslist[0].camera_address = HTMLEncode(id('camera_webaddress').value);
     SavePreferences(true);
 }
 
 function camera_detachcam() {
-    var webaddress = document.getElementById('camera_frame').src;
-    document.getElementById('camera_frame').src = "";
-    document.getElementById('camera_frame_display').style.display = "none";
-    document.getElementById('camera_detach_button').style.display = "none";
+    var webaddress = id('camera_frame').src;
+    id('camera_frame').src = "";
+    id('camera_frame_display').style.display = "none";
+    id('camera_detach_button').style.display = "none";
     window.open(webaddress);
 }
 
 function camera_GetAddress() {
     if (typeof(preferenceslist[0].camera_address) !== 'undefined') {
-        document.getElementById('camera_webaddress').value = decode_entitie(preferenceslist[0].camera_address);
-    } else document.getElementById('camera_webaddress').value = "";
+        id('camera_webaddress').value = decode_entitie(preferenceslist[0].camera_address);
+    } else id('camera_webaddress').value = "";
 }

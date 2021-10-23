@@ -10,16 +10,16 @@ var config_file_name = "/sd/config";
 
 function refreshconfig(is_override) {
     if (http_communication_locked) {
-        document.getElementById('config_status').innerHTML = translate_text_item("Communication locked by another process, retry later.");
+        id('config_status').innerHTML = translate_text_item("Communication locked by another process, retry later.");
         return;
     }
     is_override_config = false;
     if ((typeof is_override != 'undefined') && is_override) is_override_config = is_override;
     config_display_override(is_override_config);
-    document.getElementById('config_loader').style.display = "block";
-    document.getElementById('config_list_content').style.display = "none";
-    document.getElementById('config_status').style.display = "none";
-    document.getElementById('config_refresh_btn').style.display = "none";
+    id('config_loader').style.display = "block";
+    id('config_list_content').style.display = "none";
+    id('config_status').style.display = "none";
+    id('config_refresh_btn').style.display = "none";
     if (!is_override) config_configList = [];
     config_override_List = [];
     //removeIf(production)
@@ -41,13 +41,13 @@ function refreshconfig(is_override) {
 
 function config_display_override(display_it) {
     if (display_it) {
-        document.getElementById('config_override_list_content').style.display = "block";
-        document.getElementById('config_main_content').style.display = "none";
-        document.getElementById('config_override_file').checked = true;
+        id('config_override_list_content').style.display = "block";
+        id('config_main_content').style.display = "none";
+        id('config_override_file').checked = true;
     } else {
-        document.getElementById('config_override_list_content').style.display = "none";
-        document.getElementById('config_main_content').style.display = "block";
-        document.getElementById('config_main_file').checked = true;
+        id('config_override_list_content').style.display = "none";
+        id('config_main_content').style.display = "block";
+        id('config_main_file').checked = true;
     }
 }
 
@@ -139,28 +139,28 @@ function build_HTML_config_list() {
     }
     if (content.length > 0) {
         if (target_firmware == "smoothieware") {
-            document.getElementById('config_main_file_name').innerHTML = config_file_name;
+            id('config_main_file_name').innerHTML = config_file_name;
             if (!is_override_config) {
-                document.getElementById('config_list_data').innerHTML = content;
+                id('config_list_data').innerHTML = content;
                 getprinterconfig(true);
             } else {
-                document.getElementById('config_override_data').innerHTML = content;
+                id('config_override_data').innerHTML = content;
                 if (is_config_override_file()) {
-                    document.getElementById('config_delete_override').style.display = 'none';
-                    document.getElementById('config_override_file_name').innerHTML = "Smoothieware";
+                    id('config_delete_override').style.display = 'none';
+                    id('config_override_file_name').innerHTML = "Smoothieware";
                 } else {
-                    document.getElementById('config_override_file_name').innerHTML = "/sd/config-override";
-                    document.getElementById('config_delete_override').style.display = 'block';
+                    id('config_override_file_name').innerHTML = "/sd/config-override";
+                    id('config_delete_override').style.display = 'block';
                 }
             }
         } else {
-            document.getElementById('config_list_data').innerHTML = content;
+            id('config_list_data').innerHTML = content;
         }
     }
-    document.getElementById('config_loader').style.display = "none";
-    document.getElementById('config_list_content').style.display = "block";
-    document.getElementById('config_status').style.display = "none";
-    document.getElementById('config_refresh_btn').style.display = "block";
+    id('config_loader').style.display = "none";
+    id('config_list_content').style.display = "block";
+    id('config_status').style.display = "none";
+    id('config_refresh_btn').style.display = "block";
 }
 
 function config_check_value(value, index, is_override) {
@@ -408,10 +408,10 @@ function config_revert_to_default(index, is_override) {
         item = config_override_List[index];
     }
     console.log()
-    document.getElementById('config_' + prefix + index).value = item.defaultvalue;
-    document.getElementById('btn_config_' + prefix + index).className = "btn btn-default";
-    document.getElementById('status_config_' + prefix + index).className = "form-group has-feedback";
-    document.getElementById('icon_config_' + prefix + index).innerHTML = "";
+    id('config_' + prefix + index).value = item.defaultvalue;
+    id('btn_config_' + prefix + index).className = "btn btn-default";
+    id('status_config_' + prefix + index).className = "form-group has-feedback";
+    id('icon_config_' + prefix + index).innerHTML = "";
 }
 
 function is_config_override_file() {
@@ -431,16 +431,16 @@ function configGetvalue(index, is_override) {
         item = config_override_List[index];
     }
     //remove possible spaces
-    value = document.getElementById('config_' + prefix + index).value.trim();
+    value = id('config_' + prefix + index).value.trim();
     if (value == item.defaultvalue) return;
     //check validity of value
     var isvalid = config_check_value(value, index, is_override);
     //if not valid show error
     if (!isvalid) {
-        document.getElementById('btn_config_' + prefix + index).className = "btn btn-danger";
-        document.getElementById('icon_config_' + prefix + index).className = "form-control-feedback has-error ico_feedback";
-        document.getElementById('icon_config_' + prefix + index).innerHTML = get_icon_svg("remove");
-        document.getElementById('status_config_' + prefix + index).className = "form-group has-feedback has-error";
+        id('btn_config_' + prefix + index).className = "btn btn-danger";
+        id('icon_config_' + prefix + index).className = "form-control-feedback has-error ico_feedback";
+        id('icon_config_' + prefix + index).innerHTML = get_icon_svg("remove");
+        id('status_config_' + prefix + index).className = "form-group has-feedback has-error";
         alertdlg(translate_text_item("Out of range"), translate_text_item("Value ") + config_error_msg + " !");
     } else {
         //value is ok save it
@@ -448,10 +448,10 @@ function configGetvalue(index, is_override) {
         config_lastindex = index;
         config_lastindex_is_override = is_override;
         item.defaultvalue = value;
-        document.getElementById('btn_config_' + prefix + index).className = "btn btn-success";
-        document.getElementById('icon_config_' + prefix + index).className = "form-control-feedback has-success ico_feedback";
-        document.getElementById('icon_config_' + prefix + index).innerHTML = get_icon_svg("ok");
-        document.getElementById('status_config_' + prefix + index).className = "form-group has-feedback has-success";
+        id('btn_config_' + prefix + index).className = "btn btn-success";
+        id('icon_config_' + prefix + index).className = "form-control-feedback has-success ico_feedback";
+        id('icon_config_' + prefix + index).innerHTML = get_icon_svg("ok");
+        id('status_config_' + prefix + index).className = "form-group has-feedback has-success";
         var url = "/command?plain=" + encodeURIComponent(cmd);
         SendGetHttp(url, setESPconfigSuccess, setESPconfigfailed);
     }
@@ -465,25 +465,25 @@ function config_checkchange(index, is_override) {
         prefix = "_override";
         item = config_override_List[index];
     }
-    var val = document.getElementById('config_' + prefix + index).value.trim();
+    var val = id('config_' + prefix + index).value.trim();
     //console.log("value: " + val);
     if (item.defaultvalue == val) {
-        document.getElementById('btn_config_' + prefix + index).className = "btn btn-default";
-        document.getElementById('icon_config_' + prefix + index).className = "form-control-feedback";
-        document.getElementById('icon_config_' + prefix + index).innerHTML = "";
-        document.getElementById('status_config_' + prefix + index).className = "form-group has-feedback";
+        id('btn_config_' + prefix + index).className = "btn btn-default";
+        id('icon_config_' + prefix + index).className = "form-control-feedback";
+        id('icon_config_' + prefix + index).innerHTML = "";
+        id('status_config_' + prefix + index).className = "form-group has-feedback";
     } else if (config_check_value(val, index, is_override)) {
-        document.getElementById('status_config_' + prefix + index).className = "form-group has-feedback has-warning";
-        document.getElementById('btn_config_' + prefix + index).className = "btn btn-warning";
-        document.getElementById('icon_config_' + prefix + index).className = "form-control-feedback has-warning ico_feedback";
-        document.getElementById('icon_config_' + prefix + index).innerHTML = get_icon_svg("warning-sign");
+        id('status_config_' + prefix + index).className = "form-group has-feedback has-warning";
+        id('btn_config_' + prefix + index).className = "btn btn-warning";
+        id('icon_config_' + prefix + index).className = "form-control-feedback has-warning ico_feedback";
+        id('icon_config_' + prefix + index).innerHTML = get_icon_svg("warning-sign");
         //console.log("change ok");
     } else {
         //console.log("change bad");
-        document.getElementById('btn_config_' + prefix + index).className = "btn btn-danger";
-        document.getElementById('icon_config_' + prefix + index).className = "form-control-feedback has-error ico_feedback";
-        document.getElementById('icon_config_' + prefix + index).innerHTML = get_icon_svg("remove");
-        document.getElementById('status_config_' + prefix + index).className = "form-group has-feedback has-error";
+        id('btn_config_' + prefix + index).className = "btn btn-danger";
+        id('icon_config_' + prefix + index).className = "form-control-feedback has-error ico_feedback";
+        id('icon_config_' + prefix + index).innerHTML = get_icon_svg("remove");
+        id('status_config_' + prefix + index).className = "form-group has-feedback has-error";
     }
 
 }
@@ -553,28 +553,28 @@ function setESPconfigfailed(error_code, response) {
     console.log("Error " + error_code + " :" + response);
     var prefix = "";
     if (config_lastindex_is_override) prefix = "_override";
-    document.getElementById('btn_config_' + prefix + config_lastindex).className = "btn btn-danger";
-    document.getElementById('icon_config_' + prefix + config_lastindex).className = "form-control-feedback has-error ico_feedback";
-    document.getElementById('icon_config_' + prefix + config_lastindex).innerHTML = get_icon_svg("remove");
-    document.getElementById('status_config_' + prefix + config_lastindex).className = "form-group has-feedback has-error";
+    id('btn_config_' + prefix + config_lastindex).className = "btn btn-danger";
+    id('icon_config_' + prefix + config_lastindex).className = "form-control-feedback has-error ico_feedback";
+    id('icon_config_' + prefix + config_lastindex).innerHTML = get_icon_svg("remove");
+    id('status_config_' + prefix + config_lastindex).className = "form-group has-feedback has-error";
 }
 
 function getESPconfigSuccess(response) {
     //console.log(response);
     if (!process_config_answer(response)) {
         getESPconfigfailed(406, translate_text_item("Wrong data"));
-        document.getElementById('config_loader').style.display = "none";
-        document.getElementById('config_list_content').style.display = "block";
-        document.getElementById('config_status').style.display = "none";
-        document.getElementById('config_refresh_btn').style.display = "block";
+        id('config_loader').style.display = "none";
+        id('config_list_content').style.display = "block";
+        id('config_status').style.display = "none";
+        id('config_refresh_btn').style.display = "block";
         return;
     }
 }
 
 function getESPconfigfailed(error_code, response) {
     console.log("Error " + error_code + " :" + response);
-    document.getElementById('config_loader').style.display = "none";
-    document.getElementById('config_status').style.display = "block";
-    document.getElementById('config_status').innerHTML = translate_text_item("Failed:") + error_code + " " + response;
-    document.getElementById('config_refresh_btn').style.display = "block";
+    id('config_loader').style.display = "none";
+    id('config_status').style.display = "block";
+    id('config_status').innerHTML = translate_text_item("Failed:") + error_code + " " + response;
+    id('config_refresh_btn').style.display = "block";
 }

@@ -7,23 +7,23 @@ function init_controls_panel() {
 }
 
 function hideAxiscontrols() {
-    document.getElementById('JogBar').style.display = 'none';
-    document.getElementById('HomeZ').style.display = 'none';
-    document.getElementById('CornerZ').style.display = 'block';
-    document.getElementById('control_z_position_display').style.display = 'none';
-    document.getElementById('control_zm_position_row').style.display = 'none';
-    document.getElementById('z_velocity_display').style.display = 'none';
+    id('JogBar').style.display = 'none';
+    id('HomeZ').style.display = 'none';
+    id('CornerZ').style.display = 'block';
+    id('control_z_position_display').style.display = 'none';
+    id('control_zm_position_row').style.display = 'none';
+    id('z_velocity_display').style.display = 'none';
 }
 
 function showAxiscontrols() {
-    document.getElementById('CornerZ').style.display = 'none';
-    document.getElementById('JogBar').style.display = 'block';
-    document.getElementById('HomeZ').style.display = 'block';
-    document.getElementById('control_z_position_display').style.display = 'block';
+    id('CornerZ').style.display = 'none';
+    id('JogBar').style.display = 'block';
+    id('HomeZ').style.display = 'block';
+    id('control_z_position_display').style.display = 'block';
     if ((target_firmware == "grbl-embedded") || (target_firmware == "grbl")) {
-        document.getElementById('control_zm_position_row').style.display = 'table-row';
+        id('control_zm_position_row').style.display = 'table-row';
     }
-    document.getElementById('z_velocity_display').style.display = 'inline';
+    id('z_velocity_display').style.display = 'inline';
 
 }
 
@@ -84,17 +84,17 @@ function processMacroGetFailed(errorcode, response) {
 }
 
 function on_autocheck_position(use_value) {
-    if (typeof(use_value) !== 'undefined') document.getElementById('autocheck_position').checked = use_value;
-    if (document.getElementById('autocheck_position').checked) {
-        var interval = parseInt(document.getElementById('posInterval_check').value);
+    if (typeof(use_value) !== 'undefined') id('autocheck_position').checked = use_value;
+    if (id('autocheck_position').checked) {
+        var interval = parseInt(id('posInterval_check').value);
         if (!isNaN(interval) && interval > 0 && interval < 100) {
             if (interval_position != -1) clearInterval(interval_position);
             interval_position = setInterval(function() {
                 get_Position()
             }, interval * 1000);
         } else {
-            document.getElementById('autocheck_position').checked = false;
-            document.getElementById('posInterval_check').value = 0;
+            id('autocheck_position').checked = false;
+            id('posInterval_check').value = 0;
             if (interval_position != -1) clearInterval(interval_position);
             interval_position = -1;
         }
@@ -105,12 +105,12 @@ function on_autocheck_position(use_value) {
 }
 
 function onPosIntervalChange() {
-    var interval = parseInt(document.getElementById('posInterval_check').value);
+    var interval = parseInt(id('posInterval_check').value);
     if (!isNaN(interval) && interval > 0 && interval < 100) {
         on_autocheck_position();
     } else {
-        document.getElementById('autocheck_position').checked = false;
-        document.getElementById('posInterval_check').value = 0;
+        id('autocheck_position').checked = false;
+        id('posInterval_check').value = 0;
         if (interval != 0) alertdlg(translate_text_item("Out of range"), translate_text_item("Value of auto-check must be between 0s and 99s !!"));
         on_autocheck_position();
     }
@@ -143,9 +143,9 @@ function process_Position(response) {
     if ((target_firmware == "grbl") || (target_firmware == "grbl-embedded")) {
         grblProcessStatus(response);
     } else {
-        document.getElementById('control_x_position').innerHTML = Control_get_position_value("X:", response);
-        document.getElementById('control_y_position').innerHTML = Control_get_position_value("Y:", response);
-        document.getElementById('control_z_position').innerHTML = Control_get_position_value("Z:", response);
+        id('control_x_position').innerHTML = Control_get_position_value("X:", response);
+        id('control_y_position').innerHTML = Control_get_position_value("Y:", response);
+        id('control_z_position').innerHTML = Control_get_position_value("Z:", response);
     }
 }
 
@@ -155,7 +155,7 @@ function control_motorsOff() {
 }
 
 function SendHomecommand(cmd) {
-    if (document.getElementById('lock_UI').checked) return;
+    if (id('lock_UI').checked) return;
     if ((target_firmware == "grbl-embedded") || (target_firmware == "grbl")) {
         switch (cmd) {
             case 'G28':
@@ -170,7 +170,7 @@ function SendHomecommand(cmd) {
 
             case 'G28 Z0':
                 if (grblaxis > 3) {
-                    cmd = '$H' + document.getElementById('control_select_axis').value;
+                    cmd = '$H' + id('control_select_axis').value;
                 } else cmd = '$HZ';
                 break;
             default:
@@ -188,29 +188,29 @@ function SendZerocommand(cmd) {
 }
 
 function SendJogcommand(cmd, feedrate) {
-    if (document.getElementById('lock_UI').checked) return;
+    if (id('lock_UI').checked) return;
     var feedratevalue = "";
     var command = "";
     if (feedrate == "XYfeedrate") {
-        feedratevalue = parseInt(document.getElementById('control_xy_velocity').value);
+        feedratevalue = parseInt(id('control_xy_velocity').value);
         if (feedratevalue < 1 || isNaN(feedratevalue) || (feedratevalue === null)) {
             alertdlg(translate_text_item("Out of range"), translate_text_item("XY Feedrate value must be at least 1 mm/min!"));
-            document.getElementById('control_xy_velocity').value = preferenceslist[0].xy_feedrate;
+            id('control_xy_velocity').value = preferenceslist[0].xy_feedrate;
             return;
         }
     } else {
-        feedratevalue = parseInt(document.getElementById('control_z_velocity').value);
+        feedratevalue = parseInt(id('control_z_velocity').value);
         if (feedratevalue < 1 || isNaN(feedratevalue) || (feedratevalue === null)) {
             var letter = "Z";
             if ((target_firmware == "grbl-embedded") && (grblaxis > 3)) letter = "Axis";
             alertdlg(translate_text_item("Out of range"), translate_text_item( letter +" Feedrate value must be at least 1 mm/min!"));
-            document.getElementById('control_z_velocity').value = preferenceslist[0].z_feedrate;
+            id('control_z_velocity').value = preferenceslist[0].z_feedrate;
             return;
         }
     }
     if ((target_firmware == "grbl-embedded") || (target_firmware == "grbl")) {
         if(grblaxis > 3){
-            var letter = document.getElementById('control_select_axis').value;
+            var letter = id('control_select_axis').value;
             cmd = cmd.replace("Z", letter);
         }
         command = "$J=G91 G21 F" + feedratevalue + " " + cmd;
@@ -220,14 +220,14 @@ function SendJogcommand(cmd, feedrate) {
 }
 
 function onXYvelocityChange() {
-    var feedratevalue = parseInt(document.getElementById('control_xy_velocity').value);
+    var feedratevalue = parseInt(id('control_xy_velocity').value);
     if (feedratevalue < 1 || feedratevalue > 9999 || isNaN(feedratevalue) || (feedratevalue === null)) {
         //we could display error but we do not
     }
 }
 
 function onZvelocityChange() {
-    var feedratevalue = parseInt(document.getElementById('control_z_velocity').value);
+    var feedratevalue = parseInt(id('control_z_velocity').value);
     if (feedratevalue < 1 || feedratevalue > 999 || isNaN(feedratevalue) || (feedratevalue === null)) {
         //we could display error but we do not
     }
@@ -281,7 +281,7 @@ function control_build_macro_ui() {
     for (var i = 0; i < 9; i++) {
         content += control_build_macro_button(i);
     }
-    document.getElementById('Macro_list').innerHTML = content;
+    id('Macro_list').innerHTML = content;
 }
 
 function macro_command(target, filename) {

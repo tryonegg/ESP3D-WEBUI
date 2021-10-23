@@ -191,7 +191,7 @@ function movethumb(pos)
     var value=0;
     var rangeelement =null;
     if (active_control.hasAttribute('customrange')){
-        rangeelement = document.getElementById(active_control.getAttribute('customrange'));
+        rangeelement = id(active_control.getAttribute('customrange'));
         var r = rangeelement.getBoundingClientRect();
         minpos = r.left;
         maxpos = r.right;
@@ -208,7 +208,7 @@ function movethumb(pos)
     active_control.style.left = p+ 'px';
     if (active_control.hasAttribute('render')){
     value = (((p-minpos) * (maxvalue-minvalue))/((maxpos-minpos)- (r2.right-r2.left)))
-    document.getElementById(active_control.getAttribute('render')).value = Math.round(value + minvalue) ;     
+    id(active_control.getAttribute('render')).value = Math.round(value + minvalue) ;     
      }  
 }
 
@@ -220,7 +220,7 @@ function movethumbat(thumbcursor, value){
     var maxpos = 0;
     var rangeelement =null;
     if (thumbcursor.hasAttribute('customrange')){
-          rangeelement = document.getElementById(thumbcursor.getAttribute('customrange'));
+          rangeelement = id(thumbcursor.getAttribute('customrange'));
           var r = rangeelement.getBoundingClientRect();
           minpos = r.left;
           maxpos = r.right;
@@ -238,7 +238,7 @@ function movethumbat(thumbcursor, value){
     pos = ((value-minvalue)*((maxpos-minpos)-(r2.right-r2.left))/(maxvalue-minvalue))+minpos;
     thumbcursor.style.left = pos+ 'px';
     if (thumbcursor.hasAttribute('render')){
-    document.getElementById(thumbcursor.getAttribute('render')).value =value; 
+    id(thumbcursor.getAttribute('render')).value =value; 
     }
 }
 
@@ -253,7 +253,7 @@ function rangeclicked(event,element)
 {
   
     if (element.hasAttribute('customthumb')){
-        active_control = document.getElementById(element.getAttribute('customthumb'));   
+        active_control = id(element.getAttribute('customthumb'));   
         offset = 0;  
         movethumb(event.clientX);
         }
@@ -270,7 +270,7 @@ element.addEventListener('mousedown', function(e) {
     element.innerHTML = element.getAttribute('bgimage');
     }
  if (element.hasAttribute('customrange')){
-     var r = document.getElementById(element.getAttribute('customrange')).getBoundingClientRect();
+     var r = id(element.getAttribute('customrange')).getBoundingClientRect();
     element.style.top = r.top;
     element.style.left = r.left;
     }

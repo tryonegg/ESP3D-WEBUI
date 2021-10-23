@@ -56,10 +56,10 @@ function init_temperature_panel() {
     fillStyle: "rgba(255,128,128,0.3)",
   });
   smoothieextuder.streamTo(
-    document.getElementById("extruderTempgraph"),
+    id("extruderTempgraph"),
     3000 /*delay*/
   );
-  smoothiebed.streamTo(document.getElementById("bedTempgraph"), 3000 /*delay*/);
+  smoothiebed.streamTo(id("bedTempgraph"), 3000 /*delay*/);
 }
 
 function temperature_second_extruder(enabled) {
@@ -107,7 +107,7 @@ function temperature_chamber(enabled) {
 }
 
 function start_graph_output() {
-  document.getElementById("temperatures_output").style.display = "block";
+  id("temperatures_output").style.display = "block";
   smoothieextuder.start();
   smoothiebed.start();
   graph_started = true;
@@ -121,10 +121,10 @@ function stop_graph_output() {
 
 function on_autocheck_temperature(use_value) {
   if (typeof use_value !== "undefined")
-    document.getElementById("autocheck_temperature").checked = use_value;
-  if (document.getElementById("autocheck_temperature").checked) {
+    id("autocheck_temperature").checked = use_value;
+  if (id("autocheck_temperature").checked) {
     var interval = parseInt(
-      document.getElementById("tempInterval_check").value
+      id("tempInterval_check").value
     );
     if (!isNaN(interval) && interval > 0 && interval < 100) {
       if (interval_temperature != -1) clearInterval(interval_temperature);
@@ -133,8 +133,8 @@ function on_autocheck_temperature(use_value) {
       }, interval * 1000);
       start_graph_output();
     } else {
-      document.getElementById("autocheck_temperature").checked = false;
-      document.getElementById("tempInterval_check").value = 0;
+      id("autocheck_temperature").checked = false;
+      id("tempInterval_check").value = 0;
       if (interval_temperature != -1) clearInterval(interval_temperature);
       interval_temperature = -1;
       stop_graph_output();
@@ -147,12 +147,12 @@ function on_autocheck_temperature(use_value) {
 }
 
 function onTempIntervalChange() {
-  var interval = parseInt(document.getElementById("tempInterval_check").value);
+  var interval = parseInt(id("tempInterval_check").value);
   if (!isNaN(interval) && interval > 0 && interval < 100) {
     on_autocheck_temperature();
   } else {
-    document.getElementById("autocheck_temperature").checked = false;
-    document.getElementById("tempInterval_check").value = 0;
+    id("autocheck_temperature").checked = false;
+    id("tempInterval_check").value = 0;
     if (interval != 0)
       alertdlg(
         translate_text_item("Out of range"),
@@ -171,7 +171,7 @@ function get_Temperatures() {
       : command;
   //removeIf(production)
   var response = "";
-  if (document.getElementById("autocheck_temperature").checked)
+  if (id("autocheck_temperature").checked)
     response = "ok T:26.4 /0.0 T1:26.4 /0.0 @0 B:24.9 /0.0 @0 \n";
   else response = "ok T:26.4 /0.0 @0 B:24.9 /0.0 @0\n ";
   process_Temperatures(response);
@@ -211,58 +211,58 @@ function process_Temperatures(response) {
     if (tool == "T" || tool == "T0") {
       //to push to graph
       extruder_0_line.append(timedata, parseFloat(result[3]));
-      document.getElementById("heaterT0DisplayTemp").innerHTML = value;
+      id("heaterT0DisplayTemp").innerHTML = value;
       //to see if heating or not
       if (Number(value2) > 0)
-        document.getElementById("heaterT0TargetTemp_anime").style.visibility =
+        id("heaterT0TargetTemp_anime").style.visibility =
           "visible";
       else
-        document.getElementById("heaterT0TargetTemp_anime").style.visibility =
+        id("heaterT0TargetTemp_anime").style.visibility =
           "hidden";
     } else if (tool == "R") {
       extruder_redundant_line.append(timedata, parseFloat(result[3]));
-      document.getElementById("heaterRDisplayTemp").innerHTML = value;
+      id("heaterRDisplayTemp").innerHTML = value;
       if (Number(value2) > 0)
-        document.getElementById("heaterRTargetTemp_anime").style.visibility =
+        id("heaterRTargetTemp_anime").style.visibility =
           "visible";
       else
-        document.getElementById("heaterRTargetTemp_anime").style.visibility =
+        id("heaterRTargetTemp_anime").style.visibility =
           "hidden";
     } else if (tool == "T1") {
       extruder_1_line.append(timedata, parseFloat(result[3]));
-      document.getElementById("heaterT1DisplayTemp").innerHTML = value;
+      id("heaterT1DisplayTemp").innerHTML = value;
       if (Number(value2) > 0)
-        document.getElementById("heaterT1TargetTemp_anime").style.visibility =
+        id("heaterT1TargetTemp_anime").style.visibility =
           "visible";
       else
-        document.getElementById("heaterT1TargetTemp_anime").style.visibility =
+        id("heaterT1TargetTemp_anime").style.visibility =
           "hidden";
     } else if (tool == "P") {
       probe_line.append(timedata, parseFloat(result[3]));
-      document.getElementById("probeDisplayTemp").innerHTML = value;
+      id("probeDisplayTemp").innerHTML = value;
       if (Number(value2) > 0)
-        document.getElementById("probeTargetTemp_anime").style.visibility =
+        id("probeTargetTemp_anime").style.visibility =
           "visible";
       else
-        document.getElementById("probeTargetTemp_anime").style.visibility =
+        id("probeTargetTemp_anime").style.visibility =
           "hidden";
     } else if (tool == "B") {
       bed_line.append(timedata, parseFloat(result[3]));
-      document.getElementById("bedDisplayTemp").innerHTML = value;
+      id("bedDisplayTemp").innerHTML = value;
       if (Number(value2) > 0)
-        document.getElementById("bedTargetTemp_anime").style.visibility =
+        id("bedTargetTemp_anime").style.visibility =
           "visible";
       else
-        document.getElementById("bedTargetTemp_anime").style.visibility =
+        id("bedTargetTemp_anime").style.visibility =
           "hidden";
     } else if (tool == "C") {
       chamber_line.append(timedata, parseFloat(result[3]));
-      document.getElementById("chamberDisplayTemp").innerHTML = value;
+      id("chamberDisplayTemp").innerHTML = value;
       if (Number(value2) > 0)
-        document.getElementById("chamberTargetTemp_anime").style.visibility =
+        id("chamberTargetTemp_anime").style.visibility =
           "visible";
       else
-        document.getElementById("chamberTargetTemp_anime").style.visibility =
+        id("chamberTargetTemp_anime").style.visibility =
           "hidden";
     }
   }
@@ -271,26 +271,26 @@ function process_Temperatures(response) {
 function temperature_heatOff(target) {
   switch (target) {
     case "T0":
-      document.getElementById("heaterT0SelectedTemp").value = 0;
-      document.getElementById("heaterT0TargetTemp_anime").style.visibility =
+      id("heaterT0SelectedTemp").value = 0;
+      id("heaterT0TargetTemp_anime").style.visibility =
         "hidden";
-      document.getElementById("heaterRDisplayTemp").value = 0;
-      document.getElementById("heaterRTargetTemp_anime").style.visibility =
+      id("heaterRDisplayTemp").value = 0;
+      id("heaterRTargetTemp_anime").style.visibility =
         "hidden";
       break;
     case "T1":
-      document.getElementById("heaterT1SelectedTemp").value = 0;
-      document.getElementById("heaterT1TargetTemp_anime").style.visibility =
+      id("heaterT1SelectedTemp").value = 0;
+      id("heaterT1TargetTemp_anime").style.visibility =
         "hidden";
       break;
     case "bed":
-      document.getElementById("bedSelectedTemp").value = 0;
-      document.getElementById("bedTargetTemp_anime").style.visibility =
+      id("bedSelectedTemp").value = 0;
+      id("bedTargetTemp_anime").style.visibility =
         "hidden";
       break;
     case "chamber":
-      document.getElementById("chamberSelectedTemp").value = 0;
-      document.getElementById("chamberTargetTemp_anime").style.visibility =
+      id("chamberSelectedTemp").value = 0;
+      id("chamberTargetTemp_anime").style.visibility =
         "hidden";
       break;
   }
@@ -310,7 +310,7 @@ function temperature_heatSet(target) {
   switch (target) {
     case "T0":
       selectedTemp = parseInt(
-        document.getElementById("heaterT0SelectedTemp").value
+        id("heaterT0SelectedTemp").value
       );
       if (
         selectedTemp < 0 ||
@@ -329,7 +329,7 @@ function temperature_heatSet(target) {
       break;
     case "T1":
       selectedTemp = parseInt(
-        document.getElementById("heaterT1SelectedTemp").value
+        id("heaterT1SelectedTemp").value
       );
       if (
         selectedTemp < 0 ||
@@ -347,7 +347,7 @@ function temperature_heatSet(target) {
       }
       break;
     case "bed":
-      selectedTemp = parseInt(document.getElementById("bedSelectedTemp").value);
+      selectedTemp = parseInt(id("bedSelectedTemp").value);
       if (
         selectedTemp < 0 ||
         selectedTemp > 999 ||
@@ -365,7 +365,7 @@ function temperature_heatSet(target) {
       break;
     case "chamber":
       selectedTemp = parseInt(
-        document.getElementById("chamberSelectedTemp").value
+        id("chamberSelectedTemp").value
       );
       if (
         selectedTemp < 0 ||

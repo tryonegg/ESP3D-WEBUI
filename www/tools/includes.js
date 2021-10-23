@@ -2,7 +2,7 @@
 var w3DataObject = {};
 function w3DisplayData(id, data) {
     var htmlObj, htmlTemplate, html, arr = [], a, l, rowClone, x, j, i, ii, cc, repeat, repeatObj, repeatX = "";
-    htmlObj = document.getElementById(id);
+    htmlObj = id(id);
     htmlTemplate = w3InitTemplate(id, htmlObj);
     html = htmlTemplate.cloneNode(true);
     arr = w3GetElementsByAttribute(html, "w3-repeat");

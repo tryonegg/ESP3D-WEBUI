@@ -7,11 +7,11 @@ function init_command_panel() {
 }
 
 function Monitor_output_autoscrollcmd() {
-    document.getElementById('cmd_content').scrollTop = document.getElementById('cmd_content').scrollHeight;
+    id('cmd_content').scrollTop = id('cmd_content').scrollHeight;
 }
 
 function Monitor_check_autoscroll() {
-    if (document.getElementById('monitor_enable_autoscroll').checked == true) Monitor_output_autoscrollcmd();
+    if (id('monitor_enable_autoscroll').checked == true) Monitor_output_autoscrollcmd();
 }
 
 function Monitor_check_verbose_mode() {
@@ -44,7 +44,7 @@ function Monitor_output_Update(message) {
     }
     var output = "";
     var Monitor_outputLength = Monitor_output.length;
-    var isverbosefilter = document.getElementById("monitor_enable_verbose_mode").checked;
+    var isverbosefilter = id("monitor_enable_verbose_mode").checked;
     for (var i = 0; i < Monitor_outputLength; i++) {
         //Filter the output  
         if ((Monitor_output[i].trim().toLowerCase().startsWith("ok")) && !isverbosefilter) continue;
@@ -78,19 +78,19 @@ function Monitor_output_Update(message) {
         if (m.startsWith("echo:Unknown command: \"echo\"") || (m.startsWith("echo:enqueueing \"*\""))) continue;
         output += m;
     }
-    document.getElementById("cmd_content").innerHTML = output;
+    id("cmd_content").innerHTML = output;
     Monitor_check_autoscroll();
 }
 
 function SendCustomCommand() {
-    var cmd = document.getElementById("custom_cmd_txt").value;
+    var cmd = id("custom_cmd_txt").value;
     var url = "/command?commandText=";
     cmd = cmd.trim();
     if (cmd.trim().length == 0) return;
     CustomCommand_history.push(cmd);
     CustomCommand_history.slice(-40);
     CustomCommand_history_index = CustomCommand_history.length;
-    document.getElementById("custom_cmd_txt").value = "";
+    id("custom_cmd_txt").value = "";
     Monitor_output_Update(cmd + "\n");
     cmd = encodeURI(cmd);
     //because # is not encoded
@@ -110,7 +110,7 @@ function CustomCommand_OnKeyUp(event) {
         }
 
         if (CustomCommand_history_index >= 0 && CustomCommand_history_index < CustomCommand_history.length) {
-            document.getElementById("custom_cmd_txt").value = CustomCommand_history[CustomCommand_history_index];
+            id("custom_cmd_txt").value = CustomCommand_history[CustomCommand_history_index];
         }
         return false;
     }

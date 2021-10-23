@@ -58,7 +58,7 @@ function setDisabled(name, value) {
 }
 function selectDisabled(selector, value) {
     document.querySelectorAll(selector).forEach(
-        function(element) {
+        function (element) {
             element.disabled = value;
         }
     )

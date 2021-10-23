@@ -200,7 +200,7 @@ var numpad = {
     if (opt.decimal === undefined) { opt.decimal = true; }
     
     // (C2) GET + SET TARGET OPTIONS
-    var target = document.getElementById(opt.target);
+    var target = id(opt.target);
     target.readOnly = true;
     target.dataset.max = opt.max;
     target.dataset.decimal = opt.decimal;

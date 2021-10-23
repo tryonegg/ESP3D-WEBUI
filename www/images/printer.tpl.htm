@@ -225,21 +225,21 @@ delay(100);
 Sendcommand("G90");
 }
 function SendValue(cmd,item){
-Sendcommand(cmd+document.getElementById("numberinput"+item).value);
+Sendcommand(cmd+id("numberinput"+item).value);
 }
 function Sendcustomcommand(){
-var cmd = document.getElementById("cmd").value;
+var cmd = id("cmd").value;
 if (cmd.trim().length > 0) Sendcommand(cmd);
-document.getElementById("cmd").value="";
+id("cmd").value="";
 }
 function OnclickEmergency(){
 Sendcommand("M112");
 }
 function Updatenumber(item){
-document.getElementById("numberinput"+item).value=document.getElementById("rangeinput"+item).value;
+id("numberinput"+item).value=id("rangeinput"+item).value;
 }
 function Updaterange(item){
-document.getElementById("rangeinput"+item).value=document.getElementById("numberinput"+item).value;
+id("rangeinput"+item).value=id("numberinput"+item).value;
 }
 Updaterange('1');
 Updaterange('2');
@@ -270,7 +270,7 @@ box+=String(tmp*factor);
 box+=" 22 Z\" stroke=\"white\" stroke-width=\"1\"/>\n<text x=\"30\" y=\"19\" fill=\"black\" style=\"font-family:calibri;font-size:10pt;\">\n";
 box+=temperature+"/"+((tar>0)?target:"Off");
 box+=" &#176;C</text>\n</svg>";
-document.getElementById(item).innerHTML=box;
+id(item).innerHTML=box;
 }
 function displaystatus(status){
 var content ="<svg width=\"20\" height=\"20\"><circle cx=\"10\" cy=\"10\" r=\"8\" stroke=\"black\" stroke-width=\"2\" fill=\"";
@@ -285,56 +285,56 @@ if (pulse)content +="#FF0000";
 else content +="#7F0000";}
 content +="\"></circle></svg>";
 pulse=!pulse;
-document.getElementById("status").innerHTML=content;
-document.getElementById("status-text").innerHTML=status;
+id("status").innerHTML=content;
+id("status-text").innerHTML=status;
 }
 
 function dispatchstatus(jsonresponse){
 var temp=0;
 if(jsonresponse.heater[0].active==1){
-document.getElementById("Extruder1").style.visibility="visible";
-document.getElementById("Extruder1").style.height="auto";
-document.getElementById("JogBarE0").style.visibility="visible";
+id("Extruder1").style.visibility="visible";
+id("Extruder1").style.height="auto";
+id("JogBarE0").style.visibility="visible";
 displaytemp(jsonresponse.heater[0].temperature,jsonresponse.heater[0].target,"data_extruder1",1.03);
 Updaterange('1');}
 else {
-document.getElementById("Extruder1").style.visibility="hidden";
-document.getElementById("Extruder1").style.height="0px";
-document.getElementById("JogBarE0").style.visibility="hidden";}
+id("Extruder1").style.visibility="hidden";
+id("Extruder1").style.height="0px";
+id("JogBarE0").style.visibility="hidden";}
 if(jsonresponse.heater[1].active==1){
-document.getElementById("Extruder2").style.visibility="visible";
-document.getElementById("Extruder2").style.height="auto";
-document.getElementById("JogBarE1").style.visibility="visible";
+id("Extruder2").style.visibility="visible";
+id("Extruder2").style.height="auto";
+id("JogBarE1").style.visibility="visible";
 displaytemp(jsonresponse.heater[1].temperature, jsonresponse.heater[1].target,"data_extruder2",1.03);
 Updaterange('2');}
 else {
-document.getElementById("Extruder2").style.visibility="hidden";
-document.getElementById("Extruder2").style.height="0px";
-document.getElementById("JogBarE1").style.visibility="hidden";}
+id("Extruder2").style.visibility="hidden";
+id("Extruder2").style.height="0px";
+id("JogBarE1").style.visibility="hidden";}
 if(jsonresponse.heater[2].active==1){
-document.getElementById("Bed").style.visibility="visible";
-document.getElementById("Bed").style.height="auto";
+id("Bed").style.visibility="visible";
+id("Bed").style.height="auto";
 displaytemp(jsonresponse.heater[2].temperature, jsonresponse.heater[2].target,"data_bed",2.15);
 Updaterange('bed');}
 else {
-document.getElementById("Bed").style.visibility="hidden";
-document.getElementById("Bed").style.height="0px";}
-document.getElementById("posx").innerHTML=jsonresponse.Xpos;
-document.getElementById("posy").innerHTML=jsonresponse.Ypos;
-document.getElementById("posz").innerHTML=jsonresponse.Zpos;
+id("Bed").style.visibility="hidden";
+id("Bed").style.height="0px";}
+id("posx").innerHTML=jsonresponse.Xpos;
+id("posy").innerHTML=jsonresponse.Ypos;
+id("posz").innerHTML=jsonresponse.Zpos;
 displaystatus(jsonresponse.status);
 var content="";
 for (i = 0; i < jsonresponse.InformationMsg.length; i++) { 
 if (i==jsonresponse.InformationMsg.length-1)content +="<li style='list-style-type: disc;'><b>" +jsonresponse.InformationMsg[i].line+ "</b>";
 else content +="<li style='list-style-type: circle;'>"+jsonresponse.InformationMsg[i].line;
 content += "</li>";}
-document.getElementById("infomsg").innerHTML=content;
+id("infomsg").innerHTML=content;
 content="";
 for (i = 0; i < jsonresponse.ErrorMsg.length; i++){ 
 if (i==jsonresponse.ErrorMsg.length-1)content +="<li style='list-style-type: disc;'><b>" +jsonresponse.ErrorMsg[i].line+ "</b>";
 else content +="<li style='list-style-type: circle;'>"+jsonresponse.ErrorMsg[i].line;
 content +="</li>";}
-document.getElementById("errormsg").innerHTML=content;
+id("errormsg").innerHTML=content;
 content="";
 for (i = 0; i < jsonresponse.StatusMsg.length; i++) 
 { 
@@ -342,30 +342,30 @@ if (i==jsonresponse.StatusMsg.length-1)content +="<li style='list-style-type: di
 else content +="<li style='list-style-type: circle;'>"+jsonresponse.StatusMsg[i].line;
 content +="</li>";
 }
-document.getElementById("statusmsg").innerHTML=content;
+id("statusmsg").innerHTML=content;
 if (!initialization_done){
-document.getElementById("numberinputspeed").value=jsonresponse.speed;
+id("numberinputspeed").value=jsonresponse.speed;
 Updaterange('speed');
-document.getElementById("numberinputflow").value=jsonresponse.flow;
+id("numberinputflow").value=jsonresponse.flow;
 Updaterange('flow');
 if(jsonresponse.heater[0].active==1){
 if (jsonresponse.heater[0].target.length==0)temp=0;
 else temp = parseInt(jsonresponse.heater[0].target);
-document.getElementById("numberinput1").value= temp;
+id("numberinput1").value= temp;
 Updaterange('1');}
 if(jsonresponse.heater[1].active==1){
 if (jsonresponse.heater[1].target.length==0)temp=0;
 else temp = parseInt(jsonresponse.heater[1].target);
-document.getElementById("numberinput2").value=temp;
+id("numberinput2").value=temp;
 Updaterange('2');}
 if(jsonresponse.heater[2].active==1){
 if (jsonresponse.heater[2].target.length==0)temp=0;
 else temp = parseInt(jsonresponse.heater[2].target);
-document.getElementById("numberinputbed").value=temp;
+id("numberinputbed").value=temp;
 Updaterange('bed');}
 initialization_done=true;}
-document.getElementById("currentspeed").innerHTML=jsonresponse.speed + "%";
-document.getElementById("currentflow").innerHTML=jsonresponse.flow + "%";
+id("currentspeed").innerHTML=jsonresponse.speed + "%";
+id("currentflow").innerHTML=jsonresponse.flow + "%";
 }
 
 function getstatus(){
@@ -380,7 +380,7 @@ xmlhttp.open("GET", url, true);
 xmlhttp.send();
 }
 function printfile(){
-var filename = document.getElementById("sdfilelist").value;
+var filename = id("sdfilelist").value;
 if (filename.length>0){
 Sendcommand("M23 " + filename);
 delay(100);
@@ -414,11 +414,11 @@ list2display+="<polyline points=\"20,18 25,25\" style=\"stroke:black;stroke-widt
 list2display+="<text x=\"10\" y=\"35\" fill=\"black\">3D</text></svg></div>";
 list2display+="</td></tr></table>";}
 else list2display="No .gcode file";
-document.getElementById("SDLIST").innerHTML=list2display;
+id("SDLIST").innerHTML=list2display;
 }
 
 function getSDfiles(){
-document.getElementById("SDLIST").innerHTML="";
+id("SDLIST").innerHTML="";
 Sendcommand("M20");
 var xmlhttp = new XMLHttpRequest();
 var url = "http://$WEB_ADDRESS$/SDFILES";

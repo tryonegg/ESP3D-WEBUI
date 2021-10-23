@@ -3,12 +3,12 @@ var listmodal = [];
 
 
 function setactiveModal(html_template, closefunc) {
-    if (typeof document.getElementById(html_template) === 'undefined') {
+    if (typeof id(html_template) === 'undefined') {
         console.log("Error: no " + html_template);
         return null;
     }
     var modal = new Object;
-    modal.element = document.getElementById(html_template);
+    modal.element = id(html_template);
     modal.id = listmodal.length;
     modal.name = html_template;
     if (typeof closefunc !== 'undefined') modal.closefn = closefunc;
