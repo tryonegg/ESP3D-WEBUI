@@ -175,8 +175,8 @@ function refreshSPIFFS() {
 function checkSPIFFSfiles() {
     var files = document.getElementById('SPIFFS-select').files;
     document.getElementById('uploadSPIFFSmsg').style.display = 'none';
-    if (files.length == 0) document.getElementById('SPIFFS_uploadbtn').style.display = 'none';
-    else document.getElementById('SPIFFS_uploadbtn').style.display = 'block';
+    // No need to display the upload button because we will click it automatically
+    // id('SPIFFS_uploadbtn').style.display = files.length == 0 ? 'none' : 'block';
     if (files.length > 0) {
         if (files.length == 1) {
             document.getElementById("SPIFFS_file_name").innerHTML = files[0].name;
@@ -184,6 +184,7 @@ function checkSPIFFSfiles() {
             var tmp = translate_text_item("$n files");
             document.getElementById("SPIFFS_file_name").innerHTML = tmp.replace("$n", files.length);
         }
+        id('SPIFFS_uploadbtn').click();
     } else {
         document.getElementById("SPIFFS_file_name").innerHTML = translate_text_item("No file chosen");
     }

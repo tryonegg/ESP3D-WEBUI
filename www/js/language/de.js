@@ -252,6 +252,7 @@ var germantrans = {
 "Show GRBL panel":"Zeige GRBL-Panel",
 "Show commands panel":"Zeige Befehls-Panel",
 "Select files":"Dateien auswählen",
+"Upload files":"Dateien hochladen",
 "Select file":"Datei auswählen",
 "$n files":"$n Dateien",
 "No file chosen":"Keine Datei ausgew&auml;hlt",
