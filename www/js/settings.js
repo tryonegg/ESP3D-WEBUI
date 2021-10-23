@@ -11,8 +11,11 @@ function refreshSettings(hide_setting_list) {
         id('config_status').innerHTML = translate_text_item("Communication locked by another process, retry later.");
         return;
     }
-    if (typeof hide_setting_list != 'undefined') do_not_build_settings = hide_setting_list;
-    else do_not_build_settings = false;
+    // This does not seem to work right.  The refresh button calls refreshSettings('network')
+    // so do_not_build_settings is set to true, thus preventing redisplay of the new values.
+    // if (typeof hide_setting_list != 'undefined') do_not_build_settings = hide_setting_list;
+    // else do_not_build_settings = false;
+
     displayBlock('settings_loader');
     displayNone('settings_list_content');
     displayNone('settings_status');
@@ -28,26 +31,30 @@ function refreshSettings(hide_setting_list) {
     SendGetHttp(url, getESPsettingsSuccess, getESPsettingsfailed)
 }
 
+function defval(i) {
+    return scl[i].defaultvalue;
+}
+
 function build_select_flag_for_setting_list(i, j) {
     var html = "";
     var flag =
         html += "<select class='form-control' id='setting_" + i + "_" + j + "' onchange='setting_checkchange(" + i + "," + j + ")' >";
     html += "<option value='1'";
-    var tmp = scl[i].defaultvalue
+    var tmp = scl[i].defaultvalue;
     tmp |= getFlag(i, j);
-    if (tmp == scl[i].defaultvalue) html += " selected ";
+    if (tmp == defval(i)) html += " selected ";
     html += ">";
     html += translate_text_item("Disable", true);
     html += "</option>\n";
     html += "<option value='0'";
-    var tmp = scl[i].defaultvalue
+    var tmp = defval(i);
     tmp &= ~(getFlag(i, j));
-    if (tmp == scl[i].defaultvalue) html += " selected ";
+    if (tmp == defval(i)) html += " selected ";
     html += ">";
     html += translate_text_item("Enable", true);
     html += "</option>\n";
     html += "</select>\n";
-    //console.log("default:" + scl[i].defaultvalue);
+    //console.log("default:" + defval(i));
     //console.log(html);
     return html;
 }
@@ -56,7 +63,7 @@ function build_select_for_setting_list(i, j) {
     var html = "<select class='form-control input-min wauto' id='setting_" + i + "_" + j + "' onchange='setting_checkchange(" + i + "," + j + ")' >";
     for (var oi = 0; oi < scl[i].Options.length; oi++) {
         html += "<option value='" + scl[i].Options[oi].id + "'";
-        if (scl[i].Options[oi].id == scl[i].defaultvalue) html += " selected ";
+        if (scl[i].Options[oi].id == defval(i)) html += " selected ";
         html += ">";
         html += translate_text_item(scl[i].Options[oi].display, true);
         //Ugly workaround for OSX Chrome and Safari
@@ -64,7 +71,7 @@ function build_select_for_setting_list(i, j) {
         html += "</option>\n";
     }
     html += "</select>\n";
-    //console.log("default:" + scl[i].defaultvalue);
+    //console.log("default:" + defval(i));
     //console.log(html);
     return html;
 }
@@ -86,19 +93,19 @@ function update_UI_setting() {
         switch (scl[i].pos) {
             //EP_TARGET_FW		461 
             case "461":
-                target_firmware = getFWshortnamefromid(scl[i].defaultvalue);
+                target_firmware = getFWshortnamefromid(defval(i));
                 update_UI_firmware_target();
                 init_files_panel(false);
                 break;
                 // EP_IS_DIRECT_SD   850
             case "850":
-                direct_sd = (scl[i].defaultvalue == 1) ? true : false;
+                direct_sd = (defval(i) == 1) ? true : false;
                 update_UI_firmware_target();
                 init_files_panel(false);
                 break;
             case "130":
                 //set title using hostname
-                Set_page_title(scl[i].defaultvalue);
+                Set_page_title(defval(i));
                 break;
         }
 
@@ -109,64 +116,59 @@ function update_UI_setting() {
 function build_control_from_index(i, extra_set_function) {
     var content = "<table>";
     if (i < scl.length) {
-        var nbsub = 1;
-        if (scl[i].type == "F") {
-            nbsub = scl[i].Options.length;
-        }
-        for (var sub_element = 0; sub_element < nbsub; sub_element++) {
-            if (sub_element > 0) {
+        nbsub = scl[i].type == "F" ? scl[i].Options.length : 1;
+        for (var j = 0; j < nbsub; j++) {
+            if (j > 0) {
                 content += "<tr><td style='height:10px;'></td></tr>";
             }
             content += "<tr><td style='vertical-align: middle;'>";
             if (scl[i].type == "F") {
-                content += translate_text_item(scl[i].Options[sub_element].display, true);
+                content += translate_text_item(scl[i].Options[j].display, true);
                 content += "</td><td>&nbsp;</td><td>";
             }
 
-            content += "<div id='status_setting_" + i + "_" + sub_element + "' class='form-group has-feedback' style='margin: auto;'>";
+            content += "<div id='status_setting_" + i + "_" + j + "' class='form-group has-feedback' style='margin: auto;'>";
             content += "<div class='item-flex-row'>";
             content += "<table><tr><td>";
             content += "<div class='input-group'>";
             content += "<div class='input-group-btn'>";
-            content += "<button class='btn btn-default btn-svg' onclick='setting_revert_to_default(" + i + "," + sub_element + ")' >";
-            content += get_icon_svg("repeat");
-            content += "</button>";
+            // setting_revert_to_default() does not work for FluidNC, which cannot report default values
+            // content += "<button class='btn btn-default btn-svg' onclick='setting_revert_to_default(" + i + "," + j + ")' >";
+            // content += get_icon_svg("repeat");
+            // content += "</button>";
             content += "</div>";
             content += "<input class='hide_it'></input>";
             content += "</div>";
             content += "</td><td>";
             content += "<div class='input-group'>";
             content += "<span class='input-group-addon hide_it' ></span>";
-            //flag
             if (scl[i].type == "F") {
+                //flag
                 //console.log(scl[i].label + " " + scl[i].type);
                 //console.log(scl[i].Options.length);
-                content += build_select_flag_for_setting_list(i, sub_element);
-
+                content += build_select_flag_for_setting_list(i, j);
+            } else if (scl[i].Options.length > 0) {
+                //drop list
+                content += build_select_for_setting_list(i, j);
+            } else {
+                //text
+                input_type = defval(i).startsWith("******") ? "password" : "text";
+                content += "<input id='setting_" + i + "_" + j + "' type='" + input_type + "' class='form-control input-min'  value='" + defval(i) + "' onkeyup='setting_checkchange(" + i + "," + j + ")' >";
             }
-            //drop list
-            else if (scl[i].Options.length > 0) {
-                content += build_select_for_setting_list(i, sub_element);
-            }
-            //text
-            else {
-                input_type = scl[i].defaultvalue.startsWith("******") ? "password" : "text";
-                content += "<input id='setting_" + i + "_" + sub_element + "' type='" + input_type + "' class='form-control input-min'  value='" + scl[i].defaultvalue + "' onkeyup='setting_checkchange(" + i + "," + sub_element + ")' >";
-                }
-            content += "<span id='icon_setting_" + i + "_" + sub_element + "'class='form-control-feedback ico_feedback'></span>";
+            content += "<span id='icon_setting_" + i + "_" + j + "'class='form-control-feedback ico_feedback'></span>";
             content += "<span class='input-group-addon hide_it' ></span>";
             content += "</div>";
             content += "</td></tr></table>";
             content += "<div class='input-group'>";
             content += "<input class='hide_it'></input>";
             content += "<div class='input-group-btn'>";
-            content += "<button  id='btn_setting_" + i + "_" + sub_element + "' class='btn btn-default' onclick='settingsetvalue(" + i + "," + sub_element + ");";
+            content += "<button  id='btn_setting_" + i + "_" + j + "' class='btn btn-default' onclick='settingsetvalue(" + i + "," + j + ");";
             if (typeof extra_set_function != 'undefined') {
                 content += extra_set_function + "(" + i + ");"
             }
             content += "' translate english_content='Set' >" + translate_text_item("Set") + "</button>";
             if (scl[i].pos == EP_STA_SSID) {
-                content += "<button class='btn btn-default btn-svg' onclick='scanwifidlg(\"" + i + "\",\"" + sub_element + "\")'>";
+                content += "<button class='btn btn-default btn-svg' onclick='scanwifidlg(\"" + i + "\",\"" + j + "\")'>";
                 content += get_icon_svg("search");
                 content += "</button>";
             }
@@ -216,7 +218,7 @@ function build_HTML_setting_list(filter) {
     if (content.length > 0) id('settings_list_data').innerHTML = content;
 }
 
-function setting_check_value(value, i, j) {
+function setting_check_value(value, i) {
     var valid = true;
     var entry = scl[i];
     //console.log("checking value");
@@ -224,9 +226,9 @@ function setting_check_value(value, i, j) {
     //does it part of a list?
     if (entry.Options.length > 0) {
         var in_list = false;
-        for (var i = 0; i < entry.Options.length; i++) {
-            //console.log("checking *" + entry.Options[i].id + "* and *"+ value + "*" );
-            if (entry.Options[i].id == value) in_list = true;
+        for (var oi = 0; oi < entry.Options.length; oi++) {
+            //console.log("checking *" + entry.Options[oi].id + "* and *"+ value + "*" );
+            if (entry.Options[oi].id == value) in_list = true;
         }
         valid = in_list;
         if (!valid) setting_error_msg = " in provided list";
@@ -243,9 +245,7 @@ function setting_check_value(value, i, j) {
         if (!valid) setting_error_msg = " between " + entry.min_val + " and " + entry.max_val;
         if (isNaN(value)) valid = false;
     } else if (entry.type == "S") {
-        //check minimum?
         if (entry.min_val > value.length) valid = false;
-        //check maximum?
         if (entry.max_val < value.length) valid = false;
         if (value == "********") valid = false;
         if (!valid) setting_error_msg = " between " + entry.min_val + " char(s) and " + entry.max_val + " char(s) long, and not '********'";
@@ -318,16 +318,12 @@ function create_setting_entry(sentry, vi) {
             var key = i;
             var val = sentry.O[i];
             for (var j in val) {
-                var sub_key = j;
-                var sub_val = val[j];
-                sub_val = sub_val.trim();
-                sub_key = sub_key.trim();
                 var option = {
-                    id: sub_val,
-                    display: sub_key
+                    id: val[j].trim(),
+                    display: j.trim()
                 };
                 options.push(option);
-                //console.log("*" + sub_key + "* and *" + sub_val + "*");
+                //console.log("*" + option.display + "* and *" + option.id + "*");
             }
         }
     }
@@ -392,24 +388,23 @@ function setting_revert_to_default(i, j) {
     if (scl[i].type == "F") {
         var flag = getFlag(i, j);
         var enabled = 0;
-        var tmp = parseInt(scl[i].defaultvalue);
+        var tmp = parseInt(defval(i));
         tmp |= flag;
-        if (tmp == parseInt(scl[i].defaultvalue)) setting(i, j).value = "1";
+        if (tmp == parseInt(defval(i))) setting(i, j).value = "1";
         else setting(i,j).value = "0";
-    } else setting(i, j).value = scl[i].defaultvalue
+    } else setting(i, j).value = defval(i)
     setBtn(i, j, "btn-default");
     setStatus(i, j, "form-group has-feedback");
     setIconHTML(i, j, "");
 }
 
 function settingsetvalue(i, j) {
-    var sub = 0;
-    if (typeof j != 'undefined') sub = j;
+    if (typeof j == 'undefined') j = 0;
     //remove possible spaces
-    value = setting(i, sub).value.trim();
+    value = setting(i, j).value.trim();
     //Apply flag here
     if (scl[i].type == "F") {
-        var tmp = scl[i].defaultvalue;
+        var tmp = defval(i);
         if (value == "1") {
             tmp |= getFlag(i, j);
         } else {
@@ -417,9 +412,9 @@ function settingsetvalue(i, j) {
         }
         value = tmp;
     }
-    if (value == scl[i].defaultvalue) return;
+    if (value == defval(i)) return;
     //check validity of value
-    var isvalid = setting_check_value(value, i, j);
+    var isvalid = setting_check_value(value, i);
     //if not valid show error
     if (!isvalid) {
         setsettingerror(i);
@@ -430,10 +425,10 @@ function settingsetvalue(i, j) {
         setting_lasti = i;
         setting_lastj = j;
         scl[i].defaultvalue = value;
-        setBtn(i, sub, "btn-success");
-        setIcon(i, sub, "has-success ico_feedback");
-        setIconHTML(i, sub, get_icon_svg("ok"));
-        setStatus(i, sub, "has-feedback has-success");
+        setBtn(i, j, "btn-success");
+        setIcon(i, j, "has-success ico_feedback");
+        setIconHTML(i, j, get_icon_svg("ok"));
+        setStatus(i, j, "has-feedback has-success");
         var url = "/command?plain=" + encodeURIComponent(cmd);
         SendGetHttp(url, setESPsettingsSuccess, setESPsettingsfailed);
     }
@@ -444,7 +439,7 @@ function setting_checkchange(i, j) {
     var val = setting(i, j).value.trim();
     if (scl[i].type == "F") {
         //console.log("it is flag value");
-        var tmp = scl[i].defaultvalue;
+        var tmp = defval(i);
         if (val == "1") {
             tmp |= getFlag(i, j);
         } else {
@@ -453,14 +448,14 @@ function setting_checkchange(i, j) {
         val = tmp;
     }
     //console.log("value: " + val);
-    //console.log("default value: " + scl[i].defaultvalue);
-    if (scl[i].defaultvalue == val) {
+    //console.log("default value: " + defval(i));
+    if (defval(i) == val) {
         console.log("values are identical");
         setBtn(i, j, "btn-default");
         setIcon(i, j, "");
         setIconHTML(i, j, "");
         setStatus(i, j, "has-feedback");
-    } else if (setting_check_value(val, i, j)) {
+    } else if (setting_check_value(val, i)) {
         //console.log("Check passed");
         setsettingchanged(i, j);
     } else {
@@ -529,7 +524,7 @@ function process_restart_esp(answer) {
 }
 
 function define_esp_role(index) {
-    switch (Number(scl[index].defaultvalue)) {
+    switch (Number(defval(index))) {
         case SETTINGS_FALLBACK_MODE:
             displayBlock("setup_STA");
             displayBlock("setup_AP");
