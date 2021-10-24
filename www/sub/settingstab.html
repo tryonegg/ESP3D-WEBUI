@@ -5,7 +5,9 @@
         </h2>
         <table>
             <tr>
-                <td style='padding:10px'>
+                <td style='padding:10px' class="tooltip">
+                  <span class="tooltip-text">Show system status</span>
+
                     <button type="button" class="btn btn-info" onclick="statusdlg();">
                         <svg width='1.3em' height='1.2em' viewBox='0 0 1300 1200'>
                             <g transform='translate(50,1200) scale(1, -1)'>
@@ -14,7 +16,9 @@
                         </svg>
                     </button>
                 </td>
-                <td style='padding:10px'>
+                <td style='padding:10px' class="tooltip">
+                    <span class="tooltip-text">Manage local files</span>
+
                     <button type="button" class="btn btn-success" onclick="SPIFFSdlg('/');">
                         <svg width='1.3em' height='1.2em' viewBox='0 0 1300 1200'>
                             <g transform='translate(50,1200) scale(1, -1)'>
@@ -23,7 +27,9 @@
                         </svg>
                     </button>
                 </td>
-                <td style='padding:10px'>
+                <td style='padding:10px' class="tooltip">
+                    <span class="tooltip-text">Update the firmware wirelessly (OTA)</span>
+
                     <button id="settings_update_fw_btn" type="button" class="btn btn-warning" onclick="updatedlg();">
                         <svg width='1.3em' height='1.2em' viewBox='0 0 1300 1200'>
                             <g transform='translate(50,1200) scale(1, -1)'>
@@ -32,7 +38,8 @@
                         </svg>
                     </button>
                 </td>
-                <td style='padding:10px'>
+                <td style='padding:10px' class="tooltip">
+                  <span class="tooltip-text">Restart FluidNC</span>
                     <button type="button" id="settings_restart_btn" class="btn btn-danger" onclick="restart_esp();">
                         <svg width='1.3em' height='1.2em' viewBox='0 0 1300 1200'>
                             <g transform='translate(50,1200) scale(1, -1)'>
@@ -41,7 +48,8 @@
                         </svg>
                     </button>
                 </td>
-                <td style='padding:10px'>
+                <td style='padding:10px' class="tooltip">
+                  <span class="tooltip-text">Refresh this list of settings</span>
                     <button type="button" id="settings_refresh_btn" class="btn btn-primary" onclick="refreshSettings(current_setting_filter);">
                         <svg width='1.3em' height='1.2em' viewBox='0 0 1300 1200'>
                             <g transform='translate(50,1200) scale(1, -1)'>

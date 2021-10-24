@@ -264,7 +264,9 @@ function control_build_macro_button(index) {
 }
 
 function control_build_macro_ui() {
-    var content = "<button class='btn btn-primary' onclick='showmacrodlg(processMacroSave)'>";
+    var content = "<div class='tooltip'>";
+    content += "<span class='tooltip-text'>Manage macros</span>"
+    content += "<button class='btn btn-primary' onclick='showmacrodlg(processMacroSave)'>";
     content += "<span class='badge'>";
     content += "<svg width='1.3em' height='1.2em' viewBox='0 0 1300 1200'>";
     content += "<g transform='translate(50,1200) scale(1, -1)'>";
@@ -278,6 +280,7 @@ function control_build_macro_ui() {
     content += "</svg>";
     content += "</span>";
     content += "</button>";
+    content += "</div>";
     for (var i = 0; i < 9; i++) {
         content += control_build_macro_button(i);
     }

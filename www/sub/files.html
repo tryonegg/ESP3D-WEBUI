@@ -7,7 +7,8 @@
                         <tr>
                             <td><b><span id="fileSource" translate>SD Files</span></b></td>
                             <td>&nbsp;&nbsp;</td>
-                            <td>
+                            <td class="tooltip">
+                              <span class="tooltip-text">Make a directory</span>
                                 <button id="files_createdir_btn" onclick="files_Createdir()" class="btn btn-info btn-xs hide_it" style="padding: -2px 2px 0x 0px;">
                                     <svg width="1.5em" height="1.2em" viewBox="5 10 30 10">
                                         <rect x="5" y="10" width="30" height="20" rx="2" ry="2" fill="currentColor"></rect>
@@ -39,15 +40,18 @@
                 </div>
                 <div class="pull-right" id="files_navigation_buttons">
                     <div class="item-flex-row-wrap">
-                        <button class="btn btn-xs btn-primary" onclick="files_filter_button(this);">
+                        <div class="tooltip">
+                          <span class="tooltip-text">Show runnable files or all files</span>
+                          <button class="btn btn-xs btn-primary" onclick="files_filter_button(this);">
                             <span id="files_filter_glyph" style="position:relative; top:2px">
-                                <svg width='1.3em' height='1.2em' viewBox='0 0 1300 1200'>
-                                    <g transform='translate(50,1200) scale(1, -1)'>
-                                        <path fill='currentColor' d='M150 1200h900q21 0 35.5 -14.5t14.5 -35.5t-14.5 -35.5t-35.5 -14.5h-900q-21 0 -35.5 14.5t-14.5 35.5t14.5 35.5t35.5 14.5zM700 500v-300l-200 -200v500l-350 500h900z'></path>
-                                    </g>
-                                </svg>
+                              <svg width='1.3em' height='1.2em' viewBox='0 0 1300 1200'>
+                                <g transform='translate(50,1200) scale(1, -1)'>
+                                  <path fill='currentColor' d='M150 1200h900q21 0 35.5 -14.5t14.5 -35.5t-14.5 -35.5t-35.5 -14.5h-900q-21 0 -35.5 14.5t-14.5 35.5t14.5 35.5t35.5 14.5zM700 500v-300l-200 -200v500l-350 500h900z'></path>
+                                </g>
+                              </svg>
                             </span>
-                        </button>
+                          </button>
+                        </div>
                         &nbsp;
                         <button class="btn btn-xs btn-primary hide_it" id="files_refresh_btn" onclick="files_refreshFiles(files_currentPath)" translate>Refresh</button>
                         <button class="btn btn-xs btn-primary hide_it" id="files_refresh_primary_sd_btn" onclick="files_refreshFiles(primary_sd)">SD 1</button>

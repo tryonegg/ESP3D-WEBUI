@@ -30,7 +30,7 @@ function SPIFFSnavbar() {
     var tlist = SPIFFS_currentpath.split("/");
     var path = "/";
     var nb = 1;
-    content += "<td><button class='btn btn-primary'  onclick=\"SPIFFS_currentpath='/'; SPIFFSSendCommand('list','all');\">/</button></td>";
+    content += "<td class='tooltip'><span class='tooltip-text'>Go to root directory</span><button class='btn btn-primary'  onclick=\"SPIFFS_currentpath='/'; SPIFFSSendCommand('list','all');\">/</button></td>";
     while (nb < (tlist.length - 1)) {
         path += tlist[nb] + "/";
         content += "<td><button class='btn btn-link' onclick=\"SPIFFS_currentpath='" + path + "'; SPIFFSSendCommand('list','all');\">" + tlist[nb] + "</button></td><td>/</td>";

@@ -16,10 +16,10 @@
                         <table id="SPIFFS-select_form">
                             <tr>
                                 <td>
-                                    <button class="btn btn-info" type="button" id="SPIFFS_select_files" onclick="id('SPIFFS-select').click();" translate>Upload files</button>
+                                    <button class="btn btn-info" type="button" id="SPIFFS_select_files" onclick="document.getElementById('SPIFFS-select').click();" translate>Upload files</button>
                                 </td>
                                 <td>
-                                    <div class="filetext no_overflow" id="SPIFFS_file_name" onmouseup="id('SPIFFS_select_files').click();"></div>
+                                    <div class="filetext no_overflow" id="SPIFFS_file_name" onmouseup="document.getElementById('SPIFFS_select_files').click();"></div>
                                 </td>
                             </tr>
                         </table>
@@ -40,16 +40,20 @@
                     <div class="panel">
                         <div class="panel-body">
                             <div class="panel-flex-row">
-                                <button onclick="SPIFFS_Createdir()" class="btn btn-info btn-svg-no_pad">
-                                    <svg width="35px" height="25px" viewBox="0 0 40 30">
-                                        <rect x="5" y="10" width="30" height="20" rx="2" ry="2" fill="currentColor"></rect>
-                                        <rect x="20" y="5" width="15" height="15" rx="2" ry="2" fill="currentColor"></rect>
-                                        <text x="15" y="25" font-size="18" font-weight="800" fill="#5BC0DE">+</text>
-                                    </svg>
+                              <div class="tooltip">
+                                <span class="tooltip-text">Make a directory</span>
+                                <button onclick="SPIFFS_Createdir()" class="btn btn-info btn-svg-no_pad tooltip">
+                                  <svg width="35px" height="25px" viewBox="0 0 40 30">
+                                    <rect x="5" y="10" width="30" height="20" rx="2" ry="2" fill="currentColor"></rect>
+                                    <rect x="20" y="5" width="15" height="15" rx="2" ry="2" fill="currentColor"></rect>
+                                    <text x="15" y="25" font-size="18" font-weight="800" fill="#5BC0DE">+</text>
+                                  </svg>
                                 </button>
-                                <div id="SPIFFS_loader" class="loader" style="width:2em;height:2em;"></div>
-                                <div id="SPIFFS_path" class="info">&nbsp;</div>
+                              </div>
+                              <div id="SPIFFS_loader" class="loader" style="width:2em;height:2em;"></div>
+                              <div id="SPIFFS_path" class="info">&nbsp;</div>
                             </div>
+
                             <table class="table table-striped" style="border:1px;solid #dddddd;margin-bottom:20px;">
                                 <thead>
                                     <tr>
