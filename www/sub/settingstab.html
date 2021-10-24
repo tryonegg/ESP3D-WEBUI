@@ -66,16 +66,18 @@
         <div class="loader hide_it" id="settings_loader"></div>
         <div class="container hide_it" id="settings_list_content">
             <span id="settings_filters">
-                <div class="radio-inline">
+                <div class="radio-inline tooltip">
+                  <span class="tooltip-text">Settings that are saved immediately</span>
                     <label>
-                        <input type="radio" id="network_setting_filter" name="setting_filter" value="network" onclick="build_HTML_setting_list('network')">
-                        <span translate>Network</span>
+                        <input type="radio" id="nvs_setting_filter" name="setting_filter" value="nvs" onclick="build_HTML_setting_list('nvs')">
+                        <span translate>Flash Settings</span>
                     </label>
                 </div>
-                <div class="radio-inline">
+                <div class="radio-inline tooltip">
+                  <span class="tooltip-text">Settings from the config file, saved only on command</span>
                     <label>
-                        <input type="radio" id="printer_setting_filter" name="setting_filter" value="network" onclick="build_HTML_setting_list('printer')">
-                        <span translate>Printer</span>
+                        <input type="radio" id="tree_setting_filter" name="setting_filter" value="configfile" onclick="build_HTML_setting_list('tree')">
+                        <span translate>Config Items</span>
                     </label>
                 </div>
             </span>
