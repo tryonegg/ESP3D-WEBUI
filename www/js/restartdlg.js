@@ -14,14 +14,14 @@ function restart_esp_success(response) {
     var interval;
     var x = id("prgrestart");
     http_communication_locked = true;
-    x.max = 40;
+    x.max = 10;
     interval = setInterval(function() {
         last_ping = Date.now();
         i = i + 1;
         var x = id("prgrestart");
         x.value = i;
-        id('restartmsg').innerHTML = translate_text_item("Restarting, please wait....") + (41 - i) + translate_text_item(" seconds");
-        if (i > 40) {
+        id('restartmsg').innerHTML = translate_text_item("Restarting, please wait....") + (x.max + 1 - i) + translate_text_item(" seconds");
+        if (i > x.max) {
             clearInterval(interval);
             location.reload();
         }

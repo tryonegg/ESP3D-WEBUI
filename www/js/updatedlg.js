@@ -89,13 +89,13 @@ function updatesuccess(response) {
     var i = 0;
     var interval;
     var x = id("prgfw");
-    x.max = 40;
+    x.max = 10;
     interval = setInterval(function() {
         i = i + 1;
         var x = id("prgfw");
         x.value = i;
         id('updatemsg').innerHTML = translate_text_item("Restarting, please wait....") + (41 - i) + translate_text_item(" seconds");
-        if (i > 40) {
+        if (i > x.max) {
             update_ongoing = false;
             clearInterval(interval);
             location.reload();
