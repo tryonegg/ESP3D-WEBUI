@@ -417,7 +417,7 @@ function update_UI_firmware_target() {
             id('control_c_position_display').style.display = 'none';
         }
         id('grblPanel').style.display = 'flex';
-        id('FW_github').href = 'https://github.com/bdring/Grbl_Esp32';
+        // id('FW_github').href = 'https://github.com/bdring/FluidNC';
         id('settings_filters').style.display = 'block';
         id('control_x_position_label').innerHTML = "Xw";
         id('control_y_position_label').innerHTML = "Yw";
