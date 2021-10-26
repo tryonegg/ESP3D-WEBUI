@@ -37,46 +37,54 @@ function Monitor_output_Update(message) {
         }
         Monitor_output = Monitor_output.slice(-300);
     }
-    var regex = /ok T:/g;
+    var regex = /ok T:/g;  // Marlin temperature report
 
     if (target_firmware == "repetier" || target_firmware == "repetier4davinci") {
-        regex = /T:/g;
+        regex = /T:/g;  // Repetier temperature report
     }
     var output = "";
-    var Monitor_outputLength = Monitor_output.length;
     var isverbosefilter = id("monitor_enable_verbose_mode").checked;
-    for (var i = 0; i < Monitor_outputLength; i++) {
-        //Filter the output  
-        if ((Monitor_output[i].trim().toLowerCase().startsWith("ok")) && !isverbosefilter) continue;
-        if ((Monitor_output[i].trim().toLowerCase() == "wait") && !isverbosefilter) continue;
-        if ((target_firmware == "grbl") || (target_firmware == "grbl-embedded")) {
-            //no status
-            if ((Monitor_output[i].startsWith("<") || Monitor_output[i].startsWith("[echo:")) && !isverbosefilter) continue;
-        } else {
-            //no temperatures
-            if (!isverbosefilter && Monitor_output[i].match(regex)) continue;
+    for (var out of Monitor_output) {
+        var outlc = out.trim();
+
+        // Filter the output to remove boring chatter
+        if (outlc === "") {
+            continue;
         }
-        if ((Monitor_output[i].trim() === "\n") || (Monitor_output[i].trim() === "\r") || (Monitor_output[i].trim() === "\r\n") || (Monitor_output[i].trim() === "")) continue;
-        m = Monitor_output[i];
-        if (Monitor_output[i].startsWith("[#]")) {
-            if (!isverbosefilter) continue;
-            else m = m.replace("[#]", "");
+        if (!isverbosefilter) {
+            if (outlc == "wait" ||
+                outlc.startsWith("ok") ||
+                outlc.startsWith("[#]") ||
+                outlc.startsWith("x:") ||
+                outlc.startsWith("fr:") ||
+                outlc.startsWith("echo:") ||
+                outlc.startsWith("Config:") ||
+                outlc.startsWith("echo:Unknown command: \"echo\"") ||
+                outlc.startsWith("echo:enqueueing \"*\"")
+            ) {
+                continue;
+            }
+            if ((target_firmware == "grbl") || (target_firmware == "grbl-embedded")) {
+                //no status
+                if (outlc.startsWith("<") || outlc.startsWith("[echo:")) continue;
+            } else {
+                //no temperatures
+                if (outlc.match(regex)) continue;
+            }
         }
-        //position
-        if (!isverbosefilter && Monitor_output[i].startsWith("X:")) continue;
-         if (!isverbosefilter && Monitor_output[i].startsWith("FR:")) continue;
-        m = m.replace("&", "&amp;");
-        m = m.replace("<", "&lt;");
-        m = m.replace(">", "&gt;");
-        if (m.startsWith("ALARM:") || m.startsWith("Hold:") || m.startsWith("Door:")) {
-            m = "<font color='orange'><b>" + m + translate_text_item(m.trim()) + "</b></font>\n";
+        if (out.startsWith("[#]")) {
+            out = out.replace("[#]", "");
         }
-        if (m.startsWith("error:")) {
-            m = "<font color='red'><b>" + m.toUpperCase() + translate_text_item(m.trim()) + "</b></font>\n";
+        out = out.replace("&", "&amp;");
+        out = out.replace("<", "&lt;");
+        out = out.replace(">", "&gt;");
+        if (out.startsWith("ALARM:") || out.startsWith("Hold:") || out.startsWith("Door:")) {
+            out = "<font color='orange'><b>" + out + translate_text_item(out.trim()) + "</b></font>\n";
         }
-        if ((m.startsWith("echo:") || m.startsWith("Config:")) && !isverbosefilter) continue;
-        if (m.startsWith("echo:Unknown command: \"echo\"") || (m.startsWith("echo:enqueueing \"*\""))) continue;
-        output += m;
+        if (out.startsWith("error:")) {
+            out = "<font color='red'><b>" + out.toUpperCase() + translate_text_item(out.trim()) + "</b></font>\n";
+        }
+        output += out;
     }
     id("cmd_content").innerHTML = output;
     Monitor_check_autoscroll();
@@ -104,8 +112,10 @@ function CustomCommand_OnKeyUp(event) {
     }
     if (event.keyCode == 38 || event.keyCode == 40) {
         if (event.keyCode == 38 && CustomCommand_history.length > 0 && CustomCommand_history_index > 0) {
+            // Up arrow
             CustomCommand_history_index--;
         } else if (event.keyCode == 40 && CustomCommand_history_index < CustomCommand_history.length - 1) {
+            // Down arrow
             CustomCommand_history_index++;
         }
 
@@ -118,13 +128,9 @@ function CustomCommand_OnKeyUp(event) {
 }
 
 function SendCustomCommandSuccess(response) {
-    if (response[response.length - 1] != '\n') Monitor_output_Update(response + "\n");
-    else {
-        Monitor_output_Update(response);
-    }
-    var tcmdres = response.split("\n");
-    for (var il = 0; il < tcmdres.length; il++){
-        process_socket_response(tcmdres[il]);
+    Monitor_output_Update(response[response.length - 1] == '\n' ? response : response + "\n");
+    for (var res of response.split("\n")) {
+        process_socket_response(res);
     }
 }
 
