@@ -145,7 +145,7 @@ function on_autocheck_status(use_value) {
             if (interval_status != -1) clearInterval(interval_status);
             interval_status = setInterval(function() {
                 get_status()
-            }, interval * 100);
+            }, interval * 1000);
         } else {
             setAutocheck(false);
             setValue('statusInterval_check', 0);
