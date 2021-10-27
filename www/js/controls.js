@@ -117,13 +117,11 @@ function onPosIntervalChange() {
 }
 
 function get_Position() {
-    var command = "M114";
     if ((target_firmware == "grbl") || (target_firmware == "grbl-embedded")) {
-        command = "?";
-        SendPrinterCommand(command, false, null, null, 114, 1);
-    } else if (target_firmware == "marlin-embedded") {
-        SendPrinterCommand(command, false, null, null, 114, 1);
-    } else SendPrinterCommand(command, false, process_Position, null, 114, 1);
+        SendPrinterCommand("?", false, null, null, 114, 1);
+    } else {
+        SendPrinterCommand("M114", false, target_firmware == "marlin-embedded" ? null : process_Position, null, null, 114, 1);
+    }
 }
 
 function Control_get_position_value(label, result_data) {

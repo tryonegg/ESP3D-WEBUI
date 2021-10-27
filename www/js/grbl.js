@@ -177,10 +177,8 @@ function onstatusIntervalChange() {
 //TODO handle authentication issues
 //errorfn cannot be NULL
 function get_status() {
-    var command = "?";
-    if ((target_firmware == "grbl") || (target_firmware == "grbl-embedded")) command = "?";
     //ID 114 is same as M114 as '?' cannot be an ID
-    SendPrinterCommand(command, false, null, null, 114, 1);
+    SendPrinterCommand("?", false, null, null, 114, 1);
 }
 
 function parseGrblStatus(response) {

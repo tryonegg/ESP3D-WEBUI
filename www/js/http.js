@@ -63,12 +63,12 @@ function process_cmd() {
 
 function AddCmd(cmd_fn, id) {
     if (http_cmd_list.length > max_cmd) {
-        //console.log("adding rejected");	
+        errorfn(999, translate_text_item("Server not responding"));
         return;
     }
     var cmd_id = 0;
     if (typeof id != 'undefined') cmd_id = id;
-    //onsole.log("adding command");
+    //console.log("adding command");
     var cmd = {
         cmd: cmd_fn,
         type: "CMD",
@@ -81,8 +81,7 @@ function AddCmd(cmd_fn, id) {
 
 function SendGetHttp(url, result_fn, error_fn, id, max_id) {
     if ((http_cmd_list.length > max_cmd) && (max_cmd != -1)) {
-        console.log("adding rejected");
-        error_fn();
+        error_fn(999, translate_text_item("Server not responding"));
         return;
     }
     var cmd_id = 0;
@@ -101,7 +100,7 @@ function SendGetHttp(url, result_fn, error_fn, id, max_id) {
                 //console.log("found " + http_cmd_list[p].id + " and " + cmd_id);	
             }
             if (cmd_max_id <= 0) {
-                //console.log("Limit reched for " + id);	
+                console.log("Limit reached for " + id);
                 return;
             }
         }
@@ -146,8 +145,7 @@ function ProcessGetHttp(url, resultfn, errorfn) {
 
 function SendPostHttp(url, postdata, result_fn, error_fn, id, max_id) {
     if ((http_cmd_list.length > max_cmd) && (max_cmd != -1)) {
-        //console.log("adding rejected");	
-        error_fn();
+        error_fn(999, translate_text_item("Server not responding"));
         return;
     }
     var cmd_id = 0;
@@ -199,8 +197,7 @@ function ProcessPostHttp(url, postdata, resultfn, errorfn) {
 
 function SendFileHttp(url, postdata, progress_fn, result_fn, error_fn) {
     if ((http_cmd_list.length > max_cmd) && (max_cmd != -1)) {
-        //console.log("adding rejected");	
-        error_fn();
+        error_fn(999, translate_text_item("Server not responding"));
         return;
     }
     if (http_cmd_list.length != 0) process = false;

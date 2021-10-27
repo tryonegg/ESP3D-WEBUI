@@ -161,9 +161,9 @@ function files_print_filename(filename) {
     if (target_firmware == "smoothieware") {
         cmd = "play " + filename;
     } else if (target_firmware == "grbl-embedded") {
-        SendPrinterCommand("?", false, null, null, 114, 1);
+        get_status();
         on_autocheck_status(true);
-        cmd = "[ESP220]" + filename;
+        cmd = "$SD/Run=" + filename;
     } else {
         var newfilename = filename;
         if ((current_source == tft_sd) || (current_source == tft_usb))newfilename = current_source+filename;
