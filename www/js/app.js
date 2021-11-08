@@ -386,9 +386,6 @@ function update_UI_firmware_target() {
         if (grblaxis >2) {
             //id('control_z_position_display').style.display = 'block';
             id('control_z_position_label').innerHTML = "Zw";
-            id('zero_xyz_btn_txt').innerHTML +="Z";
-            grblzerocmd += " Z0";
-            
         } else {
             hideAxiscontrols();
             id('preferences_control_z_velocity_group').style.display = 'none';
