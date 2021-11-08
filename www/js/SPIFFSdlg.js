@@ -128,7 +128,7 @@ function SPIFFSdispatchfilestatus(jsonresponse) {
         if (String(jsonresponse.files[i].size) != "-1") {
             content += "<tr>";
             content += "<td  style='vertical-align:middle; color:#5BC0DE'>" + get_icon_svg("file") + "</td>";
-            content += "<td  width='100%'  style='vertical-align:middle'><a href=\"" + jsonresponse.path + jsonresponse.files[i].name + "\" target=_blank><button  class=\"btn btn-link no_overflow\">";
+            content += "<td  width='100%'  style='vertical-align:middle'><a href=\"" + jsonresponse.path + jsonresponse.files[i].name + "\" target=_blank download><button  class=\"btn btn-link no_overflow\">";
             content += jsonresponse.files[i].name;
             content += "</button></a></td><td nowrap  style='vertical-align:middle'>";
             content += jsonresponse.files[i].size;

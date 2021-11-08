@@ -289,7 +289,7 @@ function files_click_file(index) {
         var url = "";
         if (target_firmware == "smoothieware") url = files_currentPath.replace(primary_sd, "/SD/") + entry.sdname;
         else url = "/SD/" + files_currentPath + entry.sdname;
-        window.open(url.replace("//", "/"));
+        window.location.href = url.replace("//", "/");
         return;
     }
     if (target_firmware == "smoothieware" && entry.isprintable) {
