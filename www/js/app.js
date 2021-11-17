@@ -662,7 +662,7 @@ var socket_is_settings = false;
 function process_socket_response(msg) {
 
     if (target_firmware == "grbl-embedded") {
-        grblHandleMessage(msg);
+        msg.split('\n').forEach(grblHandleMessage);
         return;
     }
     if (target_firmware == "marlin-embedded") {
