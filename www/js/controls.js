@@ -288,7 +288,7 @@ function control_build_macro_ui() {
 function macro_command(target, filename) {
     var cmd = ""
     if (target == "ESP") {
-        cmd = "[ESP700]" + filename;
+        cmd = (target_firmware == "grbl-embedded" ? "$LocalFS/Run=" : "[ESP700]") + filename;
     } else if (target == "SD") {
         files_print_filename(filename);
     } else if (target == "URI") {
