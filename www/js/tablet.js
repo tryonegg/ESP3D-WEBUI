@@ -560,7 +560,7 @@ function loadGCode() {
         tabletGetFileList();
     } else {
         gCodeFilename = watchPath + filename;
-        fetch('/SD/' + gCodeFilename)
+        fetch(encodeURIComponent('SD/' + gCodeFilename))
             .then(response => response.text() )
             .then(gcode => showGCode(gcode) );
     }
