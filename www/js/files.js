@@ -287,9 +287,9 @@ function files_click_file(index) {
     if (direct_sd && (!(target_firmware == "smoothieware" && files_currentPath.startsWith(secondary_sd)) || (target_firmware != "smoothieware"))) {
         //console.log("file on direct SD");
         var url = "";
-        if (target_firmware == "smoothieware") url = files_currentPath.replace(primary_sd, "/SD/") + entry.sdname;
-        else url = "/SD/" + files_currentPath + entry.sdname;
-        window.location.href = url.replace("//", "/");
+        if (target_firmware == "smoothieware") url = files_currentPath.replace(primary_sd, "SD/") + entry.sdname;
+        else url = "SD/" + files_currentPath + entry.sdname;
+        window.location.href = encodeURIComponent(url.replace("//", "/"));
         return;
     }
     if (target_firmware == "smoothieware" && entry.isprintable) {
