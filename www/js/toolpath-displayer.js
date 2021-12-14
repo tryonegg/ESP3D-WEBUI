@@ -33,6 +33,38 @@ var resetBbox = function() {
 
 }
 
+// Project the 3D toolpath onto the 2D Canvas
+// The coefficients determine the type of projection
+// Matrix multiplication written out
+var xx = 0.707;
+var xy = 0.707;
+var xz = 0.0;
+var yx = -0.707/2;
+var yy = 0.707/2;
+var yz = 1.0;
+var isoView = function() {
+    xx = 0.707;
+    xy = 0.707;
+    xz = 0.0;
+    yx = -0.707;
+    yy = 0.707;
+    yz = 1.0;
+}
+var topView = function() {
+    xx = 1.0;
+    xy = 0.0;
+    xz = 0.0;
+    yx = 0.0;
+    yy = 1.0;
+    yz = 0.0;
+}
+var projection = function(inpoint) {
+    outpoint = {}
+    outpoint.x = inpoint.x * xx + inpoint.y * xy + inpoint.z * xz;
+    outpoint.y = inpoint.x * yx + inpoint.y * yy + inpoint.z * yz;
+    return outpoint;
+}
+
 var formatLimit = function(mm) {
     return (units == 'G20') ? (mm/25.4).toFixed(3)+'"' : mm.toFixed(2)+'mm';
 }
@@ -44,22 +76,24 @@ var toolRadius = 6;
 var toolRectWH = toolRadius*2 + 4;  // Slop to encompass the entire image area
 
 var drawTool = function(pos) {
-    toolX = xToPixel(pos.x)-toolRadius-2;
-    toolY = yToPixel(pos.y)-toolRadius-2;
+    pp = projection(pos)
+    toolX = xToPixel(pp.x)-toolRadius-2;
+    toolY = yToPixel(pp.y)-toolRadius-2;
     toolSave = tp.getImageData(toolX, toolY, toolRectWH, toolRectWH);
 
     tp.beginPath();
     tp.strokeStyle = 'magenta';
     tp.fillStyle = 'magenta';
-    tp.arc(pos.x, pos.y, toolRadius/scaler, 0, Math.PI*2, true);
+    tp.arc(pp.x, pp.y, toolRadius/scaler, 0, Math.PI*2, true);
     tp.fill();
     tp.stroke();
 }
 
 var drawOrigin = function(radius) {
+    po = projection({x: 0.0, y:0.0, z:0.0})
     tp.beginPath();
     tp.strokeStyle = 'red';
-    tp.arc(0, 0, radius, 0, Math.PI*2, false);
+    tp.arc(po.x, po.y, radius, 0, Math.PI*2, false);
     tp.moveTo(-radius*1.5, 0);
     tp.lineTo(radius*1.5, 0);
     tp.moveTo(0,-radius*1.5);
@@ -166,10 +200,13 @@ var bboxHandlers = {
 	// Update units in case it changed in a previous line
         units = modal.units;
 
-        bbox.min.x = Math.min(bbox.min.x, start.x, end.x);
-        bbox.min.y = Math.min(bbox.min.y, start.y, end.y);
-        bbox.max.x = Math.max(bbox.max.x, start.x, end.x);
-        bbox.max.y = Math.max(bbox.max.y, start.y, end.y);
+        ps = projection(start);
+        pe = projection(end);
+
+        bbox.min.x = Math.min(bbox.min.x, ps.x, pe.x);
+        bbox.min.y = Math.min(bbox.min.y, ps.y, pe.y);
+        bbox.max.x = Math.max(bbox.max.x, ps.x, pe.x);
+        bbox.max.y = Math.max(bbox.max.y, ps.y, pe.y);
         bboxIsSet = true;
     },
     addArcCurve: function(modal, start, end, center) {
@@ -187,11 +224,15 @@ var bboxHandlers = {
             end = tmp;
         }
 
+        ps = projection(start);
+        pc = projection(center);
+        pe = projection(end);
+
 	// Coordinates relative to the center of the arc
-	var sx = start.x - center.x;
-	var sy = start.y - center.y;
-	var ex = end.x - center.x;
-	var ey = end.y - center.y;
+	var sx = ps.x - pc.x;
+	var sy = ps.y - pc.y;
+	var ex = pe.x - pc.x;
+	var ey = pe.y - pc.y;
 
         var radius = Math.hypot(sx, sy);
 
@@ -275,10 +316,10 @@ var bboxHandlers = {
 		}
 	    }
 	}
-	var maxX = px ? center.x + radius : Math.max(start.x, end.x);
-	var maxY = py ? center.y + radius : Math.max(start.y, end.y);
-	var minX = mx ? center.x - radius : Math.min(start.x, end.x);
-	var minY = my ? center.y - radius : Math.min(start.y, end.y);
+	var maxX = px ? pc.x + radius : Math.max(ps.x, pe.x);
+	var maxY = py ? pc.y + radius : Math.max(ps.y, pe.y);
+	var minX = mx ? pc.x - radius : Math.min(ps.x, pe.x);
+	var minY = my ? pc.y - radius : Math.min(ps.y, pe.y);
 
 	bbox.min.x = Math.min(bbox.min.x, minX);
 	bbox.min.y = Math.min(bbox.min.y, minY);
@@ -287,7 +328,6 @@ var bboxHandlers = {
         bboxIsSet = true;
     }
 };
-
 var initialMoves = true;
 var displayHandlers = {
     addLine: function(modal, start, end) {
@@ -303,9 +343,13 @@ var displayHandlers = {
             }
         }
 
+        ps = projection(start);
+        pe = projection(end);
         tp.beginPath();
-        tp.moveTo(start.x, start.y);
-        tp.lineTo(end.x, end.y);
+        // tp.moveTo(start.x, start.y);
+        // tp.lineTo(end.x, end.y);
+        tp.moveTo(ps.x, ps.y);
+        tp.lineTo(pe.x, pe.y);
         tp.stroke();
     },
     addArcCurve: function(modal, start, end, center) {
@@ -318,15 +362,36 @@ var displayHandlers = {
         var deltaY2 = end.y - center.y;
         var theta1 = Math.atan2(deltaY1, deltaX1);
         var theta2 = Math.atan2(deltaY2, deltaX2);
+        var cw = modal.motion == "G2";
+        if (!cw && theta2 < theta1) {
+            theta2 += Math.PI * 2;
+        } else if (cw && theta2 > theta1) {
+            theta2 -= Math.PI * 2;
+        }
 	if (theta1 == theta2) {
-	    theta2 += Math.PI * ((modal.motion == "G2") ? -2 : 2);
+	    theta2 += Math.PI * ((cw) ? -2 : 2);
 	}
 
         initialMoves = false;
 
         tp.beginPath();
         tp.strokeStyle = 'blue';
-        tp.arc(center.x, center.y, radius, theta1, theta2, modal.motion == 'G2');
+        deltaTheta = theta2 - theta1;
+        n = (Math.abs(deltaTheta) > Math.PI) ? 20 : 10;
+        dt = (deltaTheta) / n;
+        ps = projection(start);
+        tp.moveTo(ps.x, ps.y);
+        next = {};
+        // XXX we could do spirals by interpolating Z
+        theta = theta1;
+        for (i = 0; i < n; i++) {
+            theta += dt;
+            next.x = center.x + radius * Math.cos(theta);
+            next.y = center.y + radius * Math.sin(theta);
+            next.z = start.z;
+            pe = projection(next)
+            tp.lineTo(pe.x, pe.y);
+        }
         tp.stroke();
     },
 };
