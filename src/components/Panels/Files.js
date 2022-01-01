@@ -187,7 +187,7 @@ const FilesPanel = () => {
           (currentPath[currentFS] == "/" ? "" : "/") +
           file.name +
           "S";
-        //append file size first to check updload is complete
+        //append file size first to check upload is complete
         formData.append(arg, file.size);
         formData.append(
           "myfiles",

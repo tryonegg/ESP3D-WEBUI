@@ -26,57 +26,51 @@ import {
   filterResultFiles,
 } from "../../../components/Helpers";
 
-//Extract information from string - specific to FW / source
-const formatFileSerialLine = (acc, line) => {
-  const elements = line.split(" ");
-  if (elements.length != 2) return acc;
-  //TODO: check it is valid file name / size
-  //check size is number ?
-  //filename ?
-  acc.push({ name: elements[0], size: formatFileSizeToString(elements[1]) });
-  return acc;
-};
-
 const capabilities = {
   Process: (path, filename) => {
     return canProcessFile(filename);
   },
   UseFilters: () => true,
-  IsFlatFS: () => true,
-  Upload: (path, filename, eMsg = false) => {
-    if (eMsg) return "E1";
-    //TODO
-    //check 8.1 if become true
-    return false;
+  IsFlatFS: () => false,
+  Upload: () => {
+    return true;
   },
   UploadMultiple: () => {
     return false;
   },
   Download: () => {
-    return false;
+    return true;
   },
   DeleteFile: () => {
     return true;
   },
   DeleteDir: () => {
-    return false;
+    return true;
   },
   CreateDir: () => {
-    return false;
+    return true;
   },
 };
 
 const commands = {
   list: (path, filename) => {
-    return { type: "cmd", cmd: "M21\nM20" };
+    return {
+      type: "url",
+      url: "upload",
+      args: { path, action: "list" },
+    };
   },
-  formatResult: (result) => {
-    const res = {};
-    const files = result.content.reduce((acc, line) => {
-      return formatFileSerialLine(acc, line);
-    }, []);
-    res.files = sortedFilesList(files);
-    res.status = formatStatus(result.status);
+  upload: (path, filename) => {
+    return {
+      type: "url",
+      url: "upload",
+      args: { path },
+    };
+  },
+  formatResult: (resultTxT) => {
+    const res = JSON.parse(resultTxT);
+    res.files = sortedFilesList(res.files);
+    res.status = formatStatus(res.status);
     return res;
   },
   filterResult: (data, path) => {
@@ -88,36 +82,39 @@ const commands = {
   play: (path, filename) => {
     return {
       type: "cmd",
-      cmd: "M23 " + path + (path == "/" ? "" : "/") + filename + "\nM24",
+      cmd: "$SD/Run=" + path + (path == "/" ? "" : "/") + filename + "\n",
+    };
+  },
+  deletedir: (path, filename) => {
+    return {
+      type: "url",
+      url: "upload",
+      args: { path, action: "deletedir", filename },
     };
   },
   delete: (path, filename) => {
     return {
-      type: "cmd",
-      cmd: "M30 " + path + (path == "/" ? "" : "/") + filename,
+      type: "url",
+      url: "upload",
+      args: { path, action: "delete", filename },
+    };
+  },
+  createdir: (path, filename) => {
+    return {
+      type: "url",
+      url: "upload",
+      args: { path, action: "createdir", filename },
+    };
+  },
+  download: (path, filename) => {
+    return {
+      type: "url",
+      url: "/sd" + path + (path.endsWith("/") ? "" : "/") + filename,
+      args: {},
     };
   },
 };
 
-const responseSteps = {
-  list: {
-    start: (data) => data.startsWith("Begin file list"),
-    end: (data) => data.startsWith("End file list"),
-    error: (data) => {
-      return (
-        data.indexOf("error") != -1 || data.indexOf("echo:No SD card") != -1
-      );
-    },
-  },
-  delete: {
-    start: (data) => data.startsWith("File deleted"),
-    end: (data) => data.startsWith("ok"),
-    error: (data) => {
-      return data.startsWith("Deletion failed");
-    },
-  },
-};
-
-const SD = { capabilities, commands, responseSteps };
+const SD = { capabilities, commands };
 
 export { SD };
