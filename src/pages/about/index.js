@@ -233,6 +233,7 @@ const About = () => {
           </ul>
         </CenterLeft>
       );
+      if (isFwUpdate) {
       showConfirmationModal({
         modals,
         title: titleConfirmation,
@@ -247,6 +248,9 @@ const About = () => {
           text: T("S28"),
         },
       });
+      } else {
+        uploadFiles();
+      }
     }
   };
 
