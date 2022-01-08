@@ -263,15 +263,15 @@ function process_settings_answer(response_text) {
     var result = true;
     try {
         var response = JSON.parse(response_text);
-        if (typeof response.EEPROM == 'undefined') {
+        if (typeof response.Settings == 'undefined') {
             result = false;
-            console.log('No EEPROM');
+            console.log('No Settings');
         } else {
-            //console.log("EEPROM has " + response.EEPROM.length + " entries");
-            if (response.EEPROM.length > 0) {
+            //console.log("Settings has " + response.Settings.length + " entries");
+            if (response.Settings.length > 0) {
                 var vi = 0;
-                for (var i = 0; i < response.EEPROM.length; i++) {
-                    vi = create_setting_entry(response.EEPROM[i], vi);
+                for (var i = 0; i < response.Settings.length; i++) {
+                    vi = create_setting_entry(response.Settings[i], vi);
 
                 }
                 if (vi > 0) {
