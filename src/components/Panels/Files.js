@@ -392,7 +392,7 @@ const FilesPanel = () => {
     if (line.size == -1) {
       currentPath[currentFS] =
         currentPath[currentFS] +
-        (currentPath[currentFS] == "/" ? "" : "/") +
+        ((currentPath[currentFS] == "/" || line.name.startsWith["/"]) ? "" : "/") +
         line.name;
       onRefresh(e, files.capability(currentFS, "IsFlatFS"));
     } else {

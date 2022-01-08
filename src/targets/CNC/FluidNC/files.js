@@ -18,7 +18,7 @@
  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 import { h } from "preact";
-import { FLASH } from "../../FLASH-source";
+import { FLASH } from "./FLASH-source";
 import { SD } from "./SD-source";
 
 //List of supported files systems
@@ -32,7 +32,6 @@ const supportedFileSystems = [
 
 const capabilities = {
   FLASH: FLASH.capabilities,
-
   SD: SD.capabilities,
 
   SDEXT: {},

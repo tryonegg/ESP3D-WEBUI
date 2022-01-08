@@ -52,12 +52,34 @@ const capabilities = {
   },
 };
 
+const normalizePath = (path) => {
+  let re = /\/\//g
+  let p = path.replace(re, "/");
+  return p;
+}
+
+
+const sdMountedPath = (path, filename) => {
+  const mountPrefix = "/sd";
+  console.log("MP ", path, filename);
+  if (typeof(path) == 'undefined') {
+    if (typeof(filename) == 'undefined') {
+      return mountPrefix + "/";
+    }
+    return normalizePath(mountPrefix + "/" + encodeURIComponent(filename));
+  }
+  if (typeof(filename) == 'undefined') {
+    return normalizePath(mountPrefix + path);
+  }
+  return normalizePath(mountPrefix + path + "/" + encodeURIComponent(filename));
+}
+
 const commands = {
   list: (path, filename) => {
     return {
       type: "url",
-      url: "upload",
-      args: { path, action: "list" },
+      url: sdMountedPath(path, filename),
+      args: { action: "list" },
     };
   },
   upload: (path, filename) => {
@@ -95,21 +117,21 @@ const commands = {
   delete: (path, filename) => {
     return {
       type: "url",
-      url: "upload",
-      args: { path, action: "delete", filename },
+      url: sdMountedPath(path, filename),
+      args: { action: "delete", filename },
     };
   },
   createdir: (path, filename) => {
     return {
       type: "url",
-      url: "upload",
-      args: { path, action: "createdir", filename },
+      url: sdMountedPath(path,filename),
+      args: { action: "createdir", filename },
     };
   },
   download: (path, filename) => {
     return {
       type: "url",
-      url: "/sd" + path + (path.endsWith("/") ? "" : "/") + filename,
+      url: sdMountedPath(path, filename),
       args: {},
     };
   },
