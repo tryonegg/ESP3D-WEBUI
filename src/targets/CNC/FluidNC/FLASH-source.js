@@ -106,7 +106,8 @@ const commands = {
     return {
       type: "url",
       url: mountedPath(path, filename),
-      args: { action: "delete", filename },
+      // args: { action: "delete", filename },
+      method: "DELETE",
     };
   },
   download: (path, filename) => {

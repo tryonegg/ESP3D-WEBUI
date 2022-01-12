@@ -32,10 +32,86 @@ const {
   __dirname + "/targets/" + target + "/" + subtarget + "/index.js"
 ));
 
+const listFiles = (req, mypath, res) => {
+  console.log("listFiles", mypath, req.body);
+  if (typeof mypath == "undefined") {
+    if (typeof req.body == "undefined") {
+      console.log("[server]path has no body");
+      mypath = "/";
+    } else {
+        if (typeof req.body.path == "undefined") {
+            console.log("[server]path is not defined");
+            mypath = "/";
+        } else {
+            mypath = (req.body.path == "/" ? "" : req.body.path) + "/";
+        }
+    }
+  }
+    console.log("[server]path is " + mypath);
+    if (!req.files || Object.keys(req.files).length === 0) {
+        return res.send(filesList(mypath));
+ }
+  let myFile = req.files.myfiles;
+  if (typeof myFile.length == "undefined") {
+    let fullpath = path.normalize(serverpath + mypath + myFile.name);
+    console.log("[server]one file:" + fullpath);
+    myFile.mv(fullpath, function (err) {
+      if (err) return res.status(500).send(err);
+      res.send(filesList(mypath));
+    });
+    return;
+  } else {
+    console.log(myFile.length + " files");
+    for (let i = 0; i < myFile.length; i++) {
+      let fullpath = path.normalize(serverpath + mypath + myFile[i].name);
+      console.log(fullpath);
+      myFile[i].mv(fullpath).then(() => {
+        if (i == myFile.length - 1) res.send(filesList(mypath));
+      });
+    }
+  }
+}
+
 const WebSocketServer = require("ws").Server,
   wss = new WebSocketServer({ port: 81 });
 app.use("/", express.static(serverpath));
 app.use("/", expressStaticGzip(serverpath));
+app.get("/command", function (req, res) {
+  commandsQuery(req, res, SendBinary);
+});
+
+
+app.use("/", function(req, res, next) {
+  console.log("Request::",req._parsedUrl.pathname, req.method, req.query, req.query.action);
+//  let mypath = req.query.path;
+  let mypath = req._parsedUrl.pathname;
+  let url = req.originalUrl;
+  let filepath = path.normalize(serverpath + mypath /* + "/" + req.query.filename */);
+  switch (req.method) {
+    case 'GET':
+          listFiles(req, mypath, res);
+          break;
+    case 'DELETE':
+      if (filename.endsWith("/")) {
+        console.log("[server]DELETE directory " + filepath);
+        deleteFolderRecursive(filepath);
+        fs.readdirSync(mypath);
+      } else {
+        fs.unlinkSync(filepath);
+        console.log("[server]DELETE file " + filepath);
+      }
+      listFiles(req, mypath, res);
+      break;
+    case 'MKCOL':
+      console.log("[server]MKCOL directory " + filepath);
+      fs.mkdirSync(filepath);
+      listFiles(req, mypath, res);
+      break;
+    default:
+      next();
+      break;
+  }
+});
 app.use(fileUpload({ preserveExtension: true, debug: false }));
 
 app.listen(port, () => console.log("Env:", subtarget, ":", target));
@@ -61,10 +137,6 @@ app.post("/login", function (req, res) {
 
 app.get("/config", function (req, res) {
   configURI(req, res);
-});
-
-app.get("/command", function (req, res) {
-  commandsQuery(req, res, SendBinary);
 });
 
 function fileSizeString(size) {

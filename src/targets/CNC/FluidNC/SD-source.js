@@ -25,6 +25,8 @@ import {
   formatStatus,
   filterResultFiles,
 } from "../../../components/Helpers";
+	resolve.fallback: { "timers": false };
+var parseString = require('xml2js').parseString;
 
 const capabilities = {
   Process: (path, filename) => {
@@ -110,22 +112,27 @@ const commands = {
   deletedir: (path, filename) => {
     return {
       type: "url",
-      url: "upload",
-      args: { path, action: "deletedir", filename },
+//      url: "upload",
+//      args: { path, action: "deletedir", filename },
+      url: sdMountedPath(path, filename) + "/",
+        method: "DELETE",
+
     };
   },
   delete: (path, filename) => {
     return {
       type: "url",
       url: sdMountedPath(path, filename),
-      args: { action: "delete", filename },
+ //     args: { action: "delete", filename },
+        method: "DELETE",
     };
   },
   createdir: (path, filename) => {
     return {
       type: "url",
       url: sdMountedPath(path,filename),
-      args: { action: "createdir", filename },
+      // args: { action: "createdir", filename },
+      method: "MKCOL",
     };
   },
   download: (path, filename) => {

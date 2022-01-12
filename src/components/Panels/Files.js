@@ -88,7 +88,7 @@ const FilesPanel = () => {
   const sendURLCmd = (cmd) => {
     createNewRequest(
       espHttpURL(cmd.url, cmd.args).toString(),
-      { method: "GET" },
+      { method: cmd.method ? cmd.method : "GET" },
       {
         onSuccess: (result) => {
           filesListCache[currentFS] = files.command(
@@ -436,7 +436,7 @@ const FilesPanel = () => {
       if (cmd.type == "url") {
         createNewRequest(
           espHttpURL(cmd.url, cmd.args).toString(),
-          { method: "GET" },
+          { method: cmd.method ? cmd.method : "GET" },
           {
             onSuccess: (result) => {
               filesListCache[currentFS] = files.command(
