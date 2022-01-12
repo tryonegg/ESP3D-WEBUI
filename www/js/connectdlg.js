@@ -133,6 +133,6 @@ function retryconnect() {
     id('connectbtn').style.display = 'none';
     id('failed_connect_msg').style.display = 'none';
     id('connecting_msg').style.display = 'block';
-    var url = "/command?plain=" + encodeURIComponent("[ESP800]plain");;
+    var url = "/command?plain=" + encodeURIComponent("[ESP800]");;
     SendGetHttp(url, connectsuccess, connectfailed)
 }
