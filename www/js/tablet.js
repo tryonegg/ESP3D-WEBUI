@@ -485,13 +485,13 @@ function gotFiles(data) {
     }
 }
 
-function tabletGetFileList() {
-    SendFileHttp('/upload', null, null, gotFiles, null);
+function tabletGetFileList(path) {
+    SendFileHttp('/upload?path=' + encodeURI(path), null, null, gotFiles, null);
 }
 
 function tabletInit() {
     requestModes();
-    tabletGetFileList();
+    tabletGetFileList('/');
 }
 
 function showGCode(gcode) {
@@ -553,11 +553,11 @@ function loadGCode() {
     if (filename === '..') {
         watchPath = watchPath.slice(0, -1).replace(/[^/]*$/,'');
         filename = '';
-        tabletGetFileList();
+        tabletGetFileList(watchPath);
     } else if (filename.endsWith('/')) {
         watchPath = watchPath + filename;
         filename = '';
-        tabletGetFileList();
+        tabletGetFileList(watchPath);
     } else {
         gCodeFilename = watchPath + filename;
         fetch(encodeURIComponent('SD/' + gCodeFilename))

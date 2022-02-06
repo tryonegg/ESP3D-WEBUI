@@ -136,6 +136,12 @@ textarea {
 .tablettab .axis-position .btn {
   text-align: center;
 }
+.btn-zero {
+    background-color: lightyellow;
+}
+.btn-goto {
+    background-color: #d0ffd0;
+}
 
 .spindle {
    text-align: center;
