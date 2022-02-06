@@ -2,11 +2,11 @@
 
 <svg width="310" height="260" xmlns="http://www.w3.org/2000/svg" version="1.1">
 <script type="text/ecmascript">
-    function Onhover(evt, id) {
-      id(id).style.opacity="1";
+    function Onhover(evt, elementId) {
+      id(elementId).style.opacity="1";
     }
-    function Onout(evt,id) {
-      id(id).style.opacity="0.2";
+    function Onout(evt,elementId) {
+      id(elementId).style.opacity="0.2";
     }
 </script>
 <defs><style type="text/css">
