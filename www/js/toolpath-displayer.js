@@ -4,15 +4,15 @@ var root = window;
 
 var canvas = id("small-toolpath");
 var tp = canvas.getContext("2d");
-var rect;
+var tpRect;
 
 tp.lineWidth = 0.1;
 tp.lineCap = 'round';
 tp.strokeStyle = 'blue';
 
-var units = 'G21';
+var tpUnits = 'G21';
 
-var bbox = {
+var tpBbox = {
     min: {
         x: Infinity,
         y: Infinity
@@ -25,11 +25,11 @@ var bbox = {
 var bboxIsSet = false;
 
 var resetBbox = function() {
-    bbox.min.x = Infinity;
-    bbox.min.y = Infinity;
-    bbox.max.x = -Infinity;
-    bbox.max.y = -Infinity;
-    bboxIsSet = false;
+    tpBbox.min.x = Infinity;
+    tpBbox.min.y = Infinity;
+    tpBbox.max.x = -Infinity;
+    tpBbox.max.y = -Infinity;
+    tpBboxIsSet = false;
 
 }
 
@@ -66,7 +66,7 @@ var projection = function(inpoint) {
 }
 
 var formatLimit = function(mm) {
-    return (units == 'G20') ? (mm/25.4).toFixed(3)+'"' : mm.toFixed(2)+'mm';
+    return (tpUnits == 'G20') ? (mm/25.4).toFixed(3)+'"' : mm.toFixed(2)+'mm';
 }
 
 var toolX = null;
@@ -109,10 +109,10 @@ var yToPixel = function(y) { return -scaler * y + yOffset; }
 
 var transformCanvas = function() {
     toolSave = null;
-    if (rect == undefined) {
-        rect = canvas.parentNode.getBoundingClientRect();
-        canvas.width = rect.width;
-        canvas.height = rect.height;
+    if (tpRect == undefined) {
+        tpRect = canvas.parentNode.getBoundingClientRect();
+        canvas.width = tpRect.width;
+        canvas.height = tpRect.height;
     }
 
     // Reset the transform and clear the canvas
@@ -133,8 +133,8 @@ var transformCanvas = function() {
         return;
     }
 
-    var imageWidth = bbox.max.x - bbox.min.x;
-    var imageHeight = bbox.max.y - bbox.min.y;
+    var imageWidth = tpBbox.max.x - tpBbox.min.x;
+    var imageHeight = tpBbox.max.y - tpBbox.min.y;
     if (imageWidth == 0) {
         imageWidth = 1;
     }
@@ -151,8 +151,8 @@ var transformCanvas = function() {
     if (scaler < 0) {
         scaler = -scaler;
     }
-    xOffset = inset - bbox.min.x * scaler;
-    yOffset = (canvas.height-inset) - bbox.min.y * (-scaler);
+    xOffset = inset - tpBbox.min.x * scaler;
+    yOffset = (canvas.height-inset) - tpBbox.min.y * (-scaler);
 
     // Canvas coordinates of image bounding box top and right
     var imageTop = scaler * imageHeight;
@@ -165,15 +165,15 @@ var transformCanvas = function() {
     tp.font = "14px Ariel";
     tp.textAlign = "center";
     tp.textBaseline = "bottom";
-    tp.fillText(formatLimit(bbox.min.y), imageRight/2, canvas.height-inset);
+    tp.fillText(formatLimit(tpBbox.min.y), imageRight/2, canvas.height-inset);
     tp.textBaseline = "top";
-    tp.fillText(formatLimit(bbox.max.y), imageRight/2, canvas.height-inset - imageTop);
+    tp.fillText(formatLimit(tpBbox.max.y), imageRight/2, canvas.height-inset - imageTop);
     tp.textAlign = "left";
     tp.textBaseline = "center";
-    tp.fillText(formatLimit(bbox.min.x), inset, canvas.height-inset - imageTop/2);
+    tp.fillText(formatLimit(tpBbox.min.x), inset, canvas.height-inset - imageTop/2);
     tp.textAlign = "right";
     tp.textBaseline = "center";
-    tp.fillText(formatLimit(bbox.max.x), inset+imageRight, canvas.height-inset - imageTop/2);
+    tp.fillText(formatLimit(tpBbox.max.x), inset+imageRight, canvas.height-inset - imageTop/2);
     // Transform the path coordinate system so the image fills the canvas
     // with a small inset, and +Y goes upward.
     // The net transform from image space (x,y) to pixel space (x',y') is:
@@ -197,16 +197,16 @@ var wrappedDegrees = function(radians) {
 
 var bboxHandlers = {
     addLine: function(modal, start, end) {
-	// Update units in case it changed in a previous line
-        units = modal.units;
+	// Update tpUnits in case it changed in a previous line
+        tpUnits = modal.units;
 
         ps = projection(start);
         pe = projection(end);
 
-        bbox.min.x = Math.min(bbox.min.x, ps.x, pe.x);
-        bbox.min.y = Math.min(bbox.min.y, ps.y, pe.y);
-        bbox.max.x = Math.max(bbox.max.x, ps.x, pe.x);
-        bbox.max.y = Math.max(bbox.max.y, ps.y, pe.y);
+        tpBbox.min.x = Math.min(tpBbox.min.x, ps.x, pe.x);
+        tpBbox.min.y = Math.min(tpBbox.min.y, ps.y, pe.y);
+        tpBbox.max.x = Math.max(tpBbox.max.x, ps.x, pe.x);
+        tpBbox.max.y = Math.max(tpBbox.max.y, ps.y, pe.y);
         bboxIsSet = true;
     },
     addArcCurve: function(modal, start, end, center) {
@@ -216,7 +216,7 @@ var bboxHandlers = {
 	// the arc across those axes.
 
 	// Update units in case it changed in a previous line
-        units = modal.units;
+        tpUnits = modal.units;
 
         if (modal.motion == 'G2') {  // clockwise
             var tmp = start;
@@ -321,10 +321,10 @@ var bboxHandlers = {
 	var minX = mx ? pc.x - radius : Math.min(ps.x, pe.x);
 	var minY = my ? pc.y - radius : Math.min(ps.y, pe.y);
 
-	bbox.min.x = Math.min(bbox.min.x, minX);
-	bbox.min.y = Math.min(bbox.min.y, minY);
-	bbox.max.x = Math.max(bbox.max.x, maxX);
-	bbox.max.y = Math.max(bbox.max.y, maxY);
+	tpBbox.min.x = Math.min(tpBbox.min.x, minX);
+	tpBbox.min.y = Math.min(tpBbox.min.y, minY);
+	tpBbox.max.x = Math.max(tpBbox.max.x, maxX);
+	tpBbox.max.y = Math.max(tpBbox.max.y, maxY);
         bboxIsSet = true;
     }
 };

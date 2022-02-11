@@ -156,7 +156,7 @@ function startSocket() {
                     process_socket_response(wsmsg);
                     //msg = wsmsg.replace("\n", "");
                     //wsmsg = msg.replace("\r", "");
-                    if (!((wsmsg.startsWith("ok T:") || wsmsg.startsWith("X:") || wsmsg.startsWith("FR:") ||wsmsg.startsWith("echo:E0 Flow"))))console.log(wsmsg);
+                    if (!((wsmsg.startsWith("<") || wsmsg.startsWith("ok T:") || wsmsg.startsWith("X:") || wsmsg.startsWith("FR:") ||wsmsg.startsWith("echo:E0 Flow"))))console.log(wsmsg);
                     wsmsg = "";
                     msg = "";
                 }
@@ -173,7 +173,7 @@ function startSocket() {
                 if (enable_ping) {
                     if (tval[0] == 'PING') {
                         page_id = tval[1];
-                        console.log("ping from id = " + page_id);
+                        // console.log("ping from id = " + page_id);
                         last_ping = Date.now();
                         if (interval_ping == -1) interval_ping = setInterval(function() {
                             check_ping();
