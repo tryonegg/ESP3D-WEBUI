@@ -515,13 +515,21 @@ function updateGcodeViewerAngle(clickEvent){
     const y = clickEvent.clientY - rect.top
 
     var cameraAngle = 0;
-    if(x > rect.width/2){
+    if(x < rect.width/2){
         cameraAngle = 1;
     }
 
     const gcode = id('gcode').value;
     if (gCodeLoaded) {
         displayer.showToolpath(gcode, WPOS, MPOS, cameraAngle);
+    }
+}
+
+function showGcodePopup(){
+
+    const gcode = id('gcode').value;
+    if (gCodeLoaded) {
+        displayer.showPopup(gcode, WPOS, MPOS, 0);
     }
 }
 
@@ -751,6 +759,9 @@ function mdiEnterKey(event) {
 id('mditext0').addEventListener('keyup', mdiEnterKey);
 id('mditext1').addEventListener('keyup', mdiEnterKey);
 id("small-toolpath").addEventListener("mousedown", updateGcodeViewerAngle); 
+id("small-toolpath").addEventListener("dblclick", showGcodePopup); 
+
+
 
 // The listener could be added to the tablettab element by setting tablettab's
 // contentEditable property.  The problem is that it is too easy for tablettab

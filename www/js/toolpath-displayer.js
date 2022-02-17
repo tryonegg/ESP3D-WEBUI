@@ -1,5 +1,66 @@
 // Display the XY-plane projection of a GCode toolpath on a 2D canvas
 
+var gcodePopup = {
+  // (A) CREATE NUMPAD HTML
+  hwrap: null, // gcodePopup wrapper container
+  hpad: null, // gcodePopup itself
+  hdisplay: null, // number display
+  hbwrap: null, // buttons wrapper
+  hbuttons: {}, // individual buttons
+  init: function(){
+    // (A1) WRAPPER
+    gcodePopup.hwrap = document.createElement("div");
+    gcodePopup.hwrap.id = "numWrap";
+
+
+    // (A2) ENTIRE NUMPAD ITSELF
+    gcodePopup.hpad = document.createElement("div");
+    gcodePopup.hpad.id = "numPad";
+    gcodePopup.hwrap.appendChild(gcodePopup.hpad);
+    gcodePopup.hpad.tabindex = "0";
+    gcodePopup.hpad.contentEditable = false;
+    gcodePopup.hpad.addEventListener("keydown", gcodePopup.keypr);
+
+    // (A4) NUMBER BUTTONS
+    gcodePopup.hbwrap = document.createElement("div");
+    gcodePopup.hbwrap.id = "numBWrap";
+    gcodePopup.hpad.appendChild(gcodePopup.hbwrap);
+
+    // (A5) BUTTONS
+    var buttonator = function (txt, css, fn) {
+      var button = document.createElement("div");
+      button.innerHTML = txt;
+      button.classList.add(css);
+      button.addEventListener("click", fn);
+      gcodePopup.hbwrap.appendChild(button);
+      gcodePopup.hbuttons[txt] = button;
+    };
+
+    var spacer = function() {
+      buttonator("", "spacer", null);
+    }          
+
+    buttonator("Cancel", "cxwide", gcodePopup.hide);
+
+
+    // (A6) ATTACH NUMPAD TO HTML BODY
+    document.body.appendChild(gcodePopup.hwrap);
+    gcodePopup.hwrap.classList.add("open"); 
+  },
+
+  // (D) SHOW GCODE POPUP
+  show: function() {
+
+    gcodePopup.hwrap.classList.add("open");
+
+  },
+
+  // (E) HIDE GCODE VIEWER
+  hide: function(){ gcodePopup.hwrap.classList.remove("open"); },
+};
+window.addEventListener("DOMContentLoaded", gcodePopup.init);
+
+
 var root = window;
 
 var canvas = id("small-toolpath");
@@ -471,6 +532,12 @@ ToolpathDisplayer.prototype.reDrawTool = function(modal, mpos) {
         };
         drawTool(dpos);
     }
+}
+
+ToolpathDisplayer.prototype.showPopup = function(gcode, wpos, mpos, cameraAngle = 0) {
+    console.log("Got into showPopup()");
+    gcodePopup.show();
+
 }
 
 displayer = new ToolpathDisplayer();
