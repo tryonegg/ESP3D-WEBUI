@@ -502,10 +502,27 @@ function showGCode(gcode) {
 
     id('gcode').value = gcode;
     if (gCodeLoaded) {
-        displayer.showToolpath(gcode, WPOS, MPOS);
+        displayer.showToolpath(gcode, WPOS, MPOS, 1);
     }
     // XXX this needs to take into account error states
     setRunnable();
+}
+
+function updateGcodeViewerAngle(clickEvent){
+
+    const rect = id("small-toolpath").getBoundingClientRect()
+    const x = clickEvent.clientX - rect.left
+    const y = clickEvent.clientY - rect.top
+
+    var cameraAngle = 0;
+    if(x > rect.width/2){
+        cameraAngle = 1;
+    }
+
+    const gcode = id('gcode').value;
+    if (gCodeLoaded) {
+        displayer.showToolpath(gcode, WPOS, MPOS, cameraAngle);
+    }
 }
 
 var gCodeFilename = '';
@@ -589,6 +606,7 @@ cycleDistance = function(up) {
 clickon = function(name) {
     //    $('[data-route="workspace"] .btn').removeClass('active');
     var button = id(name);
+    console.log("Clicked: " + name);
     button.classList.add('active');
     button.dispatchEvent(new Event('click'));
 }
@@ -631,6 +649,7 @@ function altDown() {
 }
 
 function jogClick(name) {
+    console.log("Jogclick: " + name);
     clickon(name);
 }
 
@@ -731,6 +750,7 @@ function mdiEnterKey(event) {
 
 id('mditext0').addEventListener('keyup', mdiEnterKey);
 id('mditext1').addEventListener('keyup', mdiEnterKey);
+id("small-toolpath").addEventListener("mousedown", updateGcodeViewerAngle); 
 
 // The listener could be added to the tablettab element by setting tablettab's
 // contentEditable property.  The problem is that it is too easy for tablettab

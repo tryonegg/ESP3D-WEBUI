@@ -50,6 +50,14 @@ var isoView = function() {
     yy = 0.707;
     yz = 1.0;
 }
+var defaultView = function() {
+    xx = 0.707;
+    xy = 0.707;
+    xz = 0.0;
+    yx = -0.707/2;
+    yy = 0.707/2;
+    yz = 1.0;
+}
 var topView = function() {
     xx = 1.0;
     xy = 0.0;
@@ -401,7 +409,15 @@ var ToolpathDisplayer = function() {
 
 var offset;
 
-ToolpathDisplayer.prototype.showToolpath = function(gcode, wpos, mpos) {
+ToolpathDisplayer.prototype.showToolpath = function(gcode, wpos, mpos, cameraAngle = 0) {
+
+    if(cameraAngle == 0){
+        topView();
+    }
+    else{
+        defaultView();
+    }
+
     inInches = id('units').innerText != 'mm';
 
     // Assume WPOS in mm
