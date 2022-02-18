@@ -530,6 +530,7 @@ function showGcodePopup(){
     const gcode = id('gcode').value;
     if (gCodeLoaded) {
         displayer.showPopup(gcode, WPOS, MPOS, 0);
+        displayer.showToolpath(gcode, WPOS, MPOS, 0);
     }
 }
 

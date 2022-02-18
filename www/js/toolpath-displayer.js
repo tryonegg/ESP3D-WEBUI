@@ -1,32 +1,45 @@
 // Display the XY-plane projection of a GCode toolpath on a 2D canvas
 
+var root = window;
+
+var canvas = id("small-toolpath");
+var tp = canvas.getContext("2d");
+var tpRect;
+
+tp.lineWidth = 0.1;
+tp.lineCap = 'round';
+tp.strokeStyle = 'blue';
+
 var gcodePopup = {
-  // (A) CREATE NUMPAD HTML
+  // CREATE NUMPAD HTML
   hwrap: null, // gcodePopup wrapper container
   hpad: null, // gcodePopup itself
-  hdisplay: null, // number display
   hbwrap: null, // buttons wrapper
   hbuttons: {}, // individual buttons
   init: function(){
-    // (A1) WRAPPER
+    // WRAPPER
     gcodePopup.hwrap = document.createElement("div");
     gcodePopup.hwrap.id = "numWrap";
 
-
-    // (A2) ENTIRE NUMPAD ITSELF
+    // ENTIRE TOOLPATH VIEWER POPUP ITSELF
     gcodePopup.hpad = document.createElement("div");
     gcodePopup.hpad.id = "numPad";
     gcodePopup.hwrap.appendChild(gcodePopup.hpad);
-    gcodePopup.hpad.tabindex = "0";
-    gcodePopup.hpad.contentEditable = false;
-    gcodePopup.hpad.addEventListener("keydown", gcodePopup.keypr);
 
-    // (A4) NUMBER BUTTONS
+    // BUTTONS
     gcodePopup.hbwrap = document.createElement("div");
     gcodePopup.hbwrap.id = "numBWrap";
     gcodePopup.hpad.appendChild(gcodePopup.hbwrap);
 
-    // (A5) BUTTONS
+    // CANVAS
+    gcodePopup.canvas = document.createElement("CANVAS");
+    gcodePopup.canvas.id = "popupCanvas";
+    gcodePopup.canvas.getContext("2d").scale(2, 2);
+    gcodePopup.canvas.width = 400;
+    gcodePopup.canvas.height = 400;
+    gcodePopup.hbwrap.appendChild(gcodePopup.canvas);
+
+    // BUTTONS CREATOR
     var buttonator = function (txt, css, fn) {
       var button = document.createElement("div");
       button.innerHTML = txt;
@@ -43,33 +56,26 @@ var gcodePopup = {
     buttonator("Cancel", "cxwide", gcodePopup.hide);
 
 
-    // (A6) ATTACH NUMPAD TO HTML BODY
+    // ATTACH NUMPAD TO HTML BODY
     document.body.appendChild(gcodePopup.hwrap);
-    gcodePopup.hwrap.classList.add("open"); 
   },
 
-  // (D) SHOW GCODE POPUP
+  // SHOW GCODE POPUP
   show: function() {
-
     gcodePopup.hwrap.classList.add("open");
-
+    canvas = gcodePopup.canvas;
+    tp = canvas.getContext("2d");
   },
 
-  // (E) HIDE GCODE VIEWER
-  hide: function(){ gcodePopup.hwrap.classList.remove("open"); },
+  // HIDE GCODE POPUP
+  hide: function(){ 
+    gcodePopup.hwrap.classList.remove("open");
+    canvas = id("small-toolpath");
+    tp = canvas.getContext("2d");
+  },
 };
 window.addEventListener("DOMContentLoaded", gcodePopup.init);
 
-
-var root = window;
-
-var canvas = id("small-toolpath");
-var tp = canvas.getContext("2d");
-var tpRect;
-
-tp.lineWidth = 0.1;
-tp.lineCap = 'round';
-tp.strokeStyle = 'blue';
 
 var tpUnits = 'G21';
 
@@ -535,7 +541,6 @@ ToolpathDisplayer.prototype.reDrawTool = function(modal, mpos) {
 }
 
 ToolpathDisplayer.prototype.showPopup = function(gcode, wpos, mpos, cameraAngle = 0) {
-    console.log("Got into showPopup()");
     gcodePopup.show();
 
 }
