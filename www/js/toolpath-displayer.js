@@ -176,6 +176,36 @@ var drawOrigin = function(radius) {
     tp.stroke();
 }
 
+var drawMachineBounds = function(pos) {
+    console.log("Draw machine bounds");
+
+    const xMax = 150;
+    const xMin = -0;
+    const yMax = 75;
+    const yMin = -10;
+
+    const p0 = projection({x: xMin, y: yMin, z: 0});
+    const p1 = projection({x: xMin, y: yMax, z: 0});
+    const p2 = projection({x: xMax, y: yMax, z: 0});
+    const p3 = projection({x: xMax, y: yMin, z: 0});
+
+    tpBbox.min.x = Math.min(tpBbox.min.x, p0.x);
+    tpBbox.min.y = Math.min(tpBbox.min.y, p0.y);
+    tpBbox.max.x = Math.max(tpBbox.max.x, p2.x);
+    tpBbox.max.y = Math.max(tpBbox.max.t, p2.y);
+
+    tp.beginPath();
+    tp.moveTo(p0.x, p0.y);
+    tp.lineTo(p0.x, p0.y);
+    tp.lineTo(p1.x, p1.y);
+    tp.lineTo(p2.x, p2.y);
+    tp.lineTo(p3.x, p3.y);
+    tp.lineTo(p0.x, p0.y);
+    tp.strokeStyle = "green";
+    tp.stroke();
+
+}
+
 var xOffset = 0;
 var yOffset = 0;
 var scaler = 1;
@@ -476,7 +506,7 @@ var ToolpathDisplayer = function() {
 
 var offset;
 
-ToolpathDisplayer.prototype.showToolpath = function(gcode, wpos, mpos, cameraAngle = 0) {
+ToolpathDisplayer.prototype.showToolpath = function(gcode, wpos, mpos, cameraAngle = 0, drawLimits = true) {
 
     if(cameraAngle == 0){
         topView();
@@ -512,6 +542,8 @@ ToolpathDisplayer.prototype.showToolpath = function(gcode, wpos, mpos, cameraAng
     resetBbox();
     bboxHandlers.position = initialPosition;
 
+    drawMachineBounds(); //Adds the machine bounds to the bounding box
+
     var gcodeLines = gcode.split('\n');
     new Toolpath(bboxHandlers).loadFromLinesSync(gcodeLines);
     transformCanvas();
@@ -523,6 +555,7 @@ ToolpathDisplayer.prototype.showToolpath = function(gcode, wpos, mpos, cameraAng
     new Toolpath(displayHandlers).loadFromLinesSync(gcodeLines);
 
     drawTool(initialPosition);
+    drawMachineBounds();
 };
 
 ToolpathDisplayer.prototype.reDrawTool = function(modal, mpos) {
