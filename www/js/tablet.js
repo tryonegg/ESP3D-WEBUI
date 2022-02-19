@@ -203,6 +203,18 @@ function tabletShowMessage(msg, collecting) {
     var messages = id('messages');
     messages.value += "\n" + msg;
     messages.scrollTop = messages.scrollHeight;
+
+    if(msg.startsWith('$/axes/x/max_travel_mm=')){
+        console.log("X max travel recognized");
+        console.log(msg.substring(23,msg.length));
+        displayer.setXTravel(parseFloat(msg.substring(23,msg.length)));
+    }
+    if(msg.startsWith('$/axes/y/max_travel_mm=')){
+        console.log("Y max travel recognized");
+        console.log(msg.substring(23,msg.length));
+    }
+
+    
 }
 
 function tabletShowResponse(response) {
@@ -507,6 +519,9 @@ function showGCode(gcode) {
     // XXX this needs to take into account error states
     setRunnable();
 }
+
+sendCommand("$/axes/x/max_travel_mm");
+sendCommand("$/axes/y/max_travel_mm");
 
 var cameraAngle = 0;
 

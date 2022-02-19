@@ -12,6 +12,11 @@ tp.strokeStyle = 'blue';
 
 var cameraAngle = 0;
 
+var xMaxTravel = 1000;
+var xMinTravel = 0;
+var yMaxTravel = 1000;
+var yMinTravel = 0;
+
 var gcodePopup = {
   // CREATE NUMPAD HTML
   hwrap: null, // gcodePopup wrapper container
@@ -180,15 +185,10 @@ var drawOrigin = function(radius) {
 
 var drawMachineBounds = function(pos) {
 
-    const xMax = 1219.2 ;
-    const xMin = -1219.2 ;
-    const yMax = 1219.2/2;
-    const yMin = -1219.2/2;
-
-    const p0 = projection({x: xMin, y: yMin, z: 0});
-    const p1 = projection({x: xMin, y: yMax, z: 0});
-    const p2 = projection({x: xMax, y: yMax, z: 0});
-    const p3 = projection({x: xMax, y: yMin, z: 0});
+    const p0 = projection({x: xMinTravel, y: yMinTravel, z: 0});
+    const p1 = projection({x: xMinTravel, y: yMaxTravel, z: 0});
+    const p2 = projection({x: xMaxTravel, y: yMaxTravel, z: 0});
+    const p3 = projection({x: xMaxTravel, y: yMinTravel, z: 0});
 
     tpBbox.min.x = Math.min(tpBbox.min.x, p0.x);
     tpBbox.min.y = Math.min(tpBbox.min.y, p0.y);
@@ -594,7 +594,14 @@ ToolpathDisplayer.prototype.reDrawTool = function(modal, mpos) {
 
 ToolpathDisplayer.prototype.showPopup = function() {
     gcodePopup.show();
+}
 
+ToolpathDisplayer.prototype.setXTravel = function(maxTravelX) {
+    console.log("Max x travel set");
+    xMaxTravel = maxTravelX;
+}
+ToolpathDisplayer.prototype.setYTravel = function(maxTravelY) {
+    yMaxTravel = maxTravelY;
 }
 
 displayer = new ToolpathDisplayer();
