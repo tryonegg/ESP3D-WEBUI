@@ -10,7 +10,7 @@ tp.lineWidth = 0.1;
 tp.lineCap = 'round';
 tp.strokeStyle = 'blue';
 
-var cameraAngle = 0;
+var cameraAngle = 1;
 
 var xMaxTravel = 1000;
 var xMinTravel = 0;
@@ -18,7 +18,7 @@ var yMaxTravel = 1000;
 var yMinTravel = 0;
 
 var gcodePopup = {
-  // CREATE NUMPAD HTML
+  // CREATE GCODE POPUP HTML
   hwrap: null, // gcodePopup wrapper container
   hpad: null, // gcodePopup itself
   hbwrap: null, // buttons wrapper
@@ -592,10 +592,6 @@ ToolpathDisplayer.prototype.reDrawTool = function(modal, mpos) {
     }
 }
 
-ToolpathDisplayer.prototype.showPopup = function() {
-    gcodePopup.show();
-}
-
 ToolpathDisplayer.prototype.setXTravel = function(maxTravelX) {
     console.log("Max x travel set");
     xMaxTravel = maxTravelX;
@@ -605,3 +601,24 @@ ToolpathDisplayer.prototype.setYTravel = function(maxTravelY) {
 }
 
 displayer = new ToolpathDisplayer();
+
+var updateGcodeViewerAngle = function() {
+
+    cameraAngle = cameraAngle + 1;
+    if(cameraAngle > 3){
+        cameraAngle = 0;
+    }
+
+    const gcode = id('gcode').value;
+    displayer.showToolpath(gcode, WPOS, MPOS, cameraAngle);
+}
+
+var showGcodePopup = function(){
+
+    const gcode = id('gcode').value;
+    gcodePopup.show();
+    displayer.showToolpath(gcode, WPOS, MPOS, 1);
+}
+
+id("small-toolpath").addEventListener("mouseup", updateGcodeViewerAngle); 
+id("small-toolpath").addEventListener("dblclick", showGcodePopup); 

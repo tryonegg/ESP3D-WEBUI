@@ -205,13 +205,10 @@ function tabletShowMessage(msg, collecting) {
     messages.scrollTop = messages.scrollHeight;
 
     if(msg.startsWith('$/axes/x/max_travel_mm=')){
-        console.log("X max travel recognized");
-        console.log(msg.substring(23,msg.length));
         displayer.setXTravel(parseFloat(msg.substring(23,msg.length)));
     }
     if(msg.startsWith('$/axes/y/max_travel_mm=')){
-        console.log("Y max travel recognized");
-        console.log(msg.substring(23,msg.length));
+        displayer.setYTravel(parseFloat(msg.substring(23,msg.length)));
     }
 
     
@@ -523,29 +520,29 @@ function showGCode(gcode) {
 sendCommand("$/axes/x/max_travel_mm");
 sendCommand("$/axes/y/max_travel_mm");
 
-var cameraAngle = 0;
+//var cameraAngle = 0;
 
-function updateGcodeViewerAngle(clickEvent){
+// function updateGcodeViewerAngle(clickEvent){
 
-    cameraAngle = cameraAngle + 1;
-    if(cameraAngle > 3){
-        cameraAngle = 0;
-    }
+//     cameraAngle = cameraAngle + 1;
+//     if(cameraAngle > 3){
+//         cameraAngle = 0;
+//     }
 
-    const gcode = id('gcode').value;
-    if (gCodeLoaded) {
-        displayer.showToolpath(gcode, WPOS, MPOS, cameraAngle);
-    }
-}
+//     const gcode = id('gcode').value;
+//     if (gCodeLoaded) {
+//         displayer.showToolpath(gcode, WPOS, MPOS, cameraAngle);
+//     }
+// }
 
-function showGcodePopup(){
+// function showGcodePopup(){
 
-    const gcode = id('gcode').value;
-    if (gCodeLoaded) {
-        displayer.showPopup();
-        displayer.showToolpath(gcode, WPOS, MPOS, 1);
-    }
-}
+//     const gcode = id('gcode').value;
+//     if (gCodeLoaded) {
+//         displayer.showPopup();
+//         displayer.showToolpath(gcode, WPOS, MPOS, 1);
+//     }
+// }
 
 var gCodeFilename = '';
 
@@ -628,7 +625,6 @@ cycleDistance = function(up) {
 clickon = function(name) {
     //    $('[data-route="workspace"] .btn').removeClass('active');
     var button = id(name);
-    console.log("Clicked: " + name);
     button.classList.add('active');
     button.dispatchEvent(new Event('click'));
 }
@@ -671,7 +667,6 @@ function altDown() {
 }
 
 function jogClick(name) {
-    console.log("Jogclick: " + name);
     clickon(name);
 }
 
@@ -772,8 +767,8 @@ function mdiEnterKey(event) {
 
 id('mditext0').addEventListener('keyup', mdiEnterKey);
 id('mditext1').addEventListener('keyup', mdiEnterKey);
-id("small-toolpath").addEventListener("mouseup", updateGcodeViewerAngle); 
-id("small-toolpath").addEventListener("dblclick", showGcodePopup); 
+// id("small-toolpath").addEventListener("mouseup", updateGcodeViewerAngle); 
+// id("small-toolpath").addEventListener("dblclick", showGcodePopup); 
 
 
 
