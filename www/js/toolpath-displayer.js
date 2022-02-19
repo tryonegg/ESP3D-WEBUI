@@ -10,6 +10,8 @@ tp.lineWidth = 0.1;
 tp.lineCap = 'round';
 tp.strokeStyle = 'blue';
 
+var cameraAngle = 0;
+
 var gcodePopup = {
   // CREATE NUMPAD HTML
   hwrap: null, // gcodePopup wrapper container
@@ -26,38 +28,38 @@ var gcodePopup = {
     gcodePopup.hpad.id = "numPad";
     gcodePopup.hwrap.appendChild(gcodePopup.hpad);
 
-    // BUTTONS
-    gcodePopup.hbwrap = document.createElement("div");
-    gcodePopup.hbwrap.id = "numBWrap";
-    gcodePopup.hpad.appendChild(gcodePopup.hbwrap);
-
     // CANVAS
     gcodePopup.canvas = document.createElement("CANVAS");
     gcodePopup.canvas.id = "popupCanvas";
     gcodePopup.canvas.getContext("2d").scale(2, 2);
-    gcodePopup.canvas.width = 400;
+    gcodePopup.canvas.width = 525;
     gcodePopup.canvas.height = 400;
-    gcodePopup.hbwrap.appendChild(gcodePopup.canvas);
-
-    // BUTTONS CREATOR
-    var buttonator = function (txt, css, fn) {
-      var button = document.createElement("div");
-      button.innerHTML = txt;
-      button.classList.add(css);
-      button.addEventListener("click", fn);
-      gcodePopup.hbwrap.appendChild(button);
-      gcodePopup.hbuttons[txt] = button;
-    };
-
-    var spacer = function() {
-      buttonator("", "spacer", null);
-    }          
-
-    buttonator("Cancel", "cxwide", gcodePopup.hide);
+    gcodePopup.hpad.appendChild(gcodePopup.canvas);
 
 
     // ATTACH NUMPAD TO HTML BODY
     document.body.appendChild(gcodePopup.hwrap);
+
+    //Handle click behavior in popup
+    document.addEventListener('click', function(event) {
+        if (gcodePopup.hpad.contains(event.target)) {       //If the click is inside the popup change the camera angle
+
+            cameraAngle = cameraAngle + 1;
+            if(cameraAngle > 3){
+                cameraAngle = 0;
+            }
+
+            const gcode = id('gcode').value;
+            if (gCodeLoaded) {
+                displayer.showToolpath(gcode, WPOS, MPOS, cameraAngle);
+            }
+
+        }
+        else{                                              //If the click is outside the popup close the popup
+            gcodePopup.hide();
+        }
+    });
+
   },
 
   // SHOW GCODE POPUP
@@ -177,12 +179,11 @@ var drawOrigin = function(radius) {
 }
 
 var drawMachineBounds = function(pos) {
-    console.log("Draw machine bounds");
 
-    const xMax = 150;
-    const xMin = -0;
-    const yMax = 75;
-    const yMin = -10;
+    const xMax = 1219.2 ;
+    const xMin = -1219.2 ;
+    const yMax = 1219.2/2;
+    const yMin = -1219.2/2;
 
     const p0 = projection({x: xMin, y: yMin, z: 0});
     const p1 = projection({x: xMin, y: yMax, z: 0});
@@ -192,7 +193,7 @@ var drawMachineBounds = function(pos) {
     tpBbox.min.x = Math.min(tpBbox.min.x, p0.x);
     tpBbox.min.y = Math.min(tpBbox.min.y, p0.y);
     tpBbox.max.x = Math.max(tpBbox.max.x, p2.x);
-    tpBbox.max.y = Math.max(tpBbox.max.t, p2.y);
+    tpBbox.max.y = Math.max(tpBbox.max.y, p2.y);
 
     tp.beginPath();
     tp.moveTo(p0.x, p0.y);
@@ -266,19 +267,19 @@ var transformCanvas = function() {
     // Show the X and Y limit coordinates of the GCode program.
     // We do this before scaling because after we invert the Y coordinate,
     // text would be displayed upside-down.
-    tp.fillStyle = "black";
-    tp.font = "14px Ariel";
-    tp.textAlign = "center";
-    tp.textBaseline = "bottom";
-    tp.fillText(formatLimit(tpBbox.min.y), imageRight/2, canvas.height-inset);
-    tp.textBaseline = "top";
-    tp.fillText(formatLimit(tpBbox.max.y), imageRight/2, canvas.height-inset - imageTop);
-    tp.textAlign = "left";
-    tp.textBaseline = "center";
-    tp.fillText(formatLimit(tpBbox.min.x), inset, canvas.height-inset - imageTop/2);
-    tp.textAlign = "right";
-    tp.textBaseline = "center";
-    tp.fillText(formatLimit(tpBbox.max.x), inset+imageRight, canvas.height-inset - imageTop/2);
+    // tp.fillStyle = "black";
+    // tp.font = "14px Ariel";
+    // tp.textAlign = "center";
+    // tp.textBaseline = "bottom";
+    // tp.fillText(formatLimit(tpBbox.min.y), imageRight/2, canvas.height-inset);
+    // tp.textBaseline = "top";
+    // tp.fillText(formatLimit(tpBbox.max.y), imageRight/2, canvas.height-inset - imageTop);
+    // tp.textAlign = "left";
+    // tp.textBaseline = "center";
+    // tp.fillText(formatLimit(tpBbox.min.x), inset, canvas.height-inset - imageTop/2);
+    // tp.textAlign = "right";
+    // tp.textBaseline = "center";
+    // tp.fillText(formatLimit(tpBbox.max.x), inset+imageRight, canvas.height-inset - imageTop/2);
     // Transform the path coordinate system so the image fills the canvas
     // with a small inset, and +Y goes upward.
     // The net transform from image space (x,y) to pixel space (x',y') is:
@@ -506,12 +507,26 @@ var ToolpathDisplayer = function() {
 
 var offset;
 
-ToolpathDisplayer.prototype.showToolpath = function(gcode, wpos, mpos, cameraAngle = 0, drawLimits = true) {
+ToolpathDisplayer.prototype.showToolpath = function(gcode, wpos, mpos, cameraAngle = 0) {
 
-    if(cameraAngle == 0){
+    cameraAngle = cameraAngle;
+    var drawBounds = false;
+    switch (cameraAngle) {
+      case 0:
         topView();
-    }
-    else{
+        break;
+      case 1:
+        topView();
+        drawBounds = true;
+        break;
+      case 2:
+        defaultView();
+        break;
+      case 3:
+        defaultView();
+        drawBounds = true;
+        break;
+      default:
         defaultView();
     }
 
@@ -542,7 +557,9 @@ ToolpathDisplayer.prototype.showToolpath = function(gcode, wpos, mpos, cameraAng
     resetBbox();
     bboxHandlers.position = initialPosition;
 
-    drawMachineBounds(); //Adds the machine bounds to the bounding box
+    if(drawBounds){
+        drawMachineBounds(); //Adds the machine bounds to the bounding box
+    }
 
     var gcodeLines = gcode.split('\n');
     new Toolpath(bboxHandlers).loadFromLinesSync(gcodeLines);
@@ -555,7 +572,9 @@ ToolpathDisplayer.prototype.showToolpath = function(gcode, wpos, mpos, cameraAng
     new Toolpath(displayHandlers).loadFromLinesSync(gcodeLines);
 
     drawTool(initialPosition);
-    drawMachineBounds();
+    if(drawBounds){
+        drawMachineBounds();
+    }
 };
 
 ToolpathDisplayer.prototype.reDrawTool = function(modal, mpos) {
@@ -573,7 +592,7 @@ ToolpathDisplayer.prototype.reDrawTool = function(modal, mpos) {
     }
 }
 
-ToolpathDisplayer.prototype.showPopup = function(gcode, wpos, mpos, cameraAngle = 0) {
+ToolpathDisplayer.prototype.showPopup = function() {
     gcodePopup.show();
 
 }

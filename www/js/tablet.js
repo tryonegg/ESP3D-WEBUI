@@ -508,15 +508,13 @@ function showGCode(gcode) {
     setRunnable();
 }
 
+var cameraAngle = 0;
+
 function updateGcodeViewerAngle(clickEvent){
 
-    const rect = id("small-toolpath").getBoundingClientRect()
-    const x = clickEvent.clientX - rect.left
-    const y = clickEvent.clientY - rect.top
-
-    var cameraAngle = 0;
-    if(x < rect.width/2){
-        cameraAngle = 1;
+    cameraAngle = cameraAngle + 1;
+    if(cameraAngle > 3){
+        cameraAngle = 0;
     }
 
     const gcode = id('gcode').value;
@@ -529,8 +527,8 @@ function showGcodePopup(){
 
     const gcode = id('gcode').value;
     if (gCodeLoaded) {
-        displayer.showPopup(gcode, WPOS, MPOS, 0);
-        displayer.showToolpath(gcode, WPOS, MPOS, 0);
+        displayer.showPopup();
+        displayer.showToolpath(gcode, WPOS, MPOS, 1);
     }
 }
 
@@ -759,7 +757,7 @@ function mdiEnterKey(event) {
 
 id('mditext0').addEventListener('keyup', mdiEnterKey);
 id('mditext1').addEventListener('keyup', mdiEnterKey);
-id("small-toolpath").addEventListener("mousedown", updateGcodeViewerAngle); 
+id("small-toolpath").addEventListener("mouseup", updateGcodeViewerAngle); 
 id("small-toolpath").addEventListener("dblclick", showGcodePopup); 
 
 
