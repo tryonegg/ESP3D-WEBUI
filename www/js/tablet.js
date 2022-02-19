@@ -209,9 +209,7 @@ function tabletShowMessage(msg, collecting) {
     }
     if(msg.startsWith('$/axes/y/max_travel_mm=')){
         displayer.setYTravel(parseFloat(msg.substring(23,msg.length)));
-    }
-
-    
+    }    
 }
 
 function tabletShowResponse(response) {
