@@ -21,8 +21,6 @@ var gcodePopup = {
   // CREATE GCODE POPUP HTML
   hwrap: null, // gcodePopup wrapper container
   hpad: null, // gcodePopup itself
-  hbwrap: null, // buttons wrapper
-  hbuttons: {}, // individual buttons
   init: function(){
     // WRAPPER
     gcodePopup.hwrap = document.createElement("div");
@@ -35,17 +33,15 @@ var gcodePopup = {
 
     // CANVAS
     gcodePopup.canvas = document.createElement("CANVAS");
-    gcodePopup.canvas.id = "popupCanvas";
-    gcodePopup.canvas.getContext("2d").scale(2, 2);
     gcodePopup.canvas.width = 525;
     gcodePopup.canvas.height = 400;
     gcodePopup.hpad.appendChild(gcodePopup.canvas);
 
 
-    // ATTACH NUMPAD TO HTML BODY
+    // ATTACH TOOLPATH POPUP TO HTML BODY
     document.body.appendChild(gcodePopup.hwrap);
 
-    //Handle click behavior in popup
+    //HANDLE CLICK BEHAVIOR FOR POPUP
     document.addEventListener('click', function(event) {
         if (gcodePopup.hpad.contains(event.target)) {       //If the click is inside the popup change the camera angle
 
@@ -593,7 +589,6 @@ ToolpathDisplayer.prototype.reDrawTool = function(modal, mpos) {
 }
 
 ToolpathDisplayer.prototype.setXTravel = function(maxTravelX) {
-    console.log("Max x travel set");
     xMaxTravel = maxTravelX;
 }
 ToolpathDisplayer.prototype.setYTravel = function(maxTravelY) {
@@ -603,7 +598,6 @@ ToolpathDisplayer.prototype.setYTravel = function(maxTravelY) {
 displayer = new ToolpathDisplayer();
 
 var updateGcodeViewerAngle = function() {
-
     cameraAngle = cameraAngle + 1;
     if(cameraAngle > 3){
         cameraAngle = 0;
@@ -614,10 +608,9 @@ var updateGcodeViewerAngle = function() {
 }
 
 var showGcodePopup = function(){
-
     const gcode = id('gcode').value;
     gcodePopup.show();
-    displayer.showToolpath(gcode, WPOS, MPOS, 1);
+    displayer.showToolpath(gcode, WPOS, MPOS, cameraAngle);
 }
 
 id("small-toolpath").addEventListener("mouseup", updateGcodeViewerAngle); 

@@ -520,30 +520,6 @@ function showGCode(gcode) {
 sendCommand("$/axes/x/max_travel_mm");
 sendCommand("$/axes/y/max_travel_mm");
 
-//var cameraAngle = 0;
-
-// function updateGcodeViewerAngle(clickEvent){
-
-//     cameraAngle = cameraAngle + 1;
-//     if(cameraAngle > 3){
-//         cameraAngle = 0;
-//     }
-
-//     const gcode = id('gcode').value;
-//     if (gCodeLoaded) {
-//         displayer.showToolpath(gcode, WPOS, MPOS, cameraAngle);
-//     }
-// }
-
-// function showGcodePopup(){
-
-//     const gcode = id('gcode').value;
-//     if (gCodeLoaded) {
-//         displayer.showPopup();
-//         displayer.showToolpath(gcode, WPOS, MPOS, 1);
-//     }
-// }
-
 var gCodeFilename = '';
 
 function nthLineEnd(str, n){
@@ -767,10 +743,6 @@ function mdiEnterKey(event) {
 
 id('mditext0').addEventListener('keyup', mdiEnterKey);
 id('mditext1').addEventListener('keyup', mdiEnterKey);
-// id("small-toolpath").addEventListener("mouseup", updateGcodeViewerAngle); 
-// id("small-toolpath").addEventListener("dblclick", showGcodePopup); 
-
-
 
 // The listener could be added to the tablettab element by setting tablettab's
 // contentEditable property.  The problem is that it is too easy for tablettab
