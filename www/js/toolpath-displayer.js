@@ -179,12 +179,15 @@ var drawOrigin = function(radius) {
     tp.stroke();
 }
 
-var drawMachineBounds = function(pos) {
+var drawMachineBounds = function() {
 
-    const p0 = projection({x: xMinTravel, y: yMinTravel, z: 0});
-    const p1 = projection({x: xMinTravel, y: yMaxTravel, z: 0});
-    const p2 = projection({x: xMaxTravel, y: yMaxTravel, z: 0});
-    const p3 = projection({x: xMaxTravel, y: yMinTravel, z: 0});
+    const wcoX = MPOS[0] - WPOS[0];
+    const wcoY = MPOS[1] - WPOS[1];
+
+    const p0 = projection({x: xMinTravel - wcoX, y: yMinTravel - wcoY, z: 0});
+    const p1 = projection({x: xMinTravel - wcoX, y: yMaxTravel - wcoY, z: 0});
+    const p2 = projection({x: xMaxTravel - wcoX, y: yMaxTravel - wcoY, z: 0});
+    const p3 = projection({x: xMaxTravel - wcoX, y: yMinTravel - wcoY, z: 0});
 
     tpBbox.min.x = Math.min(tpBbox.min.x, p0.x);
     tpBbox.min.y = Math.min(tpBbox.min.y, p0.y);
