@@ -756,3 +756,5 @@ numpad.attach({target: "wpos-z", axis: "Z"});
 numpad.attach({target: "wpos-a", axis: "A"});
 
 id('tablettablink').addEventListener('DOMActivate', toggleFullscreen, false);
+
+document.getElementById("control-pad").classList.add("open");

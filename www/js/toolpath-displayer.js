@@ -19,31 +19,25 @@ var yMinTravel = 0;
 
 var gcodePopup = {
   // CREATE GCODE POPUP HTML
-  hwrap: null, // gcodePopup wrapper container
-  hpad: null, // gcodePopup itself
+  largViewer: null, // gcodePopup itself
   init: function(){
-    // WRAPPER
-    gcodePopup.hwrap = document.createElement("div");
-    gcodePopup.hwrap.id = "numWrap";
 
     // ENTIRE TOOLPATH VIEWER POPUP ITSELF
-    gcodePopup.hpad = document.createElement("div");
-    gcodePopup.hpad.id = "numPad";
-    gcodePopup.hwrap.appendChild(gcodePopup.hpad);
+    gcodePopup.largViewer = document.createElement("div");
+    gcodePopup.largViewer.id = "large-gcode-viewer";
+    document.getElementById("tablet-listener").appendChild(gcodePopup.largViewer);
 
     // CANVAS
     gcodePopup.canvas = document.createElement("CANVAS");
-    gcodePopup.canvas.width = 525;
-    gcodePopup.canvas.height = 400;
-    gcodePopup.hpad.appendChild(gcodePopup.canvas);
-
-
-    // ATTACH TOOLPATH POPUP TO HTML BODY
-    document.body.appendChild(gcodePopup.hwrap);
+    gcodePopup.canvas.width = 600;
+    gcodePopup.canvas.height = 500;
+    gcodePopup.canvas.style="border:1px solid #000000;"
+    gcodePopup.canvas.id = "large-gcode-viewer-canvas"
+    gcodePopup.largViewer.appendChild(gcodePopup.canvas);
 
     //HANDLE CLICK BEHAVIOR FOR POPUP
     document.addEventListener('click', function(event) {
-        if (gcodePopup.hpad.contains(event.target)) {       //If the click is inside the popup change the camera angle
+        if (gcodePopup.canvas.contains(event.target)) {       //If the click is inside the popup change the camera angle
 
             cameraAngle = cameraAngle + 1;
             if(cameraAngle > 3){
@@ -65,14 +59,21 @@ var gcodePopup = {
 
   // SHOW GCODE POPUP
   show: function() {
-    gcodePopup.hwrap.classList.add("open");
+    document.getElementById("control-pad").style.display = "none"; 
+    document.getElementById("large-gcode-viewer").style.display = "block"; 
+    
+
+    //gcodePopup.hwrap.classList.add("open");
     canvas = gcodePopup.canvas;
     tp = canvas.getContext("2d");
   },
 
   // HIDE GCODE POPUP
   hide: function(){ 
-    gcodePopup.hwrap.classList.remove("open");
+
+    document.getElementById("control-pad").style.display = "block";
+    document.getElementById("large-gcode-viewer").style.display = "none";  
+
     canvas = id("small-toolpath");
     tp = canvas.getContext("2d");
   },
