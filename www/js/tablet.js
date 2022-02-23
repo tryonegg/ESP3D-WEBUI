@@ -22,7 +22,6 @@ function tabletClick() {
 }
 
 sendCommand = function(cmd) {
-    console.log(cmd);
     SendPrinterCommand(cmd, true, get_Position);
 }
 
@@ -209,7 +208,21 @@ function tabletShowMessage(msg, collecting) {
     }
     if(msg.startsWith('$/axes/y/max_travel_mm=')){
         displayer.setYTravel(parseFloat(msg.substring(23,msg.length)));
-    }    
+    }
+
+    if(msg.startsWith('$/axes/x/homing/mpos_mm=')){
+        displayer.setXHome(parseFloat(msg.substring(24,msg.length)));
+    }
+    if(msg.startsWith('$/axes/y/homing/mpos_mm=')){
+        displayer.setYHome(parseFloat(msg.substring(24,msg.length)));
+    }
+
+    if(msg.startsWith('$/axes/x/homing/positive_direction=')){
+        displayer.setXDir(msg.substring(35,msg.length));
+    }
+    if(msg.startsWith('$/axes/y/homing/positive_direction=')){
+        displayer.setYDir(msg.substring(35,msg.length));
+    }
 }
 
 function tabletShowResponse(response) {
@@ -516,7 +529,12 @@ function showGCode(gcode) {
 }
 
 sendCommand("$/axes/x/max_travel_mm");
+sendCommand("$/axes/x/homing/mpos_mm");
+sendCommand("$/axes/x/homing/positive_direction");
+
 sendCommand("$/axes/y/max_travel_mm");
+sendCommand("$/axes/y/homing/mpos_mm");
+sendCommand("$/axes/y/homing/positive_direction");
 
 var gCodeFilename = '';
 

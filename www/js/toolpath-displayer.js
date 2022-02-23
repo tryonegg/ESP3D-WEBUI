@@ -13,9 +13,13 @@ tp.strokeStyle = 'blue';
 var cameraAngle = 1;
 
 var xMaxTravel = 1000;
-var xMinTravel = 0;
 var yMaxTravel = 1000;
-var yMinTravel = 0;
+
+var xHomePos = 0;
+var yHomePos = 0;
+
+var xHomeDir = 1;
+var yHomeDir = 1;
 
 var gcodePopup = {
   // CREATE GCODE POPUP HTML
@@ -185,10 +189,32 @@ var drawMachineBounds = function() {
     const wcoX = MPOS[0] - WPOS[0];
     const wcoY = MPOS[1] - WPOS[1];
 
-    const p0 = projection({x: xMinTravel - wcoX, y: yMinTravel - wcoY, z: 0});
-    const p1 = projection({x: xMinTravel - wcoX, y: yMaxTravel - wcoY, z: 0});
-    const p2 = projection({x: xMaxTravel - wcoX, y: yMaxTravel - wcoY, z: 0});
-    const p3 = projection({x: xMaxTravel - wcoX, y: yMinTravel - wcoY, z: 0});
+    var xMin = 0;
+    var YMin = 0;
+
+    if(xHomeDir == 1){
+        xMin = xHomePos - xMaxTravel;
+    }
+    else{
+        xMin = xHomePos;
+    }
+
+    if(yHomeDir == 1){
+        yMin = yHomePos - yMaxTravel;
+    }
+    else{
+        yMin = yHomePos;
+    }
+
+
+    const xMax = xMin + xMaxTravel;
+    const yMax = yMin + yMaxTravel;
+
+
+    const p0 = projection({x: xMin - wcoX, y: yMin - wcoY, z: 0});
+    const p1 = projection({x: xMin - wcoX, y: yMax - wcoY, z: 0});
+    const p2 = projection({x: xMax - wcoX, y: yMax - wcoY, z: 0});
+    const p3 = projection({x: xMax - wcoX, y: yMin - wcoY, z: 0});
 
     tpBbox.min.x = Math.min(tpBbox.min.x, p0.x);
     tpBbox.min.y = Math.min(tpBbox.min.y, p0.y);
@@ -597,6 +623,30 @@ ToolpathDisplayer.prototype.setXTravel = function(maxTravelX) {
 }
 ToolpathDisplayer.prototype.setYTravel = function(maxTravelY) {
     yMaxTravel = maxTravelY;
+}
+
+ToolpathDisplayer.prototype.setXHome = function(xHomeInternal) {
+    xHomePos = xHomeInternal;
+}
+ToolpathDisplayer.prototype.setYHome = function(yHomeInternal) {
+    yHomePos = yHomeInternal;
+}
+
+ToolpathDisplayer.prototype.setXDir = function(xDir) {
+    if(xDir == "true"){
+        xHomeDir = 1;
+    }
+    else{
+        xHomeDir = -1
+    }
+}
+ToolpathDisplayer.prototype.setYDir = function(yDir) {
+    if(yDir == "true"){
+        yHomeDir = 1;
+    }
+    else{
+        yHomeDir = -1
+    }
 }
 
 displayer = new ToolpathDisplayer();
