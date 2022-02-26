@@ -754,4 +754,10 @@ numpad.attach({target: "wpos-y", axis: "Y"});
 numpad.attach({target: "wpos-z", axis: "Z"});
 numpad.attach({target: "wpos-a", axis: "A"});
 
-id('tablettablink').addEventListener('DOMActivate', toggleFullscreen, false);
+function fullscreenIfMobile() {
+    if (/Mobi|Android/i.test(navigator.userAgent)) {
+        toggleFullscreen();
+    }
+}
+
+id('tablettablink').addEventListener('DOMActivate', fullscreenIfMobile, false);
