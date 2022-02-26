@@ -3,14 +3,13 @@ aud=new AudioContext() // browsers limit the number of concurrent audio contexts
 var gCodeLoaded = false;
 
 function beep(vol, freq, duration){
-    //    v=aud.createOscillator()
-    v=aud.createConstantSource()
+    v=aud.createOscillator()
+    v.frequency.value=freq
+    v.type='sine'
+    // v=aud.createConstantSource()
     u=aud.createGain()
-    v.connect(u)
-    //    v.frequency.value=freq
-    //    v.type='square'
-    u.connect(aud.destination)
     u.gain.value=vol*0.1
+    v.connect(u).connect(aud.destination)
     v.start(aud.currentTime)
     v.stop(aud.currentTime+duration*0.001)
 }
