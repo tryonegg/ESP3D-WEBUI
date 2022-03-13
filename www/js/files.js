@@ -307,6 +307,11 @@ function files_showprintbutton(filename, isdir) {
             return false;
         }
     }
+    // This can happen if files_showprintbutton is called before the
+    // files panel has been created
+    if (typeof tfiles_filters == 'undefined') {
+        return false;
+    }
     if (tfiles_filters.length == 0) {
         return true;
     }
@@ -573,10 +578,11 @@ function files_serial_ls_list_success(response_text) {
     files_build_display_filelist();
 }
 
+
 function files_directSD_list_success(response_text) {
+    id('files_navigation_buttons').style.display = "block";
     var error = false;
     var response;
-    id('files_navigation_buttons').style.display = "block";
     try {
         response = JSON.parse(response_text);
     } catch (e) {
@@ -587,6 +593,7 @@ function files_directSD_list_success(response_text) {
         files_directSD_list_failed(406, translate_text_item("Wrong data", true));
         return;
     }
+    populateTabletFileSelector(response);
     files_file_list = [];
     files_status_list = [];
     if (typeof response.files != 'undefined') {
@@ -627,7 +634,6 @@ function files_directSD_list_success(response_text) {
         occupation: voccupation
     });
     files_build_display_filelist();
-    tabletGetFileList();
 }
 
 function files_serial_M20_list_failed(error_code, response) {

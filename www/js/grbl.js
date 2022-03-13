@@ -417,7 +417,6 @@ function grbl_reset() {
 }
 
 function grblGetProbeResult(response) {
-    console.log("yes");
     var tab1 = response.split(":");
     if (tab1.length > 2) {
         var status = tab1[2].replace("]", "");
@@ -445,7 +444,7 @@ function grblGetProbeResult(response) {
 function probe_failed_notification() {
     finalize_probing();
     alertdlg(translate_text_item("Error"), translate_text_item("Probe failed !"));
-    beep(70, 261);
+    beep(3, 140, 261);
 }
 var modalModes = [
     { name: 'motion', values: [ "G80",  "G0",  "G1",  "G2",  "G3",  "G38.1",  "G38.2",  "G38.3",  "G38.4"] },
