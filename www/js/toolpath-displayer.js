@@ -21,6 +21,23 @@ var yHomePos = 0;
 var xHomeDir = 1;
 var yHomeDir = 1;
 
+//Draw buttons
+console.log("This ran");
+const tlC = document.getElementById("tlBtn").getContext("2d");
+tlC.fillStyle = "#b69fcb";
+tlC.fillRect(0, 0, 500, 500);
+tlC.beginPath();
+tlC.moveTo(0, 0);
+tlC.lineTo(0, 100);
+tlC.lineTo(150, 0);
+tlC.lineTo(0, 0);
+tlC.closePath();
+tlC.lineWidth = 5;
+tlC.strokeStyle = 'white';
+tlC.fillStyle = 'white';
+tlC.fill();
+tlC.stroke();
+
 var gcodePopup = {
   // CREATE GCODE POPUP HTML
   largViewer: null, // gcodePopup itself
