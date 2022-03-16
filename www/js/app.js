@@ -156,9 +156,12 @@ function startSocket() {
                     process_socket_response(wsmsg);
                     //msg = wsmsg.replace("\n", "");
                     //wsmsg = msg.replace("\r", "");
-                    if (!((wsmsg.startsWith("<") || wsmsg.startsWith("ok T:") || wsmsg.startsWith("X:") || wsmsg.startsWith("FR:") ||wsmsg.startsWith("echo:E0 Flow"))))console.log(wsmsg);
                     wsmsg = "";
                     msg = "";
+                    Monitor_output_Update(thismsg);
+                    process_socket_response(thismsg);
+                    if (!((thismsg.startsWith("<") || thismsg.startsWith("ok T:") || thismsg.startsWith("X:") || thismsg.startsWith("FR:") ||thismsg.startsWith("echo:E0 Flow"))))
+                        console.log(thismsg);
                 }
             }
             wsmsg += msg;

@@ -43,17 +43,41 @@ MDI = function(field) {
     MDIcmd(id(field).value);
 }
 
+enterFullscreen = function() {
+    try {
+        document.documentElement.requestFullscreen();
+    } catch (exception) {
+        try {
+            document.documentElement.webkitRequestFullscreen();
+        } catch (exception) {
+            return;
+        }
+    }
+    messages.rows = 4;
+    messages.scrollTop = messages.scrollHeight;
+}
+exitFullscreen = function() {
+    try {
+        document.exitFullscreen();
+    } catch (exception) {
+        try {
+            document.webkitExitFullscreen();
+        } catch (exception) {
+            return;
+        }
+    }
+    messages.rows = 2;
+    messages.scrollTop = messages.scrollHeight;
+}
+
 toggleFullscreen = function() {
     var messages = id('messages');
 
     if (document.fullscreenElement) {
-        document.exitFullscreen();
-        messages.rows = 2;
+        exitFullscreen();
     } else {
-        document.documentElement.requestFullscreen();
-        messages.rows = 4;
+        enterFullScreen;
     }
-    messages.scrollTop = messages.scrollHeight;
 }
 
 inputFocused = function() {
@@ -476,13 +500,23 @@ function addOption(selector, name, isDisabled, isSelected) {
 var filename = 'TEST.NC';
 var watchPath = '';
 
-function gotFiles(data) {
+function gotFiles(response_text) {
+    try {
+        var obj = JSON.parse(response_text);
+        populateTabletFileSelector(obj);
+    } catch (e) {
+        console.error("Parsing error:", e);
+        error = true;
+    }
+}
+
+function populateTabletFileSelector(obj) {
     var selector = id('filelist');
 
     var selectedFile = filename.split('/').slice(-1)[0];
 
     selector.length = 0;
-    obj = JSON.parse(data);
+
     if (obj.files) {
         var inRoot = watchPath === '';
         var legend = inRoot ? 'Load GCode File' : 'In ' + watchPath;
@@ -506,7 +540,7 @@ function gotFiles(data) {
 }
 
 function tabletGetFileList(path) {
-    SendFileHttp('/upload?path=' + encodeURI(path), null, null, gotFiles, null);
+    SendGetHttp('/upload?path=' + encodeURI(path), files_directSD_list_success, null);
 }
 
 function tabletInit() {
@@ -773,6 +807,12 @@ numpad.attach({target: "wpos-y", axis: "Y"});
 numpad.attach({target: "wpos-z", axis: "Z"});
 numpad.attach({target: "wpos-a", axis: "A"});
 
-id('tablettablink').addEventListener('DOMActivate', toggleFullscreen, false);
+function fullscreenIfMobile() {
+    if (/Mobi|Android/i.test(navigator.userAgent)) {
+        toggleFullscreen();
+    }
+}
+
+id('tablettablink').addEventListener('DOMActivate', fullscreenIfMobile, false);
 
 document.getElementById("control-pad").classList.add("open");
