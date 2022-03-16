@@ -22,7 +22,6 @@ var xHomeDir = 1;
 var yHomeDir = 1;
 
 //Draw buttons
-console.log("This ran");
 const tlC = document.getElementById("tlBtn").getContext("2d");
 tlC.fillStyle = "#b69fcb";
 tlC.fillRect(0, 0, 500, 500);

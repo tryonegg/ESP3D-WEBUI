@@ -43,16 +43,16 @@ MDI = function(field) {
 }
 
 toggleFullscreen = function() {
-    var messages = id('messages');
+    // var messages = id('messages');
 
-    if (document.fullscreenElement) {
-        document.exitFullscreen();
-        messages.rows = 2;
-    } else {
-        document.documentElement.requestFullscreen();
-        messages.rows = 4;
-    }
-    messages.scrollTop = messages.scrollHeight;
+    // if (document.fullscreenElement) {
+    //     document.exitFullscreen();
+    //     messages.rows = 2;
+    // } else {
+    //     document.documentElement.requestFullscreen();
+    //     messages.rows = 4;
+    // }
+    // messages.scrollTop = messages.scrollHeight;
 }
 
 inputFocused = function() {
@@ -195,7 +195,7 @@ sendMove = function(cmd) {
     fn && fn();
 };
 function tabletShowMessage(msg, collecting) {
-    if (collecting || msg.startsWith('<') || msg.startsWith('ok') || msg.startsWith('\n') || msg.startsWith('\r')) {
+    if (collecting || msg.startsWith('<') || msg.startsWith('ok') || msg.startsWith('\n') || msg.startsWith('\r') || msg == "") {
         return;
     }
     var messages = id('messages');
