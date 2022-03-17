@@ -245,29 +245,29 @@ var setJogSelector = function(units) {
         selected = '10';
     }
     var buttonNames = ['jog00', 'jog01', 'jog02', 'jog03', 'jog10', 'jog11', 'jog12', 'jog13', 'jog20', 'jog21', 'jog22', 'jog23'];
-    buttonNames.forEach( function(n, i) { id(n).innerHTML = buttonDistances[i]; } );
+    //buttonNames.forEach( function(n, i) { id(n).innerHTML = buttonDistances[i]; } );
 
-    var selector = id('jog-distance');
-    selector.length = 0;
-    selector.innerText = null;
-    menuDistances.forEach(function(v) {
-        var option = document.createElement("option");
-        option.textContent=v;
-        option.selected = (v == selected);
-        selector.appendChild(option);
-    });
+    // var selector = id('jog-distance');
+    // selector.length = 0;
+    // selector.innerText = null;
+    // menuDistances.forEach(function(v) {
+    //     var option = document.createElement("option");
+    //     option.textContent=v;
+    //     option.selected = (v == selected);
+    //     selector.appendChild(option);
+    // });
 }
 function removeJogDistance(option, oldIndex) {
-    selector = id('jog-distance');
-    selector.removeChild(option);
-    selector.selectedIndex = oldIndex;
+    //selector = id('jog-distance');
+    //selector.removeChild(option);
+    //selector.selectedIndex = oldIndex;
 }
 function addJogDistance(distance) {
-    selector = id('jog-distance');
-    var option = document.createElement("option");
-    option.textContent=distance;
-    option.selected = true;
-    return selector.appendChild(option);
+    //selector = id('jog-distance');
+    //var option = document.createElement("option");
+    //option.textContent=distance;
+    //option.selected = true;
+    //return selector.appendChild(option);
 }
 
 var runTime = 0;
@@ -281,7 +281,7 @@ function setButton(name, isEnabled, color, text) {
 
 var leftButtonHandler;
 function setLeftButton(isEnabled, color, text, click) {
-    setButton('btn-start', isEnabled, color, text);
+    //setButton('btn-start', isEnabled, color, text);
     leftButtonHandler = click;
 }
 function doLeftButton() {
@@ -292,7 +292,7 @@ function doLeftButton() {
 
 var rightButtonHandler;
 function setRightButton(isEnabled, color, text, click) {
-    setButton('btn-pause', isEnabled, color, text);
+    //setButton('btn-pause', isEnabled, color, text);
     rightButtonHandler = click;
 }
 function doRightButton() {
@@ -404,13 +404,13 @@ function tabletGrblState(grbl, response) {
             case 'M5': spindleDirection = 'Off'; break;
             default:  break;
         }
-        setText('spindle-direction', spindleDirection);
+        //setText('spindle-direction', spindleDirection);
     }
     if (grbl.spindleSpeed) {
-        setText('spindle-speed', Number(grbl.spindleSpeed) + ' RPM');
+        //setText('spindle-speed', Number(grbl.spindleSpeed) + ' RPM');
     }
     var now = new Date();
-    setText('time-of-day', now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0'));
+    //setText('time-of-day', now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0'));
     if (stateName == 'Run') {
 	var elapsed = now.getTime() - startTime;
 	if (elapsed < 0)
@@ -426,19 +426,19 @@ function tabletGrblState(grbl, response) {
         runTime = "0:00";
     }
 
-    setText('runtime', runTime);
+    //setText('runtime', runTime);
 
-    setText('wpos-label', modal.wcs);
+    //setText('wpos-label', modal.wcs);
     var distanceText = modal.distance == 'G90'
 	             ? modal.distance
 	             : "<div style='color:red'>" + modal.distance + "</div>";
-    setHTML('distance', distanceText);
+    //setHTML('distance', distanceText);
 
     if (stateName == 'Run') {
 	var rateText = modal.units == 'G21'
 	             ? Number(grbl.feedrate).toFixed(0) + ' mm/min'
 	             : Number(grbl.feedrate/25.4).toFixed(2) + ' in/min';
-        setText('active-state', rateText);
+        //setText('active-state', rateText);
     } else {
         // var stateText = errorText == 'Error' ? "Error: " + errorMessage : stateName;
         var stateText = stateName;
@@ -446,7 +446,7 @@ function tabletGrblState(grbl, response) {
     }
 
     if (grbl.lineNumber && (stateName == 'Run' || stateName == 'Hold' || stateName == 'Stop')) {
-        setText('line', grbl.lineNumber);
+        //setText('line', grbl.lineNumber);
         scrollToLine(grbl.lineNumber);
     }
     displayer.reDrawTool(modal, MPOS);
@@ -455,7 +455,7 @@ function tabletGrblState(grbl, response) {
 
     if (WPOS) {
         WPOS.forEach( function(pos, index) {
-            setTextContent('wpos-'+axisNames[index], Number(pos*factor).toFixed(index > 2 ? 2 : digits));
+            //setTextContent('wpos-'+axisNames[index], Number(pos*factor).toFixed(index > 2 ? 2 : digits));
         });
     }
 

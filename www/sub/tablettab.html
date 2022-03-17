@@ -77,159 +77,6 @@
       <textarea class="messages" id="messages" rows="14" spellcheck="false" readonly>Serial Messages</textarea>
     </div>
   </div>
-  <div class="nav-panel">
-    <div class="container-fluid">
-      <div class="row no-gutter">
-        <div class="col-xs-1 info-button" id="time-of-day">
-        </div>
-        <div class="col-xs-4">
-        </div>
-        <div class="col-xs-2">
-          <button type="button" class="btn btn-default btn-start" id="btn-start" onclick="doLeftButton();">
-            Start
-          </button>
-        </div>
-        <div class="col-xs-2">
-          <button type="button" class="btn btn-default btn-start" id="btn-pause" onclick="doRightButton();">
-            Pause
-          </button>
-        </div>
-        <div class="col-xs-1 info-button" id="line">
-        </div>
-        <div class="col-xs-1 info-button" id="runtime">
-        </div>
-        <div class="col-xs-1">
-          <div class="btn-group btn-group-justified">
-            <div class="btn-group">
-              <li class="dropdown">
-                <button type="button" class="btn btn-default dropdown-toggle" id="btn-dropdown" onclick="toggleDropdown()">
-                  <!--- <i class="fa fa-list"></i> --->
-Menu
-                </button>
-                <ul class="dropdown-menu" id="tablet-dropdown-menu" role="menu">
-                  <li>
-                    <a role="menuitem" href="javascript:void(0)" onclick="menuFullscreen()"><i class="fa fa-fullscreen"></i>&nbsp;Fullscreen</a>
-                  </li>
-                  <li>
-                    <a role="menuitem" href="javascript:void(0)" onclick="menuHomeAll()"><i class="fa fa-home"></i>&nbsp;Homing</a>
-                  </li>
-                  <li>
-                    <a role="menuitem" href="javascript:void(0)" onclick="menuHomeA()"><i class="fa fa-home"></i>&nbsp;Home A</a>
-                  </li>
-                  <li>
-                    <a role="menuitem" href="javascript:void(0)" onclick="menuSpindleOff()"><i class="fa fa-power-off"></i>&nbsp;Spindle Off</a>
-                  </li>
-                  <li>
-                    <a role="menuitem" href="javascript:void(0)" onclick="menuUnlock()"><i class="fa fa-unlock-alt"></i>&nbsp;Unlock</a>
-                  </li>
-                  <li>
-                    <a role="menuitem" href="javascript:void(0)" onclick="menuReset()"><i class="fa fa-undo"></i>&nbsp;Reset</a>
-                  </li>
-                </ul>
-              </li>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="axis-position">
-    <div class="container-fluid">
-<!--
-            <div class="row no-gutter">
-                <div class="col-xs-2 pos-name" id="mpos-label">
-                    MPos:
-                </div>
-                <div class="col-xs-10">
-                    <div class="col-xs-4">
-                      <input type="number" class="form-control position" id="mpos-x" value="0.0000">
-                    </div>
-                    <div class="col-xs-4">
-                      <input type="number" class="form-control position" id="mpos-y" value="0.0000">
-                    </div>
-                    <div class="col-xs-4">
-                      <input type="number" class="form-control position" id="mpos-z" value="0.0000">
-                    </div>
-                </div>
-            </div>
--->
-      <div class="row no-gutter">
-        <div class="col-xs-1 pos-name" id="wpos-label">
-          WPos
-        </div>
-        <div class="col-xs-11">
-          
-          <!-- These should be removed when they can be -->
-          <div class="col-xs-5">
-            <div class="form-control position" id="wpos-x">
-              0.000
-            </div>
-          </div>
-          <!-- -------------- -->
-
-
-          <div class="col-xs-3">
-            <div class="col-xs-3 axis-label">Y</div>
-            <div class="col-xs-5">
-              <div class="form-control position" id="wpos-y">
-                0.000
-              </div>
-            </div>
-            <div class="col-xs-4">
-            </div>
-          </div>
-          <div class="col-xs-3">
-            <div class="col-xs-3 axis-label">Z</div>
-            <div class="col-xs-5">
-              <div class="form-control position" id="wpos-z">
-                0.000
-              </div>
-            </div>
-            <div class="col-xs-4">
-            </div>
-          </div>
-          <div class="col-xs-3">
-            <div class="col-xs-3 axis-label">A</div>
-            <div class="col-xs-5">
-              <div class="form-control position" id="wpos-a">
-                0.000
-              </div>
-            </div>
-            <div class="col-xs-4">
-              <div class="mposition" id="mpos-a">
-                0.000
-              </div>
-            </div>
-          </div>
-          <div class="col-xs-0 hidden">
-            <div class="col-xs-3 axis-label">B</div>
-            <div class="col-xs-5">
-              <div class="form-control position" id="wpos-b">
-                0.000
-              </div>
-            </div>
-            <div class="col-xs-4">
-              <div class="mposition" id="mpos-b">
-                0.000
-              </div>
-            </div>
-          </div>
-          <div class="col-xs-0 hidden">
-            <div class="col-xs-3 axis-label">C</div>
-            <div class="col-xs-5">
-              <div class="form-control position" id="wpos-c">
-                0.000
-              </div>
-            </div>
-            <div class="col-xs-4">
-              <div class="mposition" id="mpos-c">
-                0.000
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
       <div class="row no-gutter">
       </div>
       <div class="row no-gutter">
@@ -242,50 +89,26 @@ Menu
         <div class="col-xs-11">
           <div class="col-xs-1"> </div>
           <div class="col-xs-1 inset">
-            <button type="button" class="btn btn-default btn-zero" title="Set X to 0" onclick="zeroAxis('X')">
-              X=0
-            </button>
           </div>
           <div class="col-xs-1">
-            <button type="button" class="btn btn-default btn-goto" title="Goto 0 in X" onclick="goAxisByValue('X', 0)">
-              &#8594;X0
-            </button>
           </div>
 
           <div class="col-xs-1"> </div>
           <div class="col-xs-1 inset">
-            <button type="button" class="btn btn-default btn-zero" title="Set Y to 0" onclick="zeroAxis('Y')">
-              Y=0
-            </button>
           </div>
           <div class="col-xs-1">
-            <button type="button" class="btn btn-default btn-goto" title="Goto 0 in Y" onclick="goAxisByValue('Y', 0)">
-              &#8594;Y0
-            </button>
           </div>
 
           <div class="col-xs-1"> </div>
           <div class="col-xs-1 inset">
-            <button type="button" class="btn btn-default btn-zero" title="Set Z to 0" onclick="zeroAxis('Z')">
-              Z=0
-            </button>
           </div>
           <div class="col-xs-1">
-            <button type="button" class="btn btn-default btn-goto" title="Goto 0 in Z" onclick="goAxisByValue('Z', 0)">
-              &#8594;Z0
-            </button>
           </div>
 
           <div class="col-xs-1"> </div>
           <div class="col-xs-1 inset">
-            <button type="button" class="btn btn-default btn-zero" title="Set A to 0" onclick="zeroAxis('A')">
-              A=0
-            </button>
           </div>
           <div class="col-xs-1">
-            <button type="button" class="btn btn-default btn-goto" title="Goto 0 in A" onclick="goAxisByValue('A', 0)">
-              &#8594;A0
-            </button>
           </div>
         </div>
       </div>
@@ -295,87 +118,25 @@ Menu
     <div class="container-fluid">
       <div class="middle-block jog-controls">
         <div class="row no-gutter">
-          <div class="col-xs-2 info-button" id="distance">
-          </div>
           <div class="col-xs-2">
-            <button
-               type="button"
-               class="btn btn-default" id="jog-y-plus"
-               title="Move Y+"
-               onclick="sendMove('Y+')"
-               >
-              Y+
-            </button>
           </div>
           <div class="col-xs-2 emptyURHC">
           </div>
           <div class="col-xs-2">
-            <button
-               type="button"
-               class="btn btn-default" id="jog-z-plus"
-               title="Move Z+"
-               onclick="sendMove('Z+')"
-               >
-              Z+
-            </button>
           </div>
 
           <div class="col-xs-1">
-            <button
-               type="button"
-               class="btn btn-default set-distance"
-               title="Jog by 0.001"
-               onclick="btnSetDistance()"
-               id="jog00"
-              >
-              0.001
-            </button>
 	  </div>
           <div class="col-xs-1">
-            <button
-               type="button"
-               class="btn btn-default set-distance"
-               title="Jog by 0.01"
-               onclick="btnSetDistance()"
-               id="jog01"
-               >
-              0.01
-            </button>
 	  </div>
           <div class="col-xs-1">
-            <button
-               type="button"
-               class="btn btn-default set-distance"
-               title="Jog by 0.1"
-               onclick="btnSetDistance()"
-               id="jog02"
-               >
-              0.1
-            </button>
 	  </div>
           <div class="col-xs-1">
-            <button
-               type="button"
-               class="btn btn-default set-distance"
-               title="Jog by 1"
-               onclick="btnSetDistance()"
-               id="jog03"
-               >
-              1
-            </button>
 	  </div>
         </div>
 
         <div class="row no-gutter">
           <div class="col-xs-2">
-            <button
-               type="button"
-               class="btn btn-default" id="jog-x-minus"
-               title="Move X-"
-               onclick="sendMove('X-')"
-               >
-              X-
-            </button>
           </div>
           <div class="col-xs-2">
             <div class="col-xs-8 info-button spindle" id="spindle-speed"></div>
@@ -383,14 +144,6 @@ Menu
           </div>
 
           <div class="col-xs-2">
-            <button
-               type="button"
-               class="btn btn-default" id="jog-x-plus"
-               title="Move X+"
-               onclick="sendMove('X+')"
-               >
-              X+
-            </button>
           </div>
           <div class="col-xs-2">
             <select class="form-control jog-selector" id="jog-distance">
@@ -414,48 +167,12 @@ Menu
           </div>
 
           <div class="col-xs-1">
-            <button
-               type="button"
-               class="btn btn-default set-distance"
-               title="Jog by 0.003"
-               onclick="btnSetDistance()"
-               id="jog10"
-               >
-              0.003
-            </button>
 	  </div>
           <div class="col-xs-1">
-            <button
-               type="button"
-               class="btn btn-default set-distance"
-               title="Jog by 0.03"
-               onclick="btnSetDistance()"
-               id="jog11"
-               >
-              0.03
-            </button>
 	  </div>
           <div class="col-xs-1">
-            <button
-               type="button"
-               class="btn btn-default set-distance"
-               title="Jog by 0.3"
-               onclick="btnSetDistance()"
-               id="jog12"
-               >
-              0.3
-            </button>
 	  </div>
           <div class="col-xs-1">
-            <button
-               type="button"
-               class="btn btn-default set-distance"
-               title="Jog by 3"
-               onclick="btnSetDistance()"
-               id="jog13"
-               >
-              3
-            </button>
 	  </div>
         </div>
 
@@ -463,71 +180,19 @@ Menu
           <div class="col-xs-2 info-button" id="extruder-temperature">
           </div>
           <div class="col-xs-2">
-            <button
-               type="button"
-               class="btn btn-default" id="jog-y-minus"
-               title="Move Y-"
-               onclick="sendMove('Y-')"
-               >
-              Y-
-            </button>
           </div>
           <div class="col-xs-2 info-button" id="emptyLLHC">
           </div>
           <div class="col-xs-2">
-            <button
-               type="button"
-               class="btn btn-default" id="jog-z-minus"
-               title="Move Z-"
-               onclick="sendMove('Z-')"
-               >
-              Z-
-            </button>
           </div>
 
           <div class="col-xs-1">
-            <button
-               type="button"
-               class="btn btn-default set-distance"
-               title="Jog by 0.005"
-               onclick="btnSetDistance()"
-               id="jog20"
-               >
-              0.005
-            </button>
 	  </div>
           <div class="col-xs-1">
-            <button
-               type="button"
-               class="btn btn-default set-distance"
-               title="Jog by 0.05"
-               onclick="btnSetDistance()"
-               id="jog21"
-               >
-              0.05
-            </button>
 	  </div>
           <div class="col-xs-1">
-            <button
-               type="button"
-               class="btn btn-default set-distance"
-               title="Jog by 0.5"
-               onclick="btnSetDistance()"
-               id="jog22"
-               >
-              0.5
-            </button>
 	  </div>
           <div class="col-xs-1">
-            <button
-               type="button"
-               class="btn btn-default set-distance"
-               title="Jog by 5"
-               onclick="btnSetDistance()"
-               id="jog23"
-               >
-              5
-            </button>
 	  </div>
         </div>
       </div>
@@ -577,7 +242,7 @@ Menu
                  >
                 Upld
               </button>
-	    </div>
+	          </div>
             <div class="col-xs-2">
               <button
                  type="button"
