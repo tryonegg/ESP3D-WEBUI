@@ -777,10 +777,10 @@ id('mditext1').addEventListener('keyup', mdiEnterKey);
 window.addEventListener('keydown', handleKeyDown);
 window.addEventListener('keyup', handleKeyUp);
 
-numpad.attach({target: "wpos-x", axis: "X"});
-numpad.attach({target: "wpos-y", axis: "Y"});
-numpad.attach({target: "wpos-z", axis: "Z"});
-numpad.attach({target: "wpos-a", axis: "A"});
+numpad.attach({target: "disM", axis: "D"});
+//numpad.attach({target: "wpos-y", axis: "Y"});
+//numpad.attach({target: "wpos-z", axis: "Z"});
+//numpad.attach({target: "wpos-a", axis: "A"});
 
 id('tablettablink').addEventListener('DOMActivate', toggleFullscreen, false);
 

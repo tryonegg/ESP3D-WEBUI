@@ -8,7 +8,7 @@ var tpRect;
 
 tp.lineWidth = 0.1;
 tp.lineCap = 'round';
-tp.strokeStyle = 'blue';
+tp.strokeStyle = 'black';
 
 var cameraAngle = 1;
 
@@ -483,7 +483,7 @@ var displayHandlers = {
         if (motion == 'G0') {
             tp.strokeStyle = initialMoves ? 'red' : 'green';
         } else {
-            tp.strokeStyle = 'blue';
+            tp.strokeStyle = 'black';
             // Don't cancel initialMoves on no-motion G1 (e.g. G1 F30)
             // or on Z-only moves
             if (start.x != end.x || start.y != end.y) {
@@ -523,7 +523,7 @@ var displayHandlers = {
         initialMoves = false;
 
         tp.beginPath();
-        tp.strokeStyle = 'blue';
+        tp.strokeStyle = 'black';
         deltaTheta = theta2 - theta1;
         n = (Math.abs(deltaTheta) > Math.PI) ? 20 : 10;
         dt = (deltaTheta) / n;
