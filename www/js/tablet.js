@@ -360,7 +360,7 @@ function tabletGrblState(grbl, response) {
 
     var cannotClick = stateName == 'Run' || stateName == 'Hold';
     selectDisabled('.jog-controls .btn-tablet', cannotClick);
-    selectDisabled('.control-pad .form-control', cannotClick);
+    //selectDisabled('.control-pad .form-control', cannotClick);
     selectDisabled('.mdi .btn', cannotClick);
     selectDisabled('.axis-position .btn', cannotClick);
     selectDisabled('.axis-position .position', cannotClick);
@@ -781,7 +781,7 @@ numpad.attach({target: "disM", axis: "D"});
 
 id('tablettablink').addEventListener('DOMActivate', toggleFullscreen, false);
 
-document.getElementById("control-pad").classList.add("open");
+//document.getElementById("control-pad").classList.add("open");
 
 function fullscreenIfMobile() {
     if (/Mobi|Android/i.test(navigator.userAgent)) {

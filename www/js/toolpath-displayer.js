@@ -79,7 +79,7 @@ var gcodePopup = {
 
   // SHOW GCODE POPUP
   show: function() {
-    document.getElementById("control-pad").style.display = "none"; 
+    //document.getElementById("control-pad").style.display = "none"; 
     document.getElementById("large-gcode-viewer").style.display = "block"; 
     
 
@@ -91,7 +91,7 @@ var gcodePopup = {
   // HIDE GCODE POPUP
   hide: function(){ 
 
-    document.getElementById("control-pad").style.display = "block";
+    //document.getElementById("control-pad").style.display = "block";
     document.getElementById("large-gcode-viewer").style.display = "none";  
 
     canvas = id("small-toolpath");
