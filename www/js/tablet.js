@@ -121,6 +121,7 @@ setAxis = function(axis, field) {
 }
 
 sendMove = function(cmd) {
+    console.log("Button press: " + cmd);
     tabletClick();
     var jog = function(params) {
         params = params || {};
@@ -139,7 +140,7 @@ sendMove = function(cmd) {
         moveTo(s);
     };
 
-    var distance = Number(id('jog-distance').value) || 0;
+    var distance = Number(id('disM').innerText) || 0;
 
     var fn = {
         'G28': function() {

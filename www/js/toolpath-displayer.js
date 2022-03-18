@@ -14,11 +14,11 @@ tp.strokeStyle = 'black';
 
 var cameraAngle = 1;
 
-var xMaxTravel = 1000;
-var yMaxTravel = 1000;
+var xMaxTravel = 2438;
+var yMaxTravel = 2438/2;
 
-var xHomePos = 0;
-var yHomePos = 0;
+var xHomePos = 2438/2;
+var yHomePos = 2438/4;
 
 var xHomeDir = 1;
 var yHomeDir = 1;
@@ -38,70 +38,6 @@ tlC.strokeStyle = 'white';
 tlC.fillStyle = 'white';
 tlC.fill();
 tlC.stroke();
-
-var gcodePopup = {
-  // CREATE GCODE POPUP HTML
-  largViewer: null, // gcodePopup itself
-  init: function(){
-
-    // ENTIRE TOOLPATH VIEWER POPUP ITSELF
-    gcodePopup.largViewer = document.createElement("div");
-    gcodePopup.largViewer.id = "large-gcode-viewer";
-    document.getElementById("tablet-listener").appendChild(gcodePopup.largViewer);
-
-    // CANVAS
-    gcodePopup.canvas = document.createElement("CANVAS");
-    gcodePopup.canvas.width = 600;
-    gcodePopup.canvas.height = 500;
-    gcodePopup.canvas.style="border:1px solid #000000;"
-    gcodePopup.canvas.id = "large-gcode-viewer-canvas"
-    gcodePopup.largViewer.appendChild(gcodePopup.canvas);
-
-    //HANDLE CLICK BEHAVIOR FOR POPUP
-    document.addEventListener('click', function(event) {
-        if (gcodePopup.canvas.contains(event.target)) {       //If the click is inside the popup change the camera angle
-
-            cameraAngle = cameraAngle + 1;
-            if(cameraAngle > 3){
-                cameraAngle = 0;
-            }
-
-            const gcode = id('gcode').value;
-            if (gCodeLoaded) {
-                displayer.showToolpath(gcode, WPOS, MPOS, cameraAngle);
-            }
-
-        }
-        else{                                              //If the click is outside the popup close the popup
-            gcodePopup.hide();
-        }
-    });
-
-  },
-
-  // SHOW GCODE POPUP
-  show: function() {
-    //document.getElementById("control-pad").style.display = "none"; 
-    document.getElementById("large-gcode-viewer").style.display = "block"; 
-    
-
-    //gcodePopup.hwrap.classList.add("open");
-    canvas = gcodePopup.canvas;
-    tp = canvas.getContext("2d");
-  },
-
-  // HIDE GCODE POPUP
-  hide: function(){ 
-
-    //document.getElementById("control-pad").style.display = "block";
-    document.getElementById("large-gcode-viewer").style.display = "none";  
-
-    canvas = id("small-toolpath");
-    tp = canvas.getContext("2d");
-  },
-};
-window.addEventListener("DOMContentLoaded", gcodePopup.init);
-
 
 var tpUnits = 'G21';
 
@@ -679,11 +615,4 @@ var updateGcodeViewerAngle = function() {
     displayer.showToolpath(gcode, WPOS, MPOS, cameraAngle);
 }
 
-var showGcodePopup = function(){
-    const gcode = id('gcode').value;
-    gcodePopup.show();
-    displayer.showToolpath(gcode, WPOS, MPOS, cameraAngle);
-}
-
 id("small-toolpath").addEventListener("mouseup", updateGcodeViewerAngle); 
-id("small-toolpath").addEventListener("dblclick", showGcodePopup); 
