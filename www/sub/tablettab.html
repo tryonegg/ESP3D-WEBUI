@@ -15,6 +15,8 @@
   <div class = "maslow" style="height: 500px">
     <div class = "display" style="width: 75%; display: inline-block;">
       <canvas id="small-toolpath" class="previewer" style="width: 100%; height: 100%"></canvas>
+      <textarea class="gcode" id="gcode" rows="8" placeholder="GCode File Display" spellcheck="false" readonly>
+      </textarea>
     </div>
     <div class = "controls" style="width: 25%; float: right;">
       <div style="block: grid; grid-template-columns: 25% 25% 25% 25%;" class="maslow-grid-container">
@@ -115,18 +117,6 @@
     </div>
   </div>
   <div class="control-pad" id="control-pad">
-    <div class="container-fluid">
-      <div class="middle-block jog-controls">
-        <div class="row no-gutter">
-          <div class="col-xs-2">
-          </div>
-          <div class="col-xs-2 emptyURHC">
-          </div>
-          <div class="col-xs-2">
-          </div>
-
-          <div class="col-xs-1">
-	  </div>
           <div class="col-xs-1">
 	  </div>
           <div class="col-xs-1">
@@ -146,24 +136,6 @@
           <div class="col-xs-2">
           </div>
           <div class="col-xs-2">
-            <select class="form-control jog-selector" id="jog-distance">
-              <option>0.00025</option>
-              <option>0.0005</option>
-              <option>0.001</option>
-              <option>0.003</option>
-              <option>0.005</option>
-              <option>0.01</option>
-              <option>0.03</option>
-              <option>0.05</option>
-              <option>0.1</option>
-              <option>0.3</option>
-              <option>0.5</option>
-              <option>1</option>
-              <option>3</option>
-              <option>5</option>
-              <option>10</option>
-              <option>30</option>
-            </select>
           </div>
 
           <div class="col-xs-1">
@@ -202,30 +174,12 @@
         <div class="row no-gutter">
           <div class="col-xs-5">
             <div class="col-xs-10">
-              <input type="text" class="form-control" id="mditext0" placeholder="GCode Command" onFocus="inputFocused()" onBlur="inputBlurred()">
             </div>
             <div class="col-xs-2">
-              <button
-                 type="button"
-                 class="btn btn-default mdi-go"
-                 title="Submit GCode Command"
-                 onclick="MDI('mditext0')"
-                 >
-                MDI
-              </button>
             </div>
             <div class="col-xs-10">
-              <input type="text" class="form-control" id="mditext1" placeholder="GCode Command" onFocus="inputFocused()" onBlur="inputBlurred()">
             </div>
             <div class="col-xs-2">
-              <button
-                 type="button"
-                 class="btn btn-default mdi-go"
-                 title="Submit GCode Command"
-                 onclick="MDI('mditext1')"
-                 >
-                MDI
-              </button>
             </div>
             <div class="row no-gutter">
               <!-- this creates some vertical space above the file selector -->
@@ -234,29 +188,11 @@
               
             </div>
             <div class="col-xs-2">
-              <button
-                 type="button"
-                 class="btn btn-default refresh"
-                 title="Upload New File"
-                 onclick="files_select_upload()"
-                 >
-                Upld
-              </button>
 	          </div>
             <div class="col-xs-2">
-              <button
-                 type="button"
-                 class="btn btn-default load"
-                 title="Reload File"
-                 onclick="loadGCode()"
-                 >
-                Load
-              </button>
             </div>
           </div>
           <div class="col-xs-4">
-            <textarea class="gcode" id="gcode" rows="8" placeholder="GCode File Display" spellcheck="false" readonly>
-            </textarea>
           </div>
           <div class="col-xs-3">
 	    

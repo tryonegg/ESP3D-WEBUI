@@ -616,12 +616,12 @@ function menuSpindleOff() { sendCommand('M5'); hideMenu(); }
 function requestModes() { sendCommand('$G'); }
 
 cycleDistance = function(up) {
-    var sel = id('jog-distance');
-    var newIndex = sel.selectedIndex + (up ? 1 : -1);
-    if (newIndex >= 0 && newIndex < sel.length) {
-        tabletClick();
-        sel.selectedIndex = newIndex;
-    }
+    //var sel = id('jog-distance');
+    //var newIndex = sel.selectedIndex + (up ? 1 : -1);
+    //if (newIndex >= 0 && newIndex < sel.length) {
+    //    tabletClick();
+    //    sel.selectedIndex = newIndex;
+    //}
 }
 clickon = function(name) {
     //    $('[data-route="workspace"] .btn').removeClass('active');
@@ -765,9 +765,6 @@ function mdiEnterKey(event) {
         event.target.blur();
     }
 }
-
-id('mditext0').addEventListener('keyup', mdiEnterKey);
-id('mditext1').addEventListener('keyup', mdiEnterKey);
 
 // The listener could be added to the tablettab element by setting tablettab's
 // contentEditable property.  The problem is that it is too easy for tablettab
