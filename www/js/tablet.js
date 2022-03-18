@@ -509,6 +509,8 @@ function populateTabletFileSelector(obj) {
             }
             addOption(selector, file.name, false, file.name == selectedFile);
         });
+        selector.selectedIndex = "1";
+        loadGCode();
     } else {
         addOption(selector, "No files found", selectedFile == '');
     }
@@ -790,4 +792,3 @@ function fullscreenIfMobile() {
 }
 
 id('tablettablink').addEventListener('DOMActivate', fullscreenIfMobile, false);
-

@@ -3,6 +3,8 @@
 var root = window;
 
 var canvas = id("small-toolpath");
+canvas.width = 800;
+canvas.height = 400;
 var tp = canvas.getContext("2d");
 var tpRect;
 
@@ -259,8 +261,8 @@ var transformCanvas = function() {
     toolSave = null;
     if (tpRect == undefined) {
         tpRect = canvas.parentNode.getBoundingClientRect();
-        canvas.width = tpRect.width;
-        canvas.height = tpRect.height;
+        //canvas.width = tpRect.width;
+        //canvas.height = tpRect.height;
     }
 
     // Reset the transform and clear the canvas
