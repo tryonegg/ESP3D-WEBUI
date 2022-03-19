@@ -121,7 +121,6 @@ setAxis = function(axis, field) {
 }
 
 sendMove = function(cmd) {
-    console.log("Button press: " + cmd);
     tabletClick();
     var jog = function(params) {
         params = params || {};
