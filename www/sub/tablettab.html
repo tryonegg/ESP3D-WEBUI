@@ -23,18 +23,18 @@
         <div class="maslow-grid-item" onclick="sendMove('X-Y+')" style = "background-color: #b69fcb;">
           <canvas id = "tlBtn" style="width: 100%; height: 100%"></canvas>
         </div>
-        <div class="maslow-grid-item" style = "background-color: #9d88c0;" onclick="sendMove('Y+')">up</div>
-        <div class="maslow-grid-item" style = "background-color: #b69fcb;" onclick="sendMove('X+Y+')">upR</div>  
-        <div class="maslow-grid-item" style = "background-color: #f2f0e4; font-size: 1vw;">Load 
+        <div class="maslow-grid-item" style = "background-color: #9d88c0;" onclick="sendMove('Y+')"><canvas id = "upBtn" style="width: 100%; height: 100%"></canvas></div>
+        <div class="maslow-grid-item" style = "background-color: #b69fcb;" onclick="sendMove('X+Y+')"><canvas id = "trBtn" style="width: 100%; height: 100%"></canvas></div>  
+        <div class="maslow-grid-item" style = "background-color: #f2f0e4; font-size: 1vw;" onclick="files_select_upload()">Load 
         File</div>
-        <div class="maslow-grid-item" style = "background-color: #9d88c0;" onclick="sendMove('X-')">L</div>
+        <div class="maslow-grid-item" style = "background-color: #9d88c0;" onclick="sendMove('X-')"><canvas id = "lBtn" style="width: 100%; height: 100%"></div>
         <div class="maslow-grid-item" style = "background-color: #f2f0e4;">H</div>  
-        <div class="maslow-grid-item" style = "background-color: #9d88c0;" onclick="sendMove('X+')">R</div>
+        <div class="maslow-grid-item" style = "background-color: #9d88c0;" onclick="sendMove('X+')"><canvas id = "rBtn" style="width: 100%; height: 100%"></div>
         <div class="maslow-grid-item" style = "background-color: #f2f0e4; font-size: 1vw;">Extend
         Belts</div>
-        <div class="maslow-grid-item" style = "background-color: #b69fcb;" onclick="sendMove('X-Y-')">dnL</div>
-        <div class="maslow-grid-item" style = "background-color: #9d88c0;" onclick="sendMove('Y-')">dn</div>
-        <div class="maslow-grid-item" style = "background-color: #b69fcb;" onclick="sendMove('X+Y-')">dnR</div>
+        <div class="maslow-grid-item" style = "background-color: #b69fcb;" onclick="sendMove('X-Y-')"><canvas id = "blBtn" style="width: 100%; height: 100%"></canvas></div>
+        <div class="maslow-grid-item" style = "background-color: #9d88c0;" onclick="sendMove('Y-')"><canvas id = "dnBtn" style="width: 100%; height: 100%"></div>
+        <div class="maslow-grid-item" style = "background-color: #b69fcb;" onclick="sendMove('X+Y-')"><canvas id = "brBtn" style="width: 100%; height: 100%"></canvas></div>
         <div class="maslow-grid-item" style = "background-color: #f2f0e4;">Z</div>
         <div class="maslow-grid-item">Dst:</div>
         <div class="maslow-grid-item" style = "background-color: #f2f0e4;" id = "disM">3.15</div>

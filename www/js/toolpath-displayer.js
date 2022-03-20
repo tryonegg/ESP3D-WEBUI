@@ -28,16 +28,169 @@ const tlC = document.getElementById("tlBtn").getContext("2d");
 tlC.fillStyle = "#b69fcb";
 tlC.fillRect(0, 0, 500, 500);
 tlC.beginPath();
-tlC.moveTo(0, 0);
-tlC.lineTo(0, 100);
-tlC.lineTo(150, 0);
-tlC.lineTo(0, 0);
+tlC.moveTo(90, 40);
+tlC.lineTo(90, 140);
+tlC.lineTo(230, 40);
+tlC.lineTo(90, 40);
 tlC.closePath();
 tlC.lineWidth = 5;
 tlC.strokeStyle = 'white';
 tlC.fillStyle = 'white';
 tlC.fill();
 tlC.stroke();
+
+const trC = document.getElementById("trBtn").getContext("2d");
+trC.fillStyle = "#b69fcb";
+trC.fillRect(0, 0, 500, 500);
+trC.beginPath();
+trC.moveTo(90, 40);
+trC.lineTo(230, 140);
+trC.lineTo(230, 40);
+trC.lineTo(90, 40);
+trC.closePath();
+trC.lineWidth = 5;
+trC.strokeStyle = 'white';
+trC.fillStyle = 'white';
+trC.fill();
+trC.stroke();
+
+const blC = document.getElementById("blBtn").getContext("2d");
+blC.fillStyle = "#b69fcb";
+blC.fillRect(0, 0, 500, 500);
+blC.beginPath();
+blC.moveTo(90, 40);
+blC.lineTo(230, 140);
+blC.lineTo(90, 140);
+blC.lineTo(90, 40);
+blC.closePath();
+blC.lineWidth = 5;
+blC.strokeStyle = 'white';
+blC.fillStyle = 'white';
+blC.fill();
+blC.stroke();
+
+const brC = document.getElementById("brBtn").getContext("2d");
+brC.fillStyle = "#b69fcb";
+brC.fillRect(0, 0, 500, 500);
+brC.beginPath();
+brC.moveTo(90, 140);
+brC.lineTo(230, 140);
+brC.lineTo(230, 40);
+brC.lineTo(90, 140);
+brC.closePath();
+brC.lineWidth = 5;
+brC.strokeStyle = 'white';
+brC.fillStyle = 'white';
+brC.fill();
+brC.stroke();
+
+const upC = document.getElementById("upBtn").getContext("2d");
+upC.fillStyle = "#9d88c0";
+upC.fillRect(0, 0, 500, 500);
+// #rect441
+upC.beginPath();
+upC.fillStyle = 'white';
+upC.lineWidth = 1;
+upC.rect(60+49.213840, 99.622299, 93.976021, 74.721062);
+upC.fill();
+    
+// #path608
+upC.beginPath();
+upC.strokeStyle = 'white';
+upC.lineWidth = 1;
+upC.lineCap = 'butt';
+upC.lineJoin = 'miter';
+upC.moveTo(60+5.109692, 104.666810);
+upC.lineTo(60+94.679220, 4.145211);
+upC.lineTo(60+189.305070, 103.959000);
+upC.lineTo(60+5.109692, 104.666810);
+upC.closePath();
+upC.stroke();
+upC.fill();
+
+
+
+const dnC = document.getElementById("dnBtn").getContext("2d");
+dnC.fillStyle = "#9d88c0";
+dnC.fillRect(0, 0, 500, 500);
+// #rect441
+dnC.save();
+dnC.transform(1.000000, 0.000000, 0.000000, -1.000000, 0.000000, 0.000000);
+dnC.fillStyle = 'white';
+dnC.lineWidth = 1;
+dnC.rect(60 + 49.213840, -75.901474, 93.976021, 74.721062);
+dnC.fill();
+dnC.restore();
+    
+// #path608
+dnC.beginPath();
+dnC.strokeStyle = 'white';
+dnC.fillStyle = 'white';
+dnC.lineWidth = 1;
+dnC.lineCap = 'butt';
+dnC.lineJoin = 'miter';
+dnC.moveTo(60 + 5, 70 - 20);
+dnC.lineTo(60 + 94, 171 - 20);
+dnC.lineTo(60 + 189, 71 - 20);
+dnC.lineTo(60 + 5, 70 - 20);
+dnC.closePath();
+dnC.stroke();
+dnC.fill();
+
+const rC = document.getElementById("rBtn").getContext("2d");
+rC.fillStyle = "#9d88c0";
+rC.fillRect(0, 0, 500, 500);
+// #g1100
+rC.save();
+rC.transform(0.000000, 1.000000, -1.000000, 0.000000, 187.481000, 0.273690);
+    
+// #rect441
+rC.fillStyle = 'white';
+rC.lineWidth = 1;
+rC.rect(-20 + 49.213840, 99.622299 - 80, 93.976021, 74.721062);
+rC.fill();
+    
+// #path608
+rC.beginPath();
+rC.strokeStyle = 'white';
+rC.lineWidth = 1;
+rC.lineCap = 'butt';
+rC.lineJoin = 'miter';
+rC.moveTo(-20+5.109692, 104.666810 - 80);
+rC.lineTo(-20+94.679220, 4.145213 - 80);
+rC.lineTo(-20+189.305070, 103.959000 - 80);
+rC.closePath();
+rC.stroke();
+rC.fill();
+rC.restore();
+
+
+const lC = document.getElementById("lBtn").getContext("2d");
+lC.fillStyle = "#9d88c0";
+lC.fillRect(0, 0, 500, 500);
+// #g1100
+lC.save();
+lC.transform(0.000000, 1.000000, 1.000000, 0.000000, 11.957500, 0.273690);
+    
+// #rect441
+lC.fillStyle = 'white';
+lC.lineWidth = 1;
+lC.rect(-20 + 49.213840, 99.622299, 93.976021, 74.721062);
+lC.fill();
+    
+// #path608
+lC.beginPath();
+lC.strokeStyle = 'white';
+lC.lineWidth = 1;
+lC.lineCap = 'butt';
+lC.lineJoin = 'miter';
+lC.moveTo(-20 + 5.109692, 104.666810);
+lC.lineTo(-20 + 94.679220, 4.145213);
+lC.lineTo(-20 + 189.305070, 103.959000);
+lC.closePath();
+lC.stroke();
+lC.fill();
+lC.restore();
 
 var tpUnits = 'G21';
 
