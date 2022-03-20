@@ -192,6 +192,54 @@ lC.stroke();
 lC.fill();
 lC.restore();
 
+const playC = document.getElementById("playBtn").getContext("2d");
+playC.fillStyle = "#4aa85c";
+playC.fillRect(0, 0, 500, 500);
+
+playC.beginPath();
+playC.strokeStyle = 'white';
+playC.fillStyle = 'white';
+playC.lineWidth = 1;
+playC.lineCap = 'butt';
+playC.lineJoin = 'miter';
+playC.moveTo(60 + 44.053484, 147.608260 - 35);
+playC.lineTo(60 + 44.053484, 68.502834 - 35);
+playC.lineTo(60 + 112.311470, 106.828610 - 35);
+playC.closePath;
+playC.fill();
+playC.stroke();
+
+const pauseC = document.getElementById("pauseBtn").getContext("2d");
+pauseC.fillStyle = "#efbb33";
+pauseC.fillRect(0, 0, 500, 500);
+
+// #rect1967
+pauseC.beginPath();
+pauseC.fillStyle = 'white';
+pauseC.lineWidth = 1;
+pauseC.rect(75 + 44, 66 - 35, 20, 81);
+pauseC.fill();
+    
+// #rect1967-4
+pauseC.beginPath();
+pauseC.fillStyle = 'white';
+pauseC.lineWidth = 1;
+pauseC.rect(75 + 75, 66 - 35, 20, 81);
+pauseC.fill();
+
+const stopC = document.getElementById("stopBtn").getContext("2d");
+stopC.fillStyle = "#cd654c";
+stopC.fillRect(0, 0, 500, 500);
+
+stopC.strokeStyle = 'white';
+stopC.fillStyle = 'white';
+stopC.beginPath();
+stopC.fillStyle = 'white';
+stopC.lineWidth = 1;
+stopC.rect(60 + 44, 65 - 35, 100, 80);
+stopC.fill();
+stopC.stroke();
+
 var tpUnits = 'G21';
 
 var tpBbox = {
@@ -764,6 +812,11 @@ var updateGcodeViewerAngle = function() {
         cameraAngle = 0;
     }
 
+    const gcode = id('gcode').value;
+    displayer.showToolpath(gcode, WPOS, MPOS, cameraAngle);
+}
+
+var refreshGcode = function() {
     const gcode = id('gcode').value;
     displayer.showToolpath(gcode, WPOS, MPOS, cameraAngle);
 }
