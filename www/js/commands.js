@@ -86,8 +86,13 @@ function Monitor_output_Update(message) {
         }
         output += out;
     }
+    var old_output = id("cmd_content").innerHTML;
     id("cmd_content").innerHTML = output;
-    Monitor_check_autoscroll();
+    // Do not autoscroll if the contents have not changed.
+    // This prevents scrolling on filtered-out status reports.
+    if (output != old_output) {
+        Monitor_check_autoscroll();
+    }
 }
 
 function SendCustomCommand() {
