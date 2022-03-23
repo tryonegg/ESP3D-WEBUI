@@ -64,6 +64,7 @@ inputBlurred = function() {
 }
 
 zeroAxis = function(axis) {
+    console.log("Zeroing: " + axis);
     tabletClick();
     setAxisByValue(axis, 0);
 }
@@ -140,6 +141,9 @@ sendMove = function(cmd) {
     };
 
     var distance = Number(id('disM').innerText) || 0;
+    if(cmd.includes('Z')){
+        distance = Number(id('disZ').innerText) || 0;
+    }
 
     var fn = {
         'G28': function() {
@@ -777,6 +781,7 @@ window.addEventListener('keydown', handleKeyDown);
 window.addEventListener('keyup', handleKeyUp);
 
 numpad.attach({target: "disM", axis: "D"});
+numpad.attach({target: "disZ", axis: "Z"});
 //numpad.attach({target: "wpos-y", axis: "Y"});
 //numpad.attach({target: "wpos-z", axis: "Z"});
 //numpad.attach({target: "wpos-a", axis: "A"});
@@ -790,5 +795,16 @@ function fullscreenIfMobile() {
         toggleFullscreen();
     }
 }
+
+function showZaxisPopup(){
+    console.log("Z-axis popup function ran");
+    document.getElementById("z-axis-popup").style.display = "block";
+}
+
+document.addEventListener('click', function(event) {
+    if (!document.getElementById("z-axis-popup").contains(event.target) && !document.getElementById("zBtn").contains(event.target) && !document.getElementById("numPad").contains(event.target)) {
+        document.getElementById("z-axis-popup").style.display = "none";
+    }
+});
 
 id('tablettablink').addEventListener('DOMActivate', fullscreenIfMobile, false);
