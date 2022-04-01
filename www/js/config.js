@@ -16,10 +16,10 @@ function refreshconfig(is_override) {
     is_override_config = false;
     if ((typeof is_override != 'undefined') && is_override) is_override_config = is_override;
     config_display_override(is_override_config);
-    id('config_loader').style.display = "block";
-    id('config_list_content').style.display = "none";
-    id('config_status').style.display = "none";
-    id('config_refresh_btn').style.display = "none";
+    displayBlock('config_loader');
+    displayNone('config_list_content');
+    displayNone('config_status');
+    displayNone('config_refresh_btn');
     if (!is_override) config_configList = [];
     config_override_List = [];
     //removeIf(production)
@@ -41,12 +41,12 @@ function refreshconfig(is_override) {
 
 function config_display_override(display_it) {
     if (display_it) {
-        id('config_override_list_content').style.display = "block";
-        id('config_main_content').style.display = "none";
+        displayBlock('config_overrdisplayBlocke_list_content');
+        displayNone('config_main_content');
         id('config_override_file').checked = true;
     } else {
-        id('config_override_list_content').style.display = "none";
-        id('config_main_content').style.display = "block";
+        id('config_overrdisplayNonee_list_content');
+        displayBlock('config_main_content');
         id('config_main_file').checked = true;
     }
 }
@@ -146,21 +146,21 @@ function build_HTML_config_list() {
             } else {
                 id('config_override_data').innerHTML = content;
                 if (is_config_override_file()) {
-                    id('config_delete_override').style.display = 'none';
+                    displayNone('config_delete_override');
                     id('config_override_file_name').innerHTML = "Smoothieware";
                 } else {
                     id('config_override_file_name').innerHTML = "/sd/config-override";
-                    id('config_delete_override').style.display = 'block';
+                    displayBlock('config_delete_override');
                 }
             }
         } else {
             id('config_list_data').innerHTML = content;
         }
     }
-    id('config_loader').style.display = "none";
-    id('config_list_content').style.display = "block";
-    id('config_status').style.display = "none";
-    id('config_refresh_btn').style.display = "block";
+    displayNone('config_loader');
+    displayBlock('config_list_content');
+    displayNone('config_status');
+    displayBlock('config_refresh_btn');
 }
 
 function config_check_value(value, index, is_override) {
@@ -563,18 +563,18 @@ function getESPconfigSuccess(response) {
     //console.log(response);
     if (!process_config_answer(response)) {
         getESPconfigfailed(406, translate_text_item("Wrong data"));
-        id('config_loader').style.display = "none";
-        id('config_list_content').style.display = "block";
-        id('config_status').style.display = "none";
-        id('config_refresh_btn').style.display = "block";
+        displayNone('config_loader');
+        displayBlock('config_list_content');
+        displayNone('config_status');
+        displayBlock('config_refresh_btn');
         return;
     }
 }
 
 function getESPconfigfailed(error_code, response) {
     console.log("Error " + error_code + " :" + response);
-    id('config_loader').style.display = "none";
-    id('config_status').style.display = "block";
+    displayNone('config_loader');
+    displayBlock('config_status');
     id('config_status').innerHTML = translate_text_item("Failed:") + error_code + " " + response;
-    id('config_refresh_btn').style.display = "block";
+    displayBlock('config_refresh_btn');
 }

@@ -102,7 +102,7 @@ function browser_is(bname) {
 
 window.onload = function() {
     //to check if javascript is disabled like in anroid preview
-    id('loadingmsg').style.display = 'none';
+    displayNone('loadingmsg');
     console.log("Connect to board");
     connectdlg();
     //ugly hack for IE
@@ -152,10 +152,7 @@ function startSocket() {
                 msg += String.fromCharCode(bytes[i]);
                 if (bytes[i] == 10) {
                     wsmsg += msg.replace('\r\n', '\n');
-                    Monitor_output_Update(wsmsg);
-                    process_socket_response(wsmsg);
-                    //msg = wsmsg.replace("\n", "");
-                    //wsmsg = msg.replace("\r", "");
+                    var thismsg = wsmsg;
                     wsmsg = "";
                     msg = "";
                     Monitor_output_Update(thismsg);
@@ -251,7 +248,7 @@ function ontoggleLock(forcevalue) {
         id('settings_update_fw_btn').disabled = true;
         id('settings_restart_btn').disabled = true;
         disable_items(id('JogUI'), false);
-        id('JogUI').style.pointerEvents = 'none';
+        displayNone('JogUI');
     } else {
         id('lock_UI_btn_txt').innerHTML = translate_text_item("Lock interface");
         disable_items(id('maintab'), false);
@@ -324,176 +321,176 @@ function update_UI_firmware_target() {
     id('control_x_position_label').innerHTML = "X";
     id('control_y_position_label').innerHTML = "Y";
     id('control_z_position_label').innerHTML = "Z";
-    id('config_smoothie_nav').style.display = 'none';
+    displayNone('config_smoothie_nav');
     showAxiscontrols();
     if (target_firmware == "repetier") {
         fwName = "Repetier";
-        id('configtablink').style.display = 'block';
-        id('auto_check_control').style.display = 'flex';
-        id('motor_off_control').style.display = 'table-row';
-        id('progress_btn').style.display = 'table-row';
-        id('abort_btn').style.display = 'table-row';
-        id('grblPanel').style.display = 'none';
-        id('zero_xyz_btn').style.display = 'none';
-        id('zero_x_btn').style.display = 'none';
-        id('zero_y_btn').style.display = 'none';
-        id('zero_z_btn').style.display = 'none';
-        id('control_xm_position_row').style.display = 'none';
-        id('control_ym_position_row').style.display = 'none';
-        id('control_zm_position_row').style.display = 'none';
+        displayBlock('configtablink');
+        displayFlex('auto_check_control');
+        displayTable('motor_off_control');
+        displayTable('progress_btn');
+        displayTable('abort_btn');
+        displayNone('grblPanel');
+        displayNone('zero_xyz_btn');
+        displayNone('zero_x_btn');
+        displayNone('zero_y_btn');
+        displayNone('zero_z_btn');
+        displayNone('control_xm_position_row');
+        displayNone('control_ym_position_row');
+        displayNone('control_zm_position_row');
     } else if (target_firmware == "repetier4davinci") {
         fwName = "Repetier for Davinci";
-        id('configtablink').style.display = 'block';
-        id('auto_check_control').style.display = 'flex';
-        id('motor_off_control').style.display = 'table-row';
-        id('progress_btn').style.display = 'table-row';
-        id('abort_btn').style.display = 'table-row';
-        id('grblPanel').style.display = 'none';
-        id('zero_xyz_btn').style.display = 'none';
-        id('zero_x_btn').style.display = 'none';
-        id('zero_y_btn').style.display = 'none';
-        id('zero_z_btn').style.display = 'none';
-        id('control_xm_position_row').style.display = 'none';
-        id('control_ym_position_row').style.display = 'none';
-        id('control_zm_position_row').style.display = 'none';
+        displayBlock('configtablink');
+        displayFlex('auto_check_control');
+        displayTable('motor_off_control');
+        displayTable('progress_btn');
+        displayTable('abort_btn');
+        displayNone('grblPanel');
+        displayNone('zero_xyz_btn');
+        displayNone('zero_x_btn');
+        displayNone('zero_y_btn');
+        displayNone('zero_z_btn');
+        displayNone('control_xm_position_row');
+        displayNone('control_ym_position_row');
+        displayNone('control_zm_position_row');
     } else if (target_firmware == "smoothieware") {
         fwName = "Smoothieware";
-        id('configtablink').style.display = 'block';
-        id('config_smoothie_nav').style.display = 'block';
-        id('auto_check_control').style.display = 'flex';
-        id('motor_off_control').style.display = 'table-row';
-        id('progress_btn').style.display = 'table-row';
-        id('abort_btn').style.display = 'table-row';
-        id('grblPanel').style.display = 'none';
-        id('zero_xyz_btn').style.display = 'none';
-        id('zero_x_btn').style.display = 'none';
-        id('zero_y_btn').style.display = 'none';
-        id('zero_z_btn').style.display = 'none';
-        id('control_xm_position_row').style.display = 'none';
-        id('control_ym_position_row').style.display = 'none';
-        id('control_zm_position_row').style.display = 'none';
+        displayBlock('configtablink');
+        displayBlock('config_smoothie_nav');
+        displayFlex('auto_check_control');
+        displayTable('motor_off_control');
+        displayTable('progress_btn');
+        displayTable('abort_btn');
+        displayNone('grblPanel');
+        displayNone('zero_xyz_btn');
+        displayNone('zero_x_btn');
+        displayNone('zero_y_btn');
+        displayNone('zero_z_btn');
+        displayNone('control_xm_position_row');
+        displayNone('control_ym_position_row');
+        displayNone('control_zm_position_row');
     } else if (target_firmware == "grbl-embedded") {
         fwName = "FluidNC";
         last_grbl_pos = "";
-        id('configtablink').style.display = 'none';
-        id('auto_check_control').style.display = 'none';
-        id('progress_btn').style.display = 'none';
-        id('abort_btn').style.display = 'none';
-        id('motor_off_control').style.display = 'none';
+        displayNone('configtablink');
+        displayNone('auto_check_control');
+        displayNone('progress_btn');
+        displayNone('abort_btn');
+        displayNone('motor_off_control');
         id('tab_title_configuration').innerHTML = "<span translate>GRBL configuration</span>";
         id('tab_printer_configuration').innerHTML = "<span translate>GRBL</span>";
         id('files_input_file').accept = " .g, .gco, .gcode, .txt, .ncc, .G, .GCO, .GCODE, .TXT, .NC";
-        id('zero_xyz_btn').style.display = 'block';
-        id('zero_x_btn').style.display = 'block';
-        id('zero_y_btn').style.display = 'block';
+        displayInitial('zero_xyz_btn');
+        displayInitial('zero_x_btn');
+        displayInitial('zero_y_btn');
         if (grblaxis >2) {
-            //id('control_z_position_display').style.display = 'block';
+            //displayInitial('control_z_position_display');
             id('control_z_position_label').innerHTML = "Zw";
         } else {
             hideAxiscontrols();
-            id('preferences_control_z_velocity_group').style.display = 'none';
+            displayNone('preferences_control_z_velocity_group');
         }
         if (grblaxis >3) {
             
             id('zero_xyz_btn_txt').innerHTML +="A";
             grblzerocmd += " A0";
             build_axis_selection();
-            id('preferences_control_a_velocity_group').style.display = 'block';
+            displayBlock('preferences_control_a_velocity_group');
             id('positions_labels2').style.display = 'inline-grid';
-            id('control_a_position_display').style.display = 'block';
+            displayBlock('control_a_position_display');
         } 
         if (grblaxis >4) {
-            id('control_b_position_display').style.display = 'block';
+            displayBlock('control_b_position_display');
             id('zero_xyz_btn_txt').innerHTML +="B";
             grblzerocmd += " B0";
-            id('preferences_control_b_velocity_group').style.display = 'block';
+            displayBlock('preferences_control_b_velocity_group');
         } 
         if (grblaxis >5) {
-            id('control_c_position_display').style.display = 'block';
+            displayBlock('control_c_position_display');
             id('zero_xyz_btn_txt').innerHTML +="C";
-            id('preferences_control_c_velocity_group').style.display = 'block';
+            displayBlock('preferences_control_c_velocity_group');
             
         } else {
-            id('control_c_position_display').style.display = 'none';
+            displayNone('control_c_position_display');
         }
-        id('grblPanel').style.display = 'flex';
+        displayFlex('grblPanel');
         // id('FW_github').href = 'https://github.com/bdring/FluidNC';
-        id('settings_filters').style.display = 'block';
+        displayBlock('settings_filters');
         id('control_x_position_label').innerHTML = "Xw";
         id('control_y_position_label').innerHTML = "Yw";
         
 
     } else if (target_firmware == "marlin-embedded") {
         fwName = "Marlin ESP32";
-        id('configtablink').style.display = 'block';
-        id('auto_check_control').style.display = 'flex';
-        id('motor_off_control').style.display = 'table-row';
-        id('progress_btn').style.display = 'table-row';
-        id('abort_btn').style.display = 'table-row';
-        id('zero_xyz_btn').style.display = 'none';
-        id('zero_x_btn').style.display = 'none';
-        id('zero_y_btn').style.display = 'none';
-        id('zero_z_btn').style.display = 'none';
-        id('grblPanel').style.display = 'none';
+        displayBlock('configtablink');
+        displayFlex('auto_check_control');
+        displayTable('motor_off_control');
+        displayTable('progress_btn');
+        displayTable('abort_btn');
+        displayNone('zero_xyz_btn');
+        displayNone('zero_x_btn');
+        displayNone('zero_y_btn');
+        displayNone('zero_z_btn');
+        displayNone('grblPanel');
         id('FW_github').href = 'https://github.com/MarlinFirmware/Marlin';
-        id('settings_filters').style.display = 'none';
-        id('control_xm_position_row').style.display = 'none';
-        id('control_ym_position_row').style.display = 'none';
-        id('control_zm_position_row').style.display = 'none';
+        displayNone('settings_filters');
+        displayNone('control_xm_position_row');
+        displayNone('control_ym_position_row');
+        displayNone('control_zm_position_row');
     } else if (target_firmware == "marlin") {
         fwName = "Marlin";
-        id('configtablink').style.display = 'block';
-        id('auto_check_control').style.display = 'flex';
-        id('motor_off_control').style.display = 'table-row';
-        id('progress_btn').style.display = 'table-row';
-        id('abort_btn').style.display = 'table-row';
-        id('zero_xyz_btn').style.display = 'none';
-        id('zero_x_btn').style.display = 'none';
-        id('zero_y_btn').style.display = 'none';
-        id('zero_z_btn').style.display = 'none';
-        id('grblPanel').style.display = 'none';
-        id('control_xm_position_row').style.display = 'none';
-        id('control_ym_position_row').style.display = 'none';
-        id('control_zm_position_row').style.display = 'none';
+        displayBlock('configtablink');
+        displayFlex('auto_check_control');
+        displayTable('motor_off_control');
+        displayTable('progress_btn');
+        displayTable('abort_btn');
+        displayNone('zero_xyz_btn');
+        displayNone('zero_x_btn');
+        displayNone('zero_y_btn');
+        displayNone('zero_z_btn');
+        displayNone('grblPanel');
+        displayNone('control_xm_position_row');
+        displayNone('control_ym_position_row');
+        displayNone('control_zm_position_row');
     } else if (target_firmware == "marlinkimbra") {
         fwName = "Marlin Kimbra";
-        id('configtablink').style.display = 'block';
-        id('auto_check_control').style.display = 'flex';
-        id('motor_off_control').style.display = 'table-row';
-        id('progress_btn').style.display = 'table-row';
-        id('abort_btn').style.display = 'table-row';
-        id('zero_xyz_btn').style.display = 'none';
-        id('zero_x_btn').style.display = 'none';
-        id('zero_y_btn').style.display = 'none';
-        id('zero_z_btn').style.display = 'none';
-        id('grblPanel').style.display = 'none';
-        id('control_xm_position_row').style.display = 'none';
-        id('control_ym_position_row').style.display = 'none';
-        id('control_zm_position_row').style.display = 'none';
+        displayBlock('configtablink');
+        displayFlex('auto_check_control');
+        displayTable('motor_off_control');
+        displayTable('progress_btn');
+        displayTable('abort_btn');
+        displayNone('zero_xyz_btn');
+        displayNone('zero_x_btn');
+        displayNone('zero_y_btn');
+        displayNone('zero_z_btn');
+        displayNone('grblPanel');
+        displayNone('control_xm_position_row');
+        displayNone('control_ym_position_row');
+        displayNone('control_zm_position_row');
     } else if (target_firmware == "grbl") {
         fwName = "Grbl";
-        id('configtablink').style.display = 'block';
+        displayBlock('configtablink');
         id('tab_title_configuration').innerHTML = "<span translate>GRBL configuration</span>";
         id('tab_printer_configuration').innerHTML = "<span translate>GRBL</span>";
         id('files_input_file').accept = " .g, .gco, .gcode, .txt, .ncc, .G, .GCO, .GCODE, .TXT, .NC";
-        id('auto_check_control').style.display = 'none';
-        id('motor_off_control').style.display = 'none';
-        id('progress_btn').style.display = 'none';
-        id('abort_btn').style.display = 'none';
-        id('zero_xyz_btn').style.display = 'block';
-        id('zero_x_btn').style.display = 'block';
-        id('zero_y_btn').style.display = 'block';
-        id('zero_z_btn').style.display = 'block';
-        id('grblPanel').style.display = 'flex';
+        displayNone('auto_check_control');
+        displayNone('motor_off_control');
+        displayNone('progress_btn');
+        displayNone('abort_btn');
+        displayBlock('zero_xyz_btn');
+        displayBlock('zero_x_btn');
+        displayBlock('zero_y_btn');
+        displayBlock('zero_z_btn');
+        displayFlex('grblPanel');
         id('control_x_position_label').innerHTML = "Xw";
         id('control_y_position_label').innerHTML = "Yw";
         id('control_z_position_label').innerHTML = "Zw";
-        id('control_xm_position_row').style.display = 'table-row';
-        id('control_ym_position_row').style.display = 'table-row';
-        id('control_zm_position_row').style.display = 'table-row';
+        displayTable('control_xm_position_row');
+        displayTable('control_ym_position_row');
+        displayTable('control_zm_position_row');
     } else {
         fwName = "Unknown";
-        id('configtablink').style.display = 'none';
+        displayNone('configtablink');
     }
     if (target_firmware == "grbl-embedded") {
         EP_HOSTNAME = "Hostname";
@@ -621,7 +618,7 @@ function initUI_4() {
 }
 
 function show_main_UI() {
-    id('main_ui').style.display = 'block';
+    displayUndoNone('main_ui');
 }
 
 function compareStrings(a, b) {

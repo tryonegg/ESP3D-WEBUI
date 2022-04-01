@@ -11,11 +11,11 @@ function scanwifidlg(item, subitem) {
 }
 
 function refresh_scanwifi() {
-    id('AP_scan_loader').style.display = 'block';
-    id('AP_scan_list').style.display = 'none';
-    id('AP_scan_status').style.display = 'block';
+    displayBlock('AP_scan_loader');
+    displayNone('AP_scan_list');
+    displayBlock('AP_scan_status');
     id('AP_scan_status').innerHTML = translate_text_item("Scanning");
-    id('refresh_scanwifi_btn').style.display = 'none';
+    displayNone('refresh_scanwifi_btn');
     //removeIf(production)
     var response_text = "{\"AP_LIST\":[{\"SSID\":\"HP-Setup>71-M277LaserJet\",\"SIGNAL\":\"90\",\"IS_PROTECTED\":\"0\"},{\"SSID\":\"NETGEAR_2GEXT_OFFICE2\",\"SIGNAL\":\"58\",\"IS_PROTECTED\":\"1\"},{\"SSID\":\"NETGEAR_2GEXT_OFFICE\",\"SIGNAL\":\"34\",\"IS_PROTECTED\":\"1\"},{\"SSID\":\"NETGEAR_2GEXT_COULOIR\",\"SIGNAL\":\"18\",\"IS_PROTECTED\":\"1\"},{\"SSID\":\"HP-Print-D3-ColorLaserJetPro\",\"SIGNAL\":\"14\",\"IS_PROTECTED\":\"0\"},{\"SSID\":\"external-wifi\",\"SIGNAL\":\"20\",\"IS_PROTECTED\":\"1\"},{\"SSID\":\"Livebox-4D0F\",\"SIGNAL\":\"24\",\"IS_PROTECTED\":\"1\"},{\"SSID\":\"SFR_2000\",\"SIGNAL\":\"20\",\"IS_PROTECTED\":\"1\"},{\"SSID\":\"SFR_0D90\",\"SIGNAL\":\"26\",\"IS_PROTECTED\":\"1\"},{\"SSID\":\"SFRWiFiFON\",\"SIGNAL\":\"18\",\"IS_PROTECTED\":\"0\"},{\"SSID\":\"SFRWiFiMobile\",\"SIGNAL\":\"18\",\"IS_PROTECTED\":\"1\"},{\"SSID\":\"FreeWifi\",\"SIGNAL\":\"16\",\"IS_PROTECTED\":\"0\"}]}";
     getscanWifiSuccess(response_text);
@@ -78,18 +78,18 @@ function getscanWifiSuccess(response) {
         getscanWififailed(406, translate_text_item("Wrong data"));
         return;
     }
-    id('AP_scan_loader').style.display = "none";
-    id('AP_scan_list').style.display = "block";
-    id('AP_scan_status').style.display = "none";
-    id('refresh_scanwifi_btn').style.display = "block";
+    displayNone('AP_scan_loader');
+    displayBlock('AP_scan_list');
+    displayNone('AP_scan_status');
+    displayBlock('refresh_scanwifi_btn');
 }
 
 function getscanWififailed(error_code, response) {
     console.log("Error " + error_code + " :" + response);
-    id('AP_scan_loader').style.display = "none";
-    id('AP_scan_status').style.display = "block";
+    displayNone('AP_scan_loader');
+    displayBlock('AP_scan_status');
     id('AP_scan_status').innerHTML = translate_text_item("Failed:") + error_code + " " + response;
-    id('refresh_scanwifi_btn').style.display = "block";
+    displayBlock('refresh_scanwifi_btn');
 }
 
 function scanwifidlg_close(response) {

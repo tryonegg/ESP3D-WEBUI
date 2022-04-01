@@ -5,7 +5,7 @@ function showmacrodlg(closefn) {
     var modal = setactiveModal('macrodlg.html', closefn);
     if (modal == null) return;
     build_dlg_macrolist_ui();
-    id('macrodlg_upload_msg').style.display = 'none';
+    displayNone('macrodlg_upload_msg');
     showModal();
 }
 
@@ -124,9 +124,9 @@ function macro_filename_OnKeyUp(event, index) {
     if (value.length > 0) {
         if (group.classList.contains('has-feedback')) group.classList.remove('has-feedback');
         if (group.classList.contains('has-error')) group.classList.remove('has-error');
-        id("icon_macro_status_line_" + index).style.display = 'none';
+        displayNone("icon_macro_status_line_" + index);
     } else {
-        id("icon_macro_status_line_" + index).style.display = 'block';
+        displayBlock("icon_macro_status_line_" + index);
         if (!group.classList.contains('has-error')) group.classList.add('has-error');
         if (!group.classList.contains('has-feedback')) group.classList.add('has-feedback');
     }
@@ -268,7 +268,7 @@ function macrodlgUploadProgressDisplay(oEvent) {
         var percentComplete = (oEvent.loaded / oEvent.total) * 100;
         id('macrodlg_prg').value = percentComplete;
         id('macrodlg_upload_percent').innerHTML = percentComplete.toFixed(0);
-        id('macrodlg_upload_msg').style.display = 'block';
+        displayBlock('macrodlg_upload_msg');
     } else {
         // Impossible because size is unknown
     }
@@ -299,11 +299,11 @@ function macroUploadsuccess(response) {
         }
         control_macrolist.push(entry);
     }
-    id('macrodlg_upload_msg').style.display = 'none';
+    displayNone('macrodlg_upload_msg');
     closeModal('ok');
 }
 
 function macroUploadfailed(errorcode, response) {
     alertdlg(translate_text_item("Error"), translate_text_item("Save macro list failed!"));
-    id('macrodlg_upload_msg').style.display = 'none';
+    displayNone('macrodlg_upload_msg');
 }

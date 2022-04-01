@@ -107,7 +107,7 @@ function temperature_chamber(enabled) {
 }
 
 function start_graph_output() {
-  id("temperatures_output").style.display = "block";
+  displayBlock("temperatures_output");
   smoothieextuder.start();
   smoothiebed.start();
   graph_started = true;

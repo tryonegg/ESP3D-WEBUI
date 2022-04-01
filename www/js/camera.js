@@ -15,13 +15,13 @@ function camera_loadframe() {
     saddress = saddress.trim();
     if (saddress.length == 0) {
         id('camera_frame').src = "";
-        id('camera_frame_display').style.display = "none";
-        id('camera_detach_button').style.display = "none";
+        displayNone('camera_frame_display');
+        displayNone('camera_detach_button');
     } else {
         cameraformataddress();
         id('camera_frame').src = id('camera_webaddress').value;
-        id('camera_frame_display').style.display = "block";
-        id('camera_detach_button').style.display = "table-row";
+        displayBlock('camera_frame_display');
+        displayTable('camera_detach_button');
     }
 }
 
@@ -42,8 +42,8 @@ function camera_saveaddress() {
 function camera_detachcam() {
     var webaddress = id('camera_frame').src;
     id('camera_frame').src = "";
-    id('camera_frame_display').style.display = "none";
-    id('camera_detach_button').style.display = "none";
+    displayNone('camera_frame_display');
+    displayNone('camera_detach_button');
     window.open(webaddress);
 }
 

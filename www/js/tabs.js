@@ -12,6 +12,6 @@ function opentab(evt, tabname, tabcontentid, tablinkid) {
             tablinks[i].className = tablinks[i].className.replace("active", "");
         }
     }
-    id(tabname).style.display = "block";
+    displayBlock(tabname);
     evt.currentTarget.className += " active";
 }

@@ -3,7 +3,7 @@ function restartdlg() {
     console.log("show restart");
     var modal = setactiveModal('restartdlg.html');
     if (modal == null) return;
-    id('prgrestart').style.display = 'block';
+    displayBlock('prgrestart');
     id('restartmsg').innerHTML = translate_text_item("Restarting, please wait....");
     showModal();
     SendPrinterCommand("[ESP444]RESTART", false, restart_esp_success, restart_esp_failed);
@@ -30,7 +30,7 @@ function restart_esp_success(response) {
 }
 
 function restart_esp_failed(errorcode, response) {
-    id('prgrestart').style.display = 'none';
+    displayNone('prgrestart');
     id('restartmsg').innerHTML = translate_text_item("Upload failed : ") + errorcode + " :" + response;
     console.log("Error " + errorcode + " : " + response);
     closeModal('Cancel')

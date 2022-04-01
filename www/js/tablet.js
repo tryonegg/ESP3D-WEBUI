@@ -76,7 +76,7 @@ toggleFullscreen = function() {
     if (document.fullscreenElement) {
         exitFullscreen();
     } else {
-        enterFullScreen;
+        enterFullscreen;
     }
 }
 
@@ -220,11 +220,15 @@ sendMove = function(cmd) {
     fn && fn();
 };
 function tabletShowMessage(msg, collecting) {
-    if (collecting || msg.startsWith('<') || msg.startsWith('ok') || msg.startsWith('\n') || msg.startsWith('\r')) {
+    if (collecting || msg ==  '' || msg.startsWith('<') || msg.startsWith('ok') || msg.startsWith('\n') || msg.startsWith('\r')) {
         return;
     }
+    if (msg.startsWith('error:')) {
+        msg = '<span style="color:red;">' + msg + '</span>';
+    }
     var messages = id('messages');
-    messages.value += "\n" + msg;
+//    messages.value += "\n" + msg;
+    messages.innerHTML += "<br>" + msg;
     messages.scrollTop = messages.scrollHeight;
 
     if(msg.startsWith('$/axes/x/max_travel_mm=')){
@@ -384,9 +388,12 @@ function tabletGrblState(grbl, response) {
     //}
 
     var cannotClick = stateName == 'Run' || stateName == 'Hold';
-    selectDisabled('.jog-controls .btn-tablet', cannotClick);
     selectDisabled('.control-pad .form-control', cannotClick);
-    selectDisabled('.mdi .btn', cannotClick);
+    selectDisabled('.control-pad .btn', cannotClick);
+    // selectDisabled('.mdi .btn', cannotClick);
+    selectDisabled('.dropdown-toggle', cannotClick);
+    selectDisabled('.axis-position .position', cannotClick);
+    selectDisabled('.axis-position .form-control', cannotClick);
     selectDisabled('.axis-position .btn', cannotClick);
     selectDisabled('.axis-position .position', cannotClick);
 
@@ -395,7 +402,7 @@ function tabletGrblState(grbl, response) {
         setText('units', newUnits);
         setJogSelector(modal.units);
     }
-    setDisabled('units', false);
+    // setDisabled('units', false);
 
     switch (stateName) {
         case 'Sleep':
@@ -432,7 +439,7 @@ function tabletGrblState(grbl, response) {
         setText('spindle-direction', spindleDirection);
     }
     if (grbl.spindleSpeed) {
-        setText('spindle-speed', Number(grbl.spindleSpeed) + ' RPM');
+        setText('spindle-speed', Number(grbl.spindleSpeed));
     }
     var now = new Date();
     setText('time-of-day', now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0'));
@@ -510,6 +517,23 @@ function gotFiles(response_text) {
     }
 }
 
+function expandVisualizer() {
+    // Shrink messages to a smallish size
+    // Expand GCode text window
+    // Expand Visualizer window
+
+    if (id('mdifiles').hidden) {
+        id('mdifiles').hidden = false;
+        id('setAxis').hidden = false;
+        displayBlock('jog-controls');
+    } else {
+        id('mdifiles').hidden = true;
+        id('setAxis').hidden = true;
+        displayNone('jog-controls');
+    }
+    setMessageHeight();
+}
+
 function populateTabletFileSelector(obj) {
     var selector = id('filelist');
 
@@ -556,19 +580,20 @@ function showGCode(gcode) {
 
     id('gcode').value = gcode;
     if (gCodeLoaded) {
-        displayer.showToolpath(gcode, WPOS, MPOS, 1);
+        displayer.showToolpath(gcode, WPOS, MPOS);
     }
     // XXX this needs to take into account error states
     setRunnable();
 }
 
-sendCommand("$/axes/x/max_travel_mm");
-sendCommand("$/axes/x/homing/mpos_mm");
-sendCommand("$/axes/x/homing/positive_direction");
+// XXX these need to be somewhere else to ensure they are called at the right time
+SendPrinterCommand("$/axes/x/max_travel_mm");
+SendPrinterCommand("$/axes/x/homing/mpos_mm");
+SendPrinterCommand("$/axes/x/homing/positive_direction");
 
-sendCommand("$/axes/y/max_travel_mm");
-sendCommand("$/axes/y/homing/mpos_mm");
-sendCommand("$/axes/y/homing/positive_direction");
+SendPrinterCommand("$/axes/y/max_travel_mm");
+SendPrinterCommand("$/axes/y/homing/mpos_mm");
+SendPrinterCommand("$/axes/y/homing/positive_direction");
 
 var gCodeFilename = '';
 
@@ -815,4 +840,34 @@ function fullscreenIfMobile() {
 
 id('tablettablink').addEventListener('DOMActivate', fullscreenIfMobile, false);
 
-document.getElementById("control-pad").classList.add("open");
+id("control-pad").classList.add("open");
+
+// setMessageHeight(), with these helper functions, adjusts the size of the message
+// window to fill the height of the screen.  It would be nice if we could do that
+// solely with CSS, but I did not find a way to do that.  Everything I tried either
+// a) required setting a fixed message window height, or
+// b) the message window would extend past the screen bottom when messages were added
+function height(element) {
+    return element.getBoundingClientRect().height;
+}
+function heightId(eid) {
+    return height(id(eid));
+}
+function bodyHeight() { return height(document.body); }
+function controlHeight() {
+    return heightId('nav-panel') + heightId('axis-position') + heightId('setAxis') + heightId('control-pad');
+}
+function setMessageHeight() {
+    if (!tabletIsActive()) {
+        return;
+    }
+    var residue = bodyHeight() - heightId('navbar') - controlHeight();
+    var msgElement = id('messages');
+    var tStyle = getComputedStyle(id('tablettab'))
+    var tPad = parseFloat(tStyle.paddingTop) + parseFloat(tStyle.paddingBottom); 
+    tPad = 20;
+    msgElement.style.height = (residue - tPad) + 'px';
+}
+window.onresize = setMessageHeight;
+
+id('tablettablink').addEventListener('DOMActivate', setMessageHeight, false);

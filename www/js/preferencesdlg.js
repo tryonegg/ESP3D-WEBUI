@@ -89,12 +89,12 @@ function initpreferences() {
                                             \"probetouchplatethickness\":\"0.5\"\
                                             }]";
 
-        id('DHT_pref_panel').style.display = 'none';
-        id('temp_pref_panel').style.display = 'none';
-        id('ext_pref_panel').style.display = 'none';
-        id('grbl_pref_panel').style.display = 'block';
-        id('has_tft_sd').style.display = 'table-row';
-        id('has_tft_usb').style.display = 'table-row';
+        displayNone('DHT_pref_panel');
+        displayNone('temp_pref_panel');
+        displayNone('ext_pref_panel');
+        displayBlock('grbl_pref_panel');
+        displayTable('has_tft_sd');
+        displayTable('has_tft_usb');
     } else {
         defaultpreferenceslist = "[{\
                                             \"language\":\"en\",\
@@ -138,22 +138,22 @@ function initpreferences() {
                                             \"probetouchplatethickness\":\"0.5\"\
                                             }]";
 
-        if (target_firmware == "marlin-embedded") id('DHT_pref_panel').style.display = 'none';
-        else id('DHT_pref_panel').style.display = 'block';
+        if (target_firmware == "marlin-embedded") displayNone('DHT_pref_panel');
+        else displayBlock('DHT_pref_panel');
 
-        id('temp_pref_panel').style.display = 'block';
-        id('ext_pref_panel').style.display = 'block';
-        id('grbl_pref_panel').style.display = 'none';
-        id('has_tft_sd').style.display = 'table-row';
-        id('has_tft_usb').style.display = 'table-row';
+        displayBlock('temp_pref_panel');
+        displayBlock('ext_pref_panel');
+        displayNone('grbl_pref_panel');
+        displayTable('has_tft_sd');
+        displayTable('has_tft_usb');
     }
         
-    if (supportsRedundantTemperatures()) id('redundant_controls_option').style.display = 'block';
-    else id('redundant_controls_option').style.display = 'none';
-    if (supportsProbeTemperatures()) id('probe_controls_option').style.display = 'block';
-    else id('probe_controls_option').style.display = 'none';
-    if (supportsChamberTemperatures()) id('chamber_controls_option').style.display = 'block';
-    else id('chamber_controls_option').style.display = 'none';
+    if (supportsRedundantTemperatures()) displayBlock('redundant_controls_option');
+    else displayNone('redundant_controls_option');
+    if (supportsProbeTemperatures()) displayBlock('probe_controls_option');
+    else displayNone('probe_controls_option');
+    if (supportsChamberTemperatures()) displayBlock('chamber_controls_option');
+    else displayNone('chamber_controls_option');
 
     default_preferenceslist = JSON.parse(defaultpreferenceslist);
 }
@@ -191,36 +191,36 @@ function prefs_toggledisplay(id_source, forcevalue) {
     }
     switch (id_source) {
         case 'show_files_panel':
-            if (id(id_source).checked) id("files_preferences").style.display = "block";
-            else id("files_preferences").style.display = "none";
+            if (id(id_source).checked) displayBlock("files_preferences");
+            else displayNone("files_preferences");
             break;
         case 'show_grbl_panel':
-            if (id(id_source).checked) id("grbl_preferences").style.display = "block";
-            else id("grbl_preferences").style.display = "none";
+            if (id(id_source).checked) displayBlock("grbl_preferences");
+            else displayNone("grbl_preferences");
             break;
         case 'show_camera_panel':
-            if (id(id_source).checked) id("camera_preferences").style.display = "block";
-            else id("camera_preferences").style.display = "none";
+            if (id(id_source).checked) displayBlock("camera_preferences");
+            else displayNone("camera_preferences");
             break;
         case 'show_control_panel':
-            if (id(id_source).checked) id("control_preferences").style.display = "block";
-            else id("control_preferences").style.display = "none";
+            if (id(id_source).checked) displayBlock("control_preferences");
+            else displayNone("control_preferences");
             break;
         case 'show_extruder_panel':
-            if (id(id_source).checked) id("extruder_preferences").style.display = "block";
-            else id("extruder_preferences").style.display = "none";
+            if (id(id_source).checked) displayBlock("extruder_preferences");
+            else displayNone("extruder_preferences");
             break;
         case 'show_temperatures_panel':
-            if (id(id_source).checked) id("temperatures_preferences").style.display = "block";
-            else id("temperatures_preferences").style.display = "none";
+            if (id(id_source).checked) displayBlock("temperatures_preferences");
+            else displayNone("temperatures_preferences");
             break;
         case 'show_commands_panel':
-            if (id(id_source).checked) id("cmd_preferences").style.display = "block";
-            else id("cmd_preferences").style.display = "none";
+            if (id(id_source).checked) displayBlock("cmd_preferences");
+            else displayNone("cmd_preferences");
             break;
         case 'show_grbl_probe_tab':
-            if (id(id_source).checked) id("grbl_probe_preferences").style.display = "block";
-            else id("grbl_probe_preferences").style.display = "none";
+            if (id(id_source).checked) displayBlock("grbl_probe_preferences");
+            else displayNone("grbl_probe_preferences");
             break;
     }
 }
@@ -259,7 +259,7 @@ function applypreferenceslist() {
         var camoutput = false;
         if (typeof(preferenceslist[0].enable_camera) !== 'undefined') {
             if (preferenceslist[0].enable_camera === 'true') {
-                id('camtablink').style.display = "block";
+                displayBlock('camtablink');
                 camera_GetAddress();
                 if (typeof(preferenceslist[0].auto_load_camera) !== 'undefined') {
                     if (preferenceslist[0].auto_load_camera === 'true') {
@@ -270,38 +270,38 @@ function applypreferenceslist() {
                 }
             } else {
                 id("maintablink").click();
-                id('camtablink').style.display = "none";
+                displayNone('camtablink');
             }
         } else {
             id("maintablink").click();
-            id('camtablink').style.display = "none";
+            displayNone('camtablink');
         }
         if (!camoutput) {
             id('camera_frame').src = "";
-            id('camera_frame_display').style.display = "none";
-            id('camera_detach_button').style.display = "none";
+            displayNone('camera_frame_display');
+            displayNone('camera_detach_button');
         }
     }
     if (preferenceslist[0].enable_grbl_probe_panel === 'true') {
-        id('grblprobetablink').style.display = 'block';
+        displayBlock('grblprobetablink');
     } else {
         id("grblcontroltablink").click();
-        id('grblprobetablink').style.display = 'none';
+        displayNone('grblprobetablink');
     }
 
     if (preferenceslist[0].enable_DHT === 'true') {
-        id('DHT_humidity').style.display = 'block';
-        id('DHT_temperature').style.display = 'block';
+        displayBlock('DHT_humidity');
+        displayBlock('DHT_temperature');
     } else {
-        id('DHT_humidity').style.display = 'none';
-        id('DHT_temperature').style.display = 'none';
+        displayNone('DHT_humidity');
+        displayNone('DHT_temperature');
     }
     //active_extruder
     if (preferenceslist[0].is_mixed_extruder === 'true') {
-        id('second_extruder_UI').style.display = 'none';
-        id('first_extruder_UI').style.display = 'none';
-        id('temperature_secondExtruder').style.display = 'none';
-        id('mixed_extruder_UI').style.display = 'block';
+        displayNone('second_extruder_UI');
+        displayNone('first_extruder_UI');
+        displayNone('temperature_secondExtruder');
+        displayBlock('mixed_extruder_UI');
         temperature_second_extruder(false);
         var content = "";
         for (i = 0; i < preferenceslist[0].number_extruders; i++) {
@@ -309,23 +309,23 @@ function applypreferenceslist() {
         }
         id('active_extruder').innerHTML = content;
     } else {
-        id('first_extruder_UI').style.display = 'block';
-        id('mixed_extruder_UI').style.display = 'none';
+        displayBlock('first_extruder_UI');
+        displayNone('mixed_extruder_UI');
         if (preferenceslist[0].number_extruders == '2') {
-            id('second_extruder_UI').style.display = 'block';
-            id('temperature_secondExtruder').style.display = 'table-row';
+            displayBlock('second_extruder_UI');
+            displayTable('temperature_secondExtruder');
             temperature_second_extruder(true);
         } else {
-            id('second_extruder_UI').style.display = 'none';
-            id('temperature_secondExtruder').style.display = 'none';
+            displayNone('second_extruder_UI');
+            displayNone('temperature_secondExtruder');
             temperature_second_extruder(false);
         }
     }
     if (preferenceslist[0].enable_lock_UI === 'true') {
-        id('lock_ui_btn').style.display = 'block';
+        displayBlock('lock_ui_btn');
         ontoggleLock(true);
     } else {
-        id('lock_ui_btn').style.display = 'none';
+        displayNone('lock_ui_btn');
         ontoggleLock(false);
     }
     if (preferenceslist[0].enable_ping === 'true') {
@@ -336,33 +336,33 @@ function applypreferenceslist() {
 
     if (supportsRedundantTemperatures()) {
         if (preferenceslist[0].enable_redundant === 'true') {
-            id('temperature_redundant').style.display = 'table-row';
+            displayTable('temperature_redundant');
             temperature_extruder_redundant(true);
         } else {
-            id('temperature_redundant').style.display = 'none';
+            displayNone('temperature_redundant');
             temperature_extruder_redundant(false);
         }
     }
     if (supportsProbeTemperatures()) {
         if (preferenceslist[0].enable_probe === 'true') {
-            id('temperature_probe').style.display = 'table-row';
+            displayTable('temperature_probe');
             temperature_probe(true);
         } else {
-            id('temperature_probe').style.display = 'none';
+            displayNone('temperature_probe');
             temperature_probe(false);
         }
     }
     if (preferenceslist[0].enable_bed === 'true') {
-        id('temperature_bed').style.display = 'table-row';
+        displayTable('temperature_bed');
     } else {
-        id('temperature_bed').style.display = 'none';
+        displayNone('temperature_bed');
     }
     if (supportsChamberTemperatures()) {
         if (preferenceslist[0].enable_chamber === 'true') {
-            id('temperature_chamber').style.display = 'table-row';
+            displayTable('temperature_chamber');
             temperature_chamber(true);
         } else {
-            id('temperature_chamber').style.display = 'none';
+            displayNone('temperature_chamber');
             temperature_chamber(false);
         }
     }
@@ -370,29 +370,29 @@ function applypreferenceslist() {
     if (preferenceslist[0].enable_bed === 'true' ||
             (preferenceslist[0].enable_chamber === 'true' && supportsChamberTemperatures()) ||
             (preferenceslist[0].enable_probe === 'true' && supportsProbeTemperatures())) {
-        id('bedtemperaturesgraphic').style.display = 'block';
+        displayBlock('bedtemperaturesgraphic');
     } else {
-        id('bedtemperaturesgraphic').style.display = 'none';
+        displayNone('bedtemperaturesgraphic');
     }
 
-    if (preferenceslist[0].enable_fan === 'true') id('fan_UI').style.display = 'block';
-    else id('fan_UI').style.display = 'none';
+    if (preferenceslist[0].enable_fan === 'true') displayBlock('fan_UI');
+    else displayNone('fan_UI');
 
 
     if ((target_firmware == "grbl-embedded") || (target_firmware == "grbl")) {
-        if (preferenceslist[0].enable_grbl_panel === 'true') id('grblPanel').style.display = 'flex';
+        if (preferenceslist[0].enable_grbl_panel === 'true') displayFlex('grblPanel');
         else {
-            id('grblPanel').style.display = 'none';
+            displayNone('grblPanel');
             on_autocheck_status(false);
         }
     } else {
-        id('grblPanel').style.display = 'none';
+        displayNone('grblPanel');
         on_autocheck_status(false);
     }
 
-    if (preferenceslist[0].enable_control_panel === 'true') id('controlPanel').style.display = 'flex';
+    if (preferenceslist[0].enable_control_panel === 'true') displayFlex('controlPanel');
     else {
-        id('controlPanel').style.display = 'none';
+        displayNone('controlPanel');
         on_autocheck_position(false);
     }
     if (preferenceslist[0].enable_verbose_mode === 'true') {
@@ -400,54 +400,54 @@ function applypreferenceslist() {
         Monitor_check_verbose_mode();
     } else id('monitor_enable_verbose_mode').checked = false;
     if (preferenceslist[0].enable_temperatures_panel === 'true') {
-        id('temperaturesPanel').style.display = 'block';
+        displayBlock('temperaturesPanel');
     } else {
-        id('temperaturesPanel').style.display = 'none';
+        displayNone('temperaturesPanel');
         on_autocheck_temperature(false);
     }
 
-    if (preferenceslist[0].enable_extruder_panel === 'true') id('extruderPanel').style.display = 'flex';
-    else id('extruderPanel').style.display = 'none';
+    if (preferenceslist[0].enable_extruder_panel === 'true') displayFlex('extruderPanel');
+    else displayNone('extruderPanel');
 
-    if (preferenceslist[0].enable_files_panel === 'true') id('filesPanel').style.display = 'flex';
-    else id('filesPanel').style.display = 'none';
+    if (preferenceslist[0].enable_files_panel === 'true') displayFlex('filesPanel');
+    else displayNone('filesPanel');
     
     if (preferenceslist[0].has_TFT_SD === 'true'){
-         id('files_refresh_tft_sd_btn').style.display = 'flex';
+         displayFlex('files_refresh_tft_sd_btn');
      }
     else {
-        id('files_refresh_tft_sd_btn').style.display = 'none';
+        displayNone('files_refresh_tft_sd_btn');
     }
     
     if (preferenceslist[0].has_TFT_USB === 'true') {
-        id('files_refresh_tft_usb_btn').style.display = 'flex';
+        displayFlex('files_refresh_tft_usb_btn');
     }
     else {
-        id('files_refresh_tft_usb_btn').style.display = 'none';
+        displayNone('files_refresh_tft_usb_btn');
     }
     
     if ((preferenceslist[0].has_TFT_SD === 'true') || (preferenceslist[0].has_TFT_USB === 'true')){
-        id('files_refresh_printer_sd_btn').style.display = 'flex';
-        id('files_refresh_btn').style.display = 'none';
+        displayFlex('files_refresh_printer_sd_btn');
+        displayNone('files_refresh_btn');
     } else {
-        id('files_refresh_printer_sd_btn').style.display = 'none';
-        id('files_refresh_btn').style.display = 'flex';
+        displayNone('files_refresh_printer_sd_btn');
+        displayFlex('files_refresh_btn');
     }
     
     if(target_firmware == "grbl") {
-            id('files_refresh_printer_sd_btn').style.display = 'none';
-            id('files_refresh_btn').style.display = 'none';
-            id('print_upload_btn').style.display = 'none';
-            id('files_createdir_btn').style.display = "none";
+            displayNone('files_refresh_printer_sd_btn');
+            displayNone('files_refresh_btn');
+            displayNone('print_upload_btn');
+            displayNone('files_createdir_btn');
         }
 
     if (preferenceslist[0].enable_commands_panel === 'true') {
-        id('commandsPanel').style.display = 'flex';
+        displayFlex('commandsPanel');
         if (preferenceslist[0].enable_autoscroll === 'true') {
             id('monitor_enable_autoscroll').checked = true;
             Monitor_check_autoscroll();
         } else id('monitor_enable_autoscroll').checked = false;
-    } else id('commandsPanel').style.display = 'none';
+    } else displayNone('commandsPanel');
 
     id('posInterval_check').value = parseInt(preferenceslist[0].interval_positions);
     id('statusInterval_check').value = parseInt(preferenceslist[0].interval_status);
@@ -491,7 +491,7 @@ function showpreferencesdlg() {
     if (modal == null) return;
     language_save = language;
     build_dlg_preferences_list();
-    id('preferencesdlg_upload_msg').style.display = 'none';
+    displayNone('preferencesdlg_upload_msg');
     showModal();
 }
 
@@ -935,14 +935,14 @@ function preferencesdlgUploadProgressDisplay(oEvent) {
         var percentComplete = (oEvent.loaded / oEvent.total) * 100;
         id('preferencesdlg_prg').value = percentComplete;
         id('preferencesdlg_upload_percent').innerHTML = percentComplete.toFixed(0);
-        id('preferencesdlg_upload_msg').style.display = 'block';
+        displayBlock('preferencesdlg_upload_msg');
     } else {
         // Impossible because size is unknown
     }
 }
 
 function preferencesUploadsuccess(response) {
-    id('preferencesdlg_upload_msg').style.display = 'none';
+    displayNone('preferencesdlg_upload_msg');
     applypreferenceslist();
     closeModal('ok');
 }

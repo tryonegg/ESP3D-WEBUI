@@ -47,6 +47,12 @@ function displayTable(name) {
 function displayInline(name) {
     setDisplay(name, 'inline');
 }
+function displayInitial(name) {
+    setDisplay(name, 'initial');
+}
+function displayUndoNone(name) {
+    setDisplay(name, '');
+}
 function setVisible(name) {
     id('SPIFFS_loader').style.visibility = 'visible';
 }

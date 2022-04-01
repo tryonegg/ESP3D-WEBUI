@@ -11,6 +11,6 @@ function openstep(evt, stepname) {
     for (i = 0; i < steplinks.length; i++) {
         steplinks[i].className = steplinks[i].className.replace(" active", "");
     }
-    id(stepname).style.display = "block";
+    displayBlock(stepname);
     evt.currentTarget.className += " active";
 }

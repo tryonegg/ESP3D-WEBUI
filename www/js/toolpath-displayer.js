@@ -27,56 +27,65 @@ var gcodePopup = {
   init: function(){
 
     // ENTIRE TOOLPATH VIEWER POPUP ITSELF
-    gcodePopup.largViewer = document.createElement("div");
-    gcodePopup.largViewer.id = "large-gcode-viewer";
-    document.getElementById("tablet-listener").appendChild(gcodePopup.largViewer);
+    gcodePopup.largViewer = id('large-gcode-viewer'); // document.createElement("div");
+    // gcodePopup.largViewer.id = "large-gcode-viewer";
+    // document.getElementById("tablet-listener").appendChild(gcodePopup.largViewer);
 
     // CANVAS
-    gcodePopup.canvas = document.createElement("CANVAS");
-    gcodePopup.canvas.width = 600;
-    gcodePopup.canvas.height = 500;
-    gcodePopup.canvas.style="border:1px solid #000000;"
-    gcodePopup.canvas.id = "large-gcode-viewer-canvas"
-    gcodePopup.largViewer.appendChild(gcodePopup.canvas);
+    gcodePopup.canvas = id('large-gcode-viewer-canvas');
+//    gcodePopup.canvas = document.createElement("CANVAS");
 
-    //HANDLE CLICK BEHAVIOR FOR POPUP
-    document.addEventListener('click', function(event) {
-        if (gcodePopup.canvas.contains(event.target)) {       //If the click is inside the popup change the camera angle
+//    gcodePopup.canvas.width = 600;
+//    gcodePopup.canvas.height = 500;
+//    gcodePopup.canvas.style="border:1px solid #000000;"
+//    gcodePopup.canvas.id = "large-gcode-viewer-canvas";
+//    gcodePopup.largViewer.appendChild(gcodePopup.canvas);
 
-            cameraAngle = cameraAngle + 1;
-            if(cameraAngle > 3){
-                cameraAngle = 0;
-            }
+    gcodePopup.hide();
 
-            const gcode = id('gcode').value;
-            if (gCodeLoaded) {
-                displayer.showToolpath(gcode, WPOS, MPOS, cameraAngle);
-            }
+  },
 
-        }
-        else{                                              //If the click is outside the popup close the popup
-            gcodePopup.hide();
-        }
-    });
+  //HANDLE CLICK BEHAVIOR FOR POPUP
+  listener: function(event) {
+    if (gcodePopup.canvas.contains(event.target)) {       //If the click is inside the popup change the camera angle
 
+      cameraAngle = cameraAngle + 1;
+      if (cameraAngle > 3){
+        cameraAngle = 0;
+      }
+
+      const gcode = id('gcode').value;
+      if (gCodeLoaded) {
+        displayer.showToolpath(gcode, WPOS, MPOS, cameraAngle);
+      }
+    } else{                                              //If the click is outside the popup close the popup
+      gcodePopup.hide();
+    }
   },
 
   // SHOW GCODE POPUP
   show: function() {
-    document.getElementById("control-pad").style.display = "none"; 
-    document.getElementById("large-gcode-viewer").style.display = "block"; 
+    displayNone("control-pad");
+    displayBlock("large-gcode-viewer");
     
+    gcodePopup.largViewer.addEventListener('click', gcodePopup.listener);
 
     //gcodePopup.hwrap.classList.add("open");
     canvas = gcodePopup.canvas;
+
+    lvRect = canvas.getBoundingClientRect();
+    canvas.width = lvRect.width;
+    canvas.height = lvRect.height;
+
     tp = canvas.getContext("2d");
   },
 
   // HIDE GCODE POPUP
   hide: function(){ 
+    displayUndoNone("control-pad");
+    displayNone("large-gcode-viewer");
 
-    document.getElementById("control-pad").style.display = "block";
-    document.getElementById("large-gcode-viewer").style.display = "none";  
+    gcodePopup.largViewer.removeEventListener('click', gcodePopup.listener);
 
     canvas = id("small-toolpath");
     tp = canvas.getContext("2d");
@@ -125,7 +134,7 @@ var isoView = function() {
     yy = 0.707;
     yz = 1.0;
 }
-var defaultView = function() {
+var obliqueView = function() {
     xx = 0.707;
     xy = 0.707;
     xz = 0.0;
@@ -533,27 +542,25 @@ var ToolpathDisplayer = function() {
 
 var offset;
 
-ToolpathDisplayer.prototype.showToolpath = function(gcode, wpos, mpos, cameraAngle = 0) {
-
-    cameraAngle = cameraAngle;
+ToolpathDisplayer.prototype.showToolpath = function(gcode, wpos, mpos) {
     var drawBounds = false;
     switch (cameraAngle) {
       case 0:
         topView();
         break;
       case 1:
+        obliqueView();
+        break;
+      case 2:
         topView();
         drawBounds = true;
         break;
-      case 2:
-        defaultView();
-        break;
       case 3:
-        defaultView();
+        obliqueView();
         drawBounds = true;
         break;
       default:
-        defaultView();
+        obliqueView();
     }
 
     inInches = id('units').innerText != 'mm';
@@ -658,13 +665,13 @@ var updateGcodeViewerAngle = function() {
     }
 
     const gcode = id('gcode').value;
-    displayer.showToolpath(gcode, WPOS, MPOS, cameraAngle);
+    displayer.showToolpath(gcode, WPOS, MPOS);
 }
 
 var showGcodePopup = function(){
     const gcode = id('gcode').value;
     gcodePopup.show();
-    displayer.showToolpath(gcode, WPOS, MPOS, cameraAngle);
+    displayer.showToolpath(gcode, WPOS, MPOS);
 }
 
 id("small-toolpath").addEventListener("mouseup", updateGcodeViewerAngle); 

@@ -14,22 +14,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 // from in to mm
-var in2mm = function in2mm() {
-    var val = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-    return val * 25.4;
+function in2mm(inches) {
+    return inches * 25.4;
 };
 
 // noop
 // var noop = function noop() {};
-
-var translatePosition = function translatePosition(position, newPosition, relative) {
-    relative = !!relative;
-    newPosition = Number(newPosition);
-    if (Number.isNaN(newPosition)) {
-        return position;
-    }
-    return relative ? position + newPosition : newPosition;
-};
 
 var Toolpath = function () {
 
@@ -803,37 +793,32 @@ var Toolpath = function () {
             }
         }
     }, {
+        key: 'translatePosition',
+        value: function translatePosition(position, newPosition, relative) {
+            if (newPosition == undefined) {
+                return position;
+            }
+            newPosition = this.isImperialUnits() ? in2mm(newPosition) : newPosition;
+            newPosition = Number(newPosition);
+            if (Number.isNaN(newPosition)) {
+                return position;
+            }
+            return (!!relative) ? position + newPosition : newPosition;
+        }
+    }, {
         key: 'translateX',
         value: function translateX(x, relative) {
-            if (x !== undefined) {
-                x = this.isImperialUnits() ? in2mm(x) : x;
-            }
-            if (relative === undefined) {
-                relative = this.isRelativeDistance();
-            }
-            return translatePosition(this.position.x, x, !!relative);
+            return this.translatePosition(this.position.x, x, relative);
         }
     }, {
         key: 'translateY',
         value: function translateY(y, relative) {
-            if (y !== undefined) {
-                y = this.isImperialUnits() ? in2mm(y) : y;
-            }
-            if (relative === undefined) {
-                relative = this.isRelativeDistance();
-            }
-            return translatePosition(this.position.y, y, !!relative);
+            return this.translatePosition(this.position.y, y, relative);
         }
     }, {
         key: 'translateZ',
         value: function translateZ(z, relative) {
-            if (z !== undefined) {
-                z = this.isImperialUnits() ? in2mm(z) : z;
-            }
-            if (relative === undefined) {
-                relative = this.isRelativeDistance();
-            }
-            return translatePosition(this.position.z, z, !!relative);
+            return this.translatePosition(this.position.z, z, relative);
         }
     }, {
         key: 'translateI',

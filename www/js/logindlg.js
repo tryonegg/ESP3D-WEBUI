@@ -4,8 +4,8 @@ function logindlg(closefunc, check_first) {
     var need_query_auth = false;
     if (modal == null) return;
     id('login_title').innerHTML = translate_text_item("Identification requested");
-    id('login_loader').style.display = "none";
-    id('login_content').style.display = "block";
+    displayNone('login_loader');
+    displayBlock('login_content');
     if (typeof check_first !== 'undefined') need_query_auth = check_first;
     if (need_query_auth) {
         var url = "/login";
@@ -44,21 +44,21 @@ function loginfailed(errorcode, response_text) {
     if (typeof(response.status) !== 'undefined') id('login_title').innerHTML = translate_text_item(response.status);
     else id('login_title').innerHTML = translate_text_item("Identification invalid!");
     console.log("Error " + errorcode + " : " + response_text);
-    id('login_content').style.display = "block";
-    id('login_loader').style.display = "none";
+    displayBlock('login_content');
+    displayNone('login_loader');
     id('current_ID').innerHTML = translate_text_item("guest");
-    id('logout_menu').style.display = "none";
-    id('logout_menu_divider').style.display = "none";
-    id("password_menu").style.display = "none";
+    displayNone('logout_menu');
+    displayNone('logout_menu_divider');
+    displayNone("password_menu");
 }
 
 function loginsuccess(response_text) {
     var response = JSON.parse(response_text);
     if (typeof(response.authentication_lvl) !== 'undefined') id('current_auth_level').innerHTML = "(" + translate_text_item(response.authentication_lvl) + ")";
-    id('login_loader').style.display = "none";
-    id('logout_menu').style.display = "block";
-    id('logout_menu_divider').style.display = "block";
-    id("password_menu").style.display = "block";
+    displayNone('login_loader');
+    displayBlock('logout_menu');
+    displayBlock('logout_menu_divider');
+    displayBlock("password_menu");
     closeModal("Connection successful");
 }
 
@@ -68,8 +68,8 @@ function SubmitLogin() {
     var url = "/login?USER=" + encodeURIComponent(user) + "&PASSWORD=" + encodeURIComponent(password) + "&SUBMIT=yes";
     id('current_ID').innerHTML = user;
     id('current_auth_level').innerHTML = "";
-    id('login_content').style.display = "none";
-    id('login_loader').style.display = "block";
+    displayNone('login_content');
+    displayBlock('login_loader');
     SendGetHttp(url, loginsuccess, loginfailed);
 }
 
@@ -91,17 +91,17 @@ function GetIdentificationStatusSuccess(response_text) {
 function DisconnectionSuccess(response_text) {
     id('current_ID').innerHTML = translate_text_item("guest");
     id('current_auth_level').innerHTML = "";
-    id('logout_menu').style.display = "none";
-    id('logout_menu_divider').style.display = "none";
-    id("password_menu").style.display = "none";
+    displayNone('logout_menu');
+    displayNone('logout_menu_divider');
+    displayNone("password_menu");
 }
 
 function DisconnectionFailed(errorcode, response) {
     id('current_ID').innerHTML = translate_text_item("guest");
     id('current_auth_level').innerHTML = "";
-    id('logout_menu').style.display = "none";
-    id('logout_menu_divider').style.display = "none";
-    id("password_menu").style.display = "none";
+    displayNone('logout_menu');
+    displayNone('logout_menu_divider');
+    displayNone("password_menu");
     console.log("Error " + errorcode + " : " + response);
 }
 

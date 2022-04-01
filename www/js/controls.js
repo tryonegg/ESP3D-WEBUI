@@ -7,23 +7,23 @@ function init_controls_panel() {
 }
 
 function hideAxiscontrols() {
-    id('JogBar').style.display = 'none';
-    id('HomeZ').style.display = 'none';
-    id('CornerZ').style.display = 'block';
-    id('control_z_position_display').style.display = 'none';
-    id('control_zm_position_row').style.display = 'none';
-    id('z_velocity_display').style.display = 'none';
+    displayNone('JogBar');
+    displayNone('HomeZ');
+    displayBlock('CornerZ');
+    displayNone('control_z_position_display');
+    displayNone('control_zm_position_row');
+    displayNone('z_velocity_display');
 }
 
 function showAxiscontrols() {
-    id('CornerZ').style.display = 'none';
-    id('JogBar').style.display = 'block';
-    id('HomeZ').style.display = 'block';
-    id('control_z_position_display').style.display = 'block';
+    displayNone('CornerZ');
+    displayBlock('JogBar');
+    displayBlock('HomeZ');
+    displayBlock('control_z_position_display');
     if ((target_firmware == "grbl-embedded") || (target_firmware == "grbl")) {
-        id('control_zm_position_row').style.display = 'table-row';
+        displayTable('control_zm_position_row');
     }
-    id('z_velocity_display').style.display = 'inline';
+    displayInline('z_velocity_display');
 
 }
 

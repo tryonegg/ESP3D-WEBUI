@@ -110,10 +110,10 @@ function connectsuccess(response) {
         console.log("Fw identification:" + response);
         if (ESP3D_authentication) {
             closeModal("Connection successful");
-            id('menu_authentication').style.display = 'inline';
+            displayInline('menu_authentication');
             logindlg(initUI, true);
         } else {
-            id('menu_authentication').style.display = 'none';
+            displayNone('menu_authentication');
             initUI();
         }
     } else {
@@ -123,16 +123,16 @@ function connectsuccess(response) {
 }
 
 function connectfailed(errorcode, response) {
-    id('connectbtn').style.display = 'block';
-    id('failed_connect_msg').style.display = 'block';
-    id('connecting_msg').style.display = 'none';
+    displayBlock('connectbtn');
+    displayBlock('failed_connect_msg');
+    displayNone('connecting_msg');
     console.log("Fw identification error " + errorcode + " : " + response);
 }
 
 function retryconnect() {
-    id('connectbtn').style.display = 'none';
-    id('failed_connect_msg').style.display = 'none';
-    id('connecting_msg').style.display = 'block';
+    displayNone('connectbtn');
+    displayNone('failed_connect_msg');
+    displayBlock('connecting_msg');
     var url = "/command?plain=" + encodeURIComponent("[ESP800]");;
     SendGetHttp(url, connectsuccess, connectfailed)
 }

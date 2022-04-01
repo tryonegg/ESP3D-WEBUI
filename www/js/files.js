@@ -53,24 +53,24 @@ function init_files_panel(dorefresh) {
         files_currentPath = primary_sd;
         id('files_refresh_primary_sd_btn').innerHTML = primary_sd.substring(0, primary_sd.length - 1);
         id('files_refresh_secondary_sd_btn').innerHTML = secondary_sd.substring(0, secondary_sd.length - 1);
-        if (primary_sd.toLowerCase() != "none") id('files_refresh_primary_sd_btn').style.display = "inline";
-        if (secondary_sd.toLowerCase() != "none") id('files_refresh_secondary_sd_btn').style.display = "inline";
-        id('files_createdir_btn').style.display = "none";
-        id('files_refresh_btn').style.display = "none";
+        if (primary_sd.toLowerCase() != "none") displayInline('files_refresh_primary_sd_btn');
+        if (secondary_sd.toLowerCase() != "none") displayInline('files_refresh_secondary_sd_btn');
+        displayNone('files_createdir_btn');
+        displayNone('files_refresh_btn');
     } else {
-        if (target_firmware == "???") id('files_refresh_btn').style.display = "none";
-        else id('files_refresh_btn').style.display = "inline";
-        id('files_refresh_primary_sd_btn').style.display = "none";
-        id('files_refresh_secondary_sd_btn').style.display = "none";
+        if (target_firmware == "???") displayNone('files_refresh_btn');
+        else displayInline('files_refresh_btn');
+        displayNone('files_refresh_primary_sd_btn');
+        displayNone('files_refresh_secondary_sd_btn');
         if(target_firmware == "grbl") {
-            id('files_refresh_printer_sd_btn').style.display = 'none';
-            id('files_refresh_btn').style.display = 'none';
-            id('print_upload_btn').style.display = 'none';
-            id('files_createdir_btn').style.display = "none";
+            displayNone('files_refresh_printer_sd_btn');
+            displayNone('files_refresh_btn');
+            displayNone('print_upload_btn');
+            displayNone('files_createdir_btn');
         }
     }
-    if (!((target_firmware == "marlin") || (target_firmware == "???") ||(target_firmware == "grbl"))) id('files_createdir_btn').style.display = "inline";
-    else id('files_createdir_btn').style.display = "none";
+    if (!((target_firmware == "marlin") || (target_firmware == "???") ||(target_firmware == "grbl"))) displayInline('files_createdir_btn');
+    else displayNone('files_createdir_btn');
     files_set_button_as_filter(files_filter_sd_list);
     var refreshlist = true;
     if (typeof dorefresh !== 'undefined') refreshlist = dorefresh;
@@ -186,7 +186,7 @@ function files_create_dir(name) {
         var cmdpath = files_currentPath;
         if (target_firmware == "smoothieware") cmdpath = files_currentPath.substring(primary_sd.length);
         var url = "/upload?path=" + encodeURIComponent(cmdpath) + "&action=createdir&filename=" + encodeURIComponent(name);
-        id('files_nav_loader').style.display = "block";
+        displayBlock('files_nav_loader');
         SendGetHttp(url, files_directSD_list_success, files_directSD_list_failed);
     } else {
         var command = "";
@@ -223,7 +223,7 @@ function files_delete_file(index) {
             url += "delete&filename=";
         }
         url += encodeURIComponent(files_file_list[index].sdname);
-        id('files_nav_loader').style.display = "block";
+        displayBlock('files_nav_loader');
         SendGetHttp(url, files_directSD_list_success, files_directSD_list_failed);
     } else {
         var command = "";
@@ -239,7 +239,7 @@ function files_delete_file(index) {
 }
 
 function files_proccess_and_update(answer) {
-    id('files_navigation_buttons').style.display = "block";
+    displayBlock('files_navigation_buttons');
     if (answer.startsWith("{") && answer.endsWith("}")) {
         try {
             response = JSON.parse(answer);
@@ -354,17 +354,17 @@ function files_refreshFiles(path, usecache) {
         last_source = current_source;
     }
     if ((current_source==tft_sd) || (current_source==tft_usb)){
-     id('print_upload_btn').style.display="none";
+     displayNone('print_upload_btn');
     } else {
-     id('print_upload_btn').style.display="block";
+     displayBlock('print_upload_btn');
     }
     if (typeof usecache === 'undefined') usecache = false;
     id('files_currentPath').innerHTML = files_currentPath;
     files_file_list = [];
     files_status_list = [];
     files_build_display_filelist(false);
-    id('files_list_loader').style.display = "block";
-    id('files_nav_loader').style.display = "block";
+    displayBlock('files_list_loader');
+    displayBlock('files_nav_loader');
     //this is pure direct SD
     if (direct_sd && !(target_firmware == "smoothieware" && files_currentPath.startsWith(secondary_sd))) {
         if (target_firmware == "smoothieware") cmdpath = path.substring(4);
@@ -580,7 +580,7 @@ function files_serial_ls_list_success(response_text) {
 
 
 function files_directSD_list_success(response_text) {
-    id('files_navigation_buttons').style.display = "block";
+    displayBlock('files_navigation_buttons');
     var error = false;
     var response;
     try {
@@ -637,7 +637,7 @@ function files_directSD_list_success(response_text) {
 }
 
 function files_serial_M20_list_failed(error_code, response) {
-    id('files_navigation_buttons').style.display = "block";
+    displayBlock('files_navigation_buttons');
     if (esp_error_code !=0){
          alertdlg (translate_text_item("Error") + " (" + esp_error_code + ")", esp_error_message);
          esp_error_code = 0;
@@ -674,15 +674,15 @@ function files_go_levelup() {
 
 function files_build_display_filelist(displaylist) {
     var content = "";
-    id('files_uploading_msg').style.display = "none";
+    displayNone('files_uploading_msg');
     if (typeof displaylist == 'undefined') displaylist = true;
-    id('files_list_loader').style.display = "none";
-    id('files_nav_loader').style.display = "none";
+    displayNone('files_list_loader');
+    displayNone('files_nav_loader');
     if (!displaylist) {
-        id('files_status_sd_status').style.display = "none";
-        id('files_space_sd_status').style.display = "none";
+        displayNone('files_status_sd_status');
+        displayNone('files_space_sd_status');
         id('files_fileList').innerHTML = "";
-        id('files_fileList').style.display = "none";
+        displayNone('files_fileList');
         return;
     }
     if (need_up_level()) {
@@ -699,7 +699,7 @@ function files_build_display_filelist(displaylist) {
     for (index = 0; index < files_file_list.length; index++) {
         if (files_file_list[index].isdir) content += files_build_file_line(index);
     }
-    id('files_fileList').style.display = "block";
+    displayBlock('files_fileList');
     id('files_fileList').innerHTML = content;
     if ((files_status_list.length == 0) && (files_error_status != "")) {
         files_status_list.push({
@@ -716,9 +716,9 @@ function files_build_display_filelist(displaylist) {
             id('files_sd_status_used').innerHTML = files_status_list[0].used;
             id('files_sd_status_occupation').value = files_status_list[0].occupation;
             id('files_sd_status_percent').innerHTML = files_status_list[0].occupation;
-            id('files_space_sd_status').style.display = "table-row";
+            displayTable('files_space_sd_status');
         } else {
-            id('files_space_sd_status').style.display = "none";
+            displayNone('files_space_sd_status');
         }
         if ((files_error_status != "") && ((files_status_list[0].status.toLowerCase() == "ok") || (files_status_list[0].status.length == 0))) {
             files_status_list[0].status = files_error_status;
@@ -726,11 +726,11 @@ function files_build_display_filelist(displaylist) {
         files_error_status = "";
         if (files_status_list[0].status.toLowerCase() != "ok") {
             id('files_sd_status_msg').innerHTML = translate_text_item(files_status_list[0].status, true);
-            id('files_status_sd_status').style.display = "table-row";
+            displayTable('files_status_sd_status');
         } else {
-            id('files_status_sd_status').style.display = "none";
+            displayNone('files_status_sd_status');
         }
-    } else id('files_space_sd_status').style.display = "none";
+    } else displayNone('files_space_sd_status');
 }
 
 function files_progress() {
@@ -797,7 +797,7 @@ function process_check_sd_presence(answer) {
             files_error_status = "No SD card"
             files_build_display_filelist(false);
             id('files_sd_status_msg').innerHTML = translate_text_item(files_error_status, true);
-            id('files_status_sd_status').style.display = "table-row";
+            displayTable('files_status_sd_status');
         } else files_start_upload();
     } else { //for smoothiware ls say no directory
         if (target_firmware == "smoothieware") {
@@ -806,7 +806,7 @@ function process_check_sd_presence(answer) {
                 files_error_status = "No SD card"
                 files_build_display_filelist(false);
                 id('files_sd_status_msg').innerHTML = translate_text_item(files_error_status, true);
-                id('files_status_sd_status').style.display = "table-row";
+                displayTable('files_status_sd_status');
             } else files_start_upload();
         } else files_start_upload();
     }
@@ -851,8 +851,8 @@ function files_start_upload() {
     }
     files_error_status = "Upload " + file.name;
     id('files_currentUpload_msg').innerHTML = file.name;
-    id('files_uploading_msg').style.display = "block";
-    id('files_navigation_buttons').style.display = "none";
+    displayBlock('files_uploading_msg');
+    displayNone('files_navigation_buttons');
     if (direct_sd && !(target_firmware == "smoothieware" && files_currentPath.startsWith(secondary_sd))) {
         SendFileHttp(url, formData, FilesUploadProgressDisplay, files_directSD_list_success, files_directSD_list_failed);
         //console.log("send file");

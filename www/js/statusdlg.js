@@ -34,8 +34,8 @@ function update_btn_status(forcevalue) {
 }
 
 function statussuccess(response) {
-    id('refreshstatusbtn').style.display = 'block';
-    id('status_loader').style.display = 'none';
+    displayBlock('refreshstatusbtn');
+    displayNone('status_loader');
     var modal = getactiveModal();
     if (modal == null) return;
     var text = modal.element.getElementsByClassName("modal-text")[0];
@@ -65,21 +65,21 @@ function statussuccess(response) {
 }
 
 function statusfailed(errorcode, response) {
-    id('refreshstatusbtn').style.display = 'block';
-    id('status_loader').style.display = 'none';
-    id('status_msg').style.display = 'block';
+    displayBlock('refreshstatusbtn');
+    displayNone('status_loader');
+    displayBlock('status_msg');
     console.log("Error " + errorcode + " : " + response);
     id('status_msg').innerHTML = "Error " + errorcode + " : " + response;
 }
 
 function refreshstatus() {
-    id('refreshstatusbtn').style.display = 'none';
-    id('status_loader').style.display = 'block';
+    displayNone('refreshstatusbtn');
+    displayBlock('status_loader');
     var modal = getactiveModal();
     if (modal == null) return;
     var text = modal.element.getElementsByClassName("modal-text")[0];
     text.innerHTML = "";
-    id('status_msg').style.display = 'none';
+    displayNone('status_msg');
     //removeIf(production)
     var response = "Chip ID: 13874112\nCPU Frequency: 160Mhz\nFree memory: 24.23 KB\nSDK: 2.0.0(656edbf)\nFlash Size: 4.00 MB\nAvailable Size for update: 652.17 KB(Ok)\nAvailable Size for SPIFFS: 3.00 MB\nBaud rate: 115200\nSleep mode: None\nChannel: 1\nPhy Mode: 11g\nWeb port: 80\nData port: 8888\nHostname: lucesp\nActive Mode: Station (5C:CF:7F:D3:B3:C0)\nConnected to: NETGEAR_2GEXT_OFFICE2\nSignal: 98%\nIP Mode: DHCP\nIP: 192.168.1.51\nGateway: 192.168.1.1\nMask: 255.255.255.0\nDNS: 192.168.1.1\nDisabled Mode: Access Point (5E:CF:7F:D3:B3:C0)\nCaptive portal: Enabled\nSSDP: Enabled\nNetBios: Enabled\nmDNS: Enabled\nWeb Update: Enabled\nPin Recovery: Disabled\nAuthentication: Disabled\nTarget Firmware: Smoothieware\nSD Card Support: Enabled\nFW version: 0.9.93\n";
     statussuccess(response);

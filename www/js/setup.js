@@ -84,7 +84,7 @@ function setupdone(response) {
     do_not_build_settings = false;
     build_HTML_setting_list(current_setting_filter);
     translate_text(language_save);
-    displayBlock('main_ui');
+    displayUndoNone('main_ui');
     closeModal("setup done");
 }
 
