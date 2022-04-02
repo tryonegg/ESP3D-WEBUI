@@ -400,9 +400,7 @@ function tabletGrblState(grbl, response) {
         selectDisabled('.axis-position .form-control', cannotClick);
         selectDisabled('.axis-position .btn', cannotClick);
         selectDisabled('.axis-position .position', cannotClick);
-        if (cannotClick) {
-            expandVisualizer();
-        } else {
+        if (!cannotClick) {
             contractVisualizer();
         }
     }
@@ -662,6 +660,7 @@ function scrollToLine(lineNumber) {
 
 function runGCode() {
     gCodeFilename && sendCommand('$sd/run=' + gCodeFilename);
+    expandVisualizer();
 }
 
 function loadGCode() {
