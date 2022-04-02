@@ -350,6 +350,7 @@ var grblReportingUnits = 0;
 var startTime = 0;
 
 var spindleDirection = ''
+var spindleSpeed = ''
 
 function stopAndRecover() {
     stopGCode();
@@ -358,6 +359,8 @@ function stopAndRecover() {
     // which affects the coordinate display and the jog distances.
     requestModes();
 }
+
+var oldCannotClick = null;
 
 function tabletGrblState(grbl, response) {
     // tabletShowResponse(response)
@@ -388,14 +391,22 @@ function tabletGrblState(grbl, response) {
     //}
 
     var cannotClick = stateName == 'Run' || stateName == 'Hold';
-    selectDisabled('.control-pad .form-control', cannotClick);
-    selectDisabled('.control-pad .btn', cannotClick);
-    // selectDisabled('.mdi .btn', cannotClick);
-    selectDisabled('.dropdown-toggle', cannotClick);
-    selectDisabled('.axis-position .position', cannotClick);
-    selectDisabled('.axis-position .form-control', cannotClick);
-    selectDisabled('.axis-position .btn', cannotClick);
-    selectDisabled('.axis-position .position', cannotClick);
+    // Recompute the layout only when the state changes
+    if (oldCannotClick != cannotClick) {
+        selectDisabled('.control-pad .form-control', cannotClick);
+        selectDisabled('.control-pad .btn', cannotClick);
+        selectDisabled('.dropdown-toggle', cannotClick);
+        selectDisabled('.axis-position .position', cannotClick);
+        selectDisabled('.axis-position .form-control', cannotClick);
+        selectDisabled('.axis-position .btn', cannotClick);
+        selectDisabled('.axis-position .position', cannotClick);
+        if (cannotClick) {
+            expandVisualizer();
+        } else {
+            contractVisualizer();
+        }
+    }
+    oldCannotClick = cannotClick;
 
     var newUnits = modal.units == 'G21' ? 'mm' : 'Inch';
     if (getText('units') != newUnits) {
@@ -434,13 +445,14 @@ function tabletGrblState(grbl, response) {
             case 'M3': spindleDirection = 'CW'; break;
             case 'M4': spindleDirection = 'CCW'; break;
             case 'M5': spindleDirection = 'Off'; break;
-            default:  break;
+            default: spindleDirection = '';  break;
         }
-        setText('spindle-direction', spindleDirection);
     }
-    if (grbl.spindleSpeed) {
-        setText('spindle-speed', Number(grbl.spindleSpeed));
-    }
+    setText('spindle-direction', spindleDirection);
+
+    spindleSpeed = grbl.spindleSpeed ? Number(grbl.spindleSpeed) : '';
+    setText('spindle-speed', spindleSpeed);
+
     var now = new Date();
     setText('time-of-day', now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0'));
     if (stateName == 'Run') {
@@ -466,16 +478,30 @@ function tabletGrblState(grbl, response) {
 	             : "<div style='color:red'>" + modal.distance + "</div>";
     setHTML('distance', distanceText);
 
+    var stateText = "";
     if (stateName == 'Run') {
-	var rateText = modal.units == 'G21'
-	             ? Number(grbl.feedrate).toFixed(0) + ' mm/min'
-	             : Number(grbl.feedrate/25.4).toFixed(2) + ' in/min';
-        setText('active-state', rateText);
+        var rateNumber = modal.units == 'G21'
+	             ? Number(grbl.feedrate).toFixed(0)
+	             : Number(grbl.feedrate/25.4).toFixed(2);
+
+	var rateText = rateNumber +
+                       (modal.units == 'G21' ? ' mm/min' : ' in/min');
+
+        stateText = rateText + " " + spindleSpeed + " " + spindleDirection;
     } else {
         // var stateText = errorText == 'Error' ? "Error: " + errorMessage : stateName;
-        var stateText = stateName;
-        setText('active-state', stateText);
+        stateText = stateName;
     }
+    setText('active-state', stateText);
+
+    var modeText = modal.distance + " " +
+                   modal.wcs + " " +
+                   modal.units + " " +
+                   "T" + modal.tool + " " +
+                   "F" + modal.feedrate + " " +
+                   "S" + modal.spindle + " ";
+
+    setHTML('gcode-states', modal.modes);
 
     if (grbl.lineNumber && (stateName == 'Run' || stateName == 'Hold' || stateName == 'Stop')) {
         setText('line', grbl.lineNumber);
@@ -517,21 +543,26 @@ function gotFiles(response_text) {
     }
 }
 
-function expandVisualizer() {
-    // Shrink messages to a smallish size
-    // Expand GCode text window
-    // Expand Visualizer window
-
+function toggleVisualizer() {
     if (id('mdifiles').hidden) {
-        id('mdifiles').hidden = false;
-        id('setAxis').hidden = false;
-        displayBlock('jog-controls');
+        contractVisualizer();
     } else {
-        id('mdifiles').hidden = true;
-        id('setAxis').hidden = true;
-        displayNone('jog-controls');
+        expandVisualizer();
     }
-    setMessageHeight();
+}
+
+function contractVisualizer() {
+    id('mdifiles').hidden = false;
+    id('setAxis').hidden = false;
+    displayBlock('jog-controls');
+    setBottomHeight();
+}
+
+function expandVisualizer() {
+    id('mdifiles').hidden = true;
+    id('setAxis').hidden = true;
+    displayNone('jog-controls');
+    setBottomHeight();
 }
 
 function populateTabletFileSelector(obj) {
@@ -647,6 +678,7 @@ function loadGCode() {
         tabletGetFileList(watchPath);
     } else {
         gCodeFilename = watchPath + filename;
+        setHTML('filename', gCodeFilename);
         fetch(encodeURIComponent('SD/' + gCodeFilename))
             .then(response => response.text() )
             .then(gcode => showGCode(gcode) );
@@ -857,17 +889,28 @@ function bodyHeight() { return height(document.body); }
 function controlHeight() {
     return heightId('nav-panel') + heightId('axis-position') + heightId('setAxis') + heightId('control-pad');
 }
-function setMessageHeight() {
+function setBottomHeight() {
     if (!tabletIsActive()) {
         return;
     }
     var residue = bodyHeight() - heightId('navbar') - controlHeight();
-    var msgElement = id('messages');
+    var msgElement = id('status');
     var tStyle = getComputedStyle(id('tablettab'))
     var tPad = parseFloat(tStyle.paddingTop) + parseFloat(tStyle.paddingBottom); 
     tPad = 20;
     msgElement.style.height = (residue - tPad) + 'px';
 }
-window.onresize = setMessageHeight;
+// function setMessageHeight() {
+//     if (!tabletIsActive()) {
+//         return;
+//     }
+//     var residue = bodyHeight() - heightId('navbar') - controlHeight();
+//     var msgElement = id('messages');
+//     var tStyle = getComputedStyle(id('tablettab'))
+//     var tPad = parseFloat(tStyle.paddingTop) + parseFloat(tStyle.paddingBottom); 
+//     tPad = 20;
+//     msgElement.style.height = (residue - tPad) + 'px';
+// }
+window.onresize = setBottomHeight;
 
-id('tablettablink').addEventListener('DOMActivate', setMessageHeight, false);
+id('tablettablink').addEventListener('DOMActivate', setBottomHeight, false);

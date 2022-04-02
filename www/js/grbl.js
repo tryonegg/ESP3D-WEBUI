@@ -12,7 +12,7 @@ var last_axis_letter = 'Z';
 
 var axisNames = ['x', 'y', 'z', 'a', 'b', 'c'];
 
-var modal = { plane: 'G17', units: 'G21', wcs: 'G54', distance: 'G90' };
+var modal = { modes: "", plane: 'G17', units: 'G21', wcs: 'G54', distance: 'G90' };
 
 function setClickability(element, visible) {
     setDisplay(element, visible ? 'table-row' : 'none');
@@ -463,7 +463,8 @@ var modalModes = [
 ];
 
 function grblGetModal(msg) {
-    var modes = msg.replace("[GC:", '').replace(']', '').split(' ');
+    modal.modes = msg.replace("[GC:", '').replace(']', '');
+    var modes = modal.modes.split(' ');
     modal.parking = undefined;  // Otherwise there is no way to turn it off
     modal.program = '';  // Otherwise there is no way to turn it off
     modes.forEach(function(mode) {

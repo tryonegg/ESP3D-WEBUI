@@ -10,7 +10,14 @@ html {
     flex-direction: column;
 }
 #small-toolpath {
-    max-width: 100%;
+    width: 100%;
+    height: 100%;
+    # border: 1px solid #ccc;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 5px;
+    border-color: rgb(118, 118, 118);
+    padding: 4px;
 }
 
 .col-1 {
@@ -249,22 +256,58 @@ select:disabled {
   padding-top: 12px;
 }
 
-.message-container {
-    padding: 0;
-    margin: 0;
+#filename {
+  position:absolute;
+  top:0;
+  left:0;
+  z-index:1;
+  height:4rem;
+  margin: 5px;
+}
+
+#expand-button {
+  position:absolute;
+  top:0;
+  right:0;
+  z-index:1;
+  width:3rem;
+  height:4rem;
+  margin: 5px;
+}
+
+#gcode-states {
     background-color: lightyellow;
-    padding-bottom: 0px;
+    # padding-left: 0.4rem;
+    width: 100%;
+    height: fit-content;
+
+    overflow-x: scroll;
+    overflow-y: hidden;
+    font-size: 10px;
+
+    padding: 2px;
+
+    # border-style: solid;
+    # border-width: 1px;
+    # border-radius: 5px;
+    # border-color: rgb(118, 118, 118);
+}
+
+#messages {
+    background-color: lightyellow;
+    # padding-left: 0.4rem;
+    width: 100%;
+    height: 40%;
+    max-height: 100%;
+    overflow: scroll;
+    font-size: 10px;
+
+    padding: 2px;
+
     border-style: solid;
     border-width: 1px;
     border-radius: 5px;
-}
-
-.message-container .messages {
-    padding-left: 0.4rem;
-    width: 100%;
-    height: 100%;
-    max-height: 100%;
-    overflow: scroll;
+    border-color: rgb(118, 118, 118);
 }
 
 .middle-block {
@@ -339,13 +382,20 @@ select:disabled {
   resize: none;
 }
 .fileslist {
-    padding-top: 20px;
+  padding-top: 20px;
+}
+.text-column {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 textarea {
-  font-size: 12px;
+  font-size: 10px;
   width: 100%;
   resize: none;
   border-radius: 5px;
+  margin-top: 2px;
+  flex-grow: 1;
 }
 .tablettab .axis-position .btn {
   text-align: center;
@@ -393,13 +443,12 @@ textarea {
 .axis-position .inset {
   padding-left: 15px;
 }
-.mdi {
+.mdifiles {
   background-color: lavenderblush;
   padding-top: 12px;
   padding-bottom: 0px;
   overflow: hidden;
 }
-
 
 #large-gcode-viewer {
   height: auto;
@@ -454,13 +503,13 @@ textarea {
   #jog-distance {
     text-align-last: right;
   }
-  textarea {
-    font-size: 9px;
+  textarea, #messages, #gcode-states {
+    font-size: 10px;
   }
-  #small-toolpath {
-      width: 180px;
-      height: 100px;
-  }
+#  #small-toolpath {
+#      width: 180px;
+#      height: 100px;
+#  }
 }
 
 @media (min-width: 768px) {
@@ -491,13 +540,13 @@ textarea {
   #jog-distance {
     text-align-last: right;
   }
-  textarea {
-    font-size: 11px;
+  textarea, #messages, #gcode-states {
+    font-size: 12px;
   }
-  #small-toolpath {
-      width: 230px;
-      height: 130px;
-  }
+#  #small-toolpath {
+#      width: 230px;
+#      height: 130px;
+#  }
 }
 @media (min-width: 992px) {
   .tablettab {
@@ -525,13 +574,13 @@ textarea {
     font-size: 20px;
   }
 
-  textarea {
-    font-size: 12px;
+  textarea, #messages, #gcode-states  {
+    font-size: 14px;
   }
-  #small-toolpath {
-      width: 250px;
-      height: 130px;
-  }
+#  #small-toolpath {
+#      width: 250px;
+#      height: 130px;
+#  }
 }
 @media (min-width: 1200px) {
   .tablettab {
@@ -559,11 +608,11 @@ textarea {
     font-size: 24px;
   }
 
-  textarea {
-    font-size: 14px;
+  textarea, #messages, #gcode-states  {
+    font-size: 18px;
   }
-  #small-toolpath {
-      width: 300px;
-      height: 160px;
-  }
+#  #small-toolpath {
+#      width: 300px;
+#      height: 160px;
+#  }
 }

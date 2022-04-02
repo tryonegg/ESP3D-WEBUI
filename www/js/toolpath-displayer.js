@@ -42,7 +42,6 @@ var gcodePopup = {
 //    gcodePopup.largViewer.appendChild(gcodePopup.canvas);
 
     gcodePopup.hide();
-
   },
 
   //HANDLE CLICK BEHAVIOR FOR POPUP
