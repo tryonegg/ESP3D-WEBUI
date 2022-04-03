@@ -10,7 +10,7 @@ tp.lineWidth = 0.1;
 tp.lineCap = 'round';
 tp.strokeStyle = 'blue';
 
-var cameraAngle = 1;
+var cameraAngle = 0;
 
 var xMaxTravel = 1000;
 var yMaxTravel = 1000;
@@ -473,17 +473,17 @@ ToolpathDisplayer.prototype.showToolpath = function(gcode, modal, initialPositio
     var drawBounds = false;
     switch (cameraAngle) {
       case 0:
-        topView();
+        obliqueView();
         break;
       case 1:
         obliqueView();
+        drawBounds = true;
         break;
       case 2:
         topView();
-        drawBounds = true;
         break;
       case 3:
-        obliqueView();
+        topView();
         drawBounds = true;
         break;
       default:
