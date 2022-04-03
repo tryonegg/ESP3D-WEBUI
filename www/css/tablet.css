@@ -9,6 +9,7 @@ html {
     display: flex;
     flex-direction: column;
 }
+
 #toolpath {
     width: 100%;
     height: 100%;
@@ -243,17 +244,13 @@ select:disabled {
   pointer-events: none;
   opacity: .6;
 }
-.control-pad .position[disabled] {
-  pointer-events: none;
-  opacity: .4;
-}
 .control-pad .form-control[disabled=disabled] {
   pointer-events: none;
   opacity: .4;
 }
 .control-pad {
-  background-color: lightyellow;
   padding-top: 12px;
+  padding-bottom: 6px;
 }
 
 #filename {
@@ -275,8 +272,12 @@ select:disabled {
   margin: 5px;
 }
 
+.gcode {
+    background-color: lavenderblush;
+}
+
 #gcode-states {
-    background-color: lightyellow;
+    background-color: azure;
     # padding-left: 0.4rem;
     width: 100%;
     height: fit-content;
@@ -316,9 +317,10 @@ select:disabled {
   z-index: 100;
 }
 .jog-controls {
+    background-color: lightyellow;
     display: block;
     overflow: hidden;
-    padding-bottom: 12px:
+    padding-bottom: 12px;
 }
 .run-controls {
     display: none;
@@ -366,7 +368,7 @@ select:disabled {
   # width: 90%;
   float: right;
   text-align: center;
-  background-color: #f0fff0;
+  background-color: honeydew;
 }
 .mposition {
   font-size: 10px;
@@ -437,8 +439,6 @@ textarea {
 }
 .control-pad .tablettab .btn {
   width: 100%;
-#  padding-left: 0;
-#  padding-right: 0;
 }
 .axis-position .inset {
   padding-left: 15px;
@@ -446,7 +446,7 @@ textarea {
 .mdifiles {
   background-color: lavenderblush;
   padding-top: 12px;
-  padding-bottom: 0px;
+  padding-bottom: 6px;
   overflow: hidden;
 }
 
