@@ -505,7 +505,7 @@ function tabletGrblState(grbl, response) {
         setText('line', grbl.lineNumber);
         scrollToLine(grbl.lineNumber);
     }
-    displayer.reDrawTool(modal, MPOS);
+    displayer.reDrawTool(modal, arrayToXYZ(WPOS));
 
     var digits = modal.units == 'G20' ? 4 : 2;
 
@@ -601,6 +601,14 @@ function tabletInit() {
     tabletGetFileList('/');
 }
 
+function arrayToXYZ(a) {
+    return {
+        x: a[0],
+        y: a[1],
+        z: a[2]
+    }
+}
+
 function showGCode(gcode) {
     gCodeLoaded = gcode != '';
     if (!gCodeLoaded) {
@@ -609,7 +617,13 @@ function showGCode(gcode) {
 
     id('gcode').value = gcode;
     if (gCodeLoaded) {
-        displayer.showToolpath(gcode, WPOS, MPOS);
+        var initialPosition = {
+            x: WPOS[0],
+            y: WPOS[1],
+            z: WPOS[2]
+        };
+
+        displayer.showToolpath(gcode, modal, arrayToXYZ(WPOS));
     }
     // XXX this needs to take into account error states
     setRunnable();
@@ -899,17 +913,13 @@ function setBottomHeight() {
     tPad = 20;
     msgElement.style.height = (residue - tPad) + 'px';
 }
-// function setMessageHeight() {
-//     if (!tabletIsActive()) {
-//         return;
-//     }
-//     var residue = bodyHeight() - heightId('navbar') - controlHeight();
-//     var msgElement = id('messages');
-//     var tStyle = getComputedStyle(id('tablettab'))
-//     var tPad = parseFloat(tStyle.paddingTop) + parseFloat(tStyle.paddingBottom); 
-//     tPad = 20;
-//     msgElement.style.height = (residue - tPad) + 'px';
-// }
 window.onresize = setBottomHeight;
 
 id('tablettablink').addEventListener('DOMActivate', setBottomHeight, false);
+
+function updateGcodeViewerAngle()  {
+    const gcode = id('gcode').value;
+    displayer.cycleCameraAngle(gcode, modal, arrayToXYZ(WPOS));
+}
+
+id('toolpath').addEventListener("mouseup", updateGcodeViewerAngle);

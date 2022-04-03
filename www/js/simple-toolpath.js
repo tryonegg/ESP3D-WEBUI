@@ -285,11 +285,7 @@ var Toolpath = function () {
                     _this.setModal({ motion: 'G3' });
                 }
 
-                var v1 = {
-                    x: _this.position.x,
-                    y: _this.position.y,
-                    z: _this.position.z
-                };
+                var v1 = _this.position;
                 var v2 = {
                     x: _this.translateX(params.X),
                     y: _this.translateY(params.Y),

@@ -2,7 +2,7 @@
 
 var root = window;
 
-var canvas = id("small-toolpath");
+var canvas = id("toolpath");
 var tp = canvas.getContext("2d");
 var tpRect;
 
@@ -20,78 +20,6 @@ var yHomePos = 0;
 
 var xHomeDir = 1;
 var yHomeDir = 1;
-
-var gcodePopup = {
-  // CREATE GCODE POPUP HTML
-  largViewer: null, // gcodePopup itself
-  init: function(){
-
-    // ENTIRE TOOLPATH VIEWER POPUP ITSELF
-    gcodePopup.largViewer = id('large-gcode-viewer'); // document.createElement("div");
-    // gcodePopup.largViewer.id = "large-gcode-viewer";
-    // document.getElementById("tablet-listener").appendChild(gcodePopup.largViewer);
-
-    // CANVAS
-    gcodePopup.canvas = id('large-gcode-viewer-canvas');
-//    gcodePopup.canvas = document.createElement("CANVAS");
-
-//    gcodePopup.canvas.width = 600;
-//    gcodePopup.canvas.height = 500;
-//    gcodePopup.canvas.style="border:1px solid #000000;"
-//    gcodePopup.canvas.id = "large-gcode-viewer-canvas";
-//    gcodePopup.largViewer.appendChild(gcodePopup.canvas);
-
-    gcodePopup.hide();
-  },
-
-  //HANDLE CLICK BEHAVIOR FOR POPUP
-  listener: function(event) {
-    if (gcodePopup.canvas.contains(event.target)) {       //If the click is inside the popup change the camera angle
-
-      cameraAngle = cameraAngle + 1;
-      if (cameraAngle > 3){
-        cameraAngle = 0;
-      }
-
-      const gcode = id('gcode').value;
-      if (gCodeLoaded) {
-        displayer.showToolpath(gcode, WPOS, MPOS, cameraAngle);
-      }
-    } else{                                              //If the click is outside the popup close the popup
-      gcodePopup.hide();
-    }
-  },
-
-  // SHOW GCODE POPUP
-  show: function() {
-    displayNone("control-pad");
-    displayBlock("large-gcode-viewer");
-    
-    gcodePopup.largViewer.addEventListener('click', gcodePopup.listener);
-
-    //gcodePopup.hwrap.classList.add("open");
-    canvas = gcodePopup.canvas;
-
-    lvRect = canvas.getBoundingClientRect();
-    canvas.width = lvRect.width;
-    canvas.height = lvRect.height;
-
-    tp = canvas.getContext("2d");
-  },
-
-  // HIDE GCODE POPUP
-  hide: function(){ 
-    displayUndoNone("control-pad");
-    displayNone("large-gcode-viewer");
-
-    gcodePopup.largViewer.removeEventListener('click', gcodePopup.listener);
-
-    canvas = id("small-toolpath");
-    tp = canvas.getContext("2d");
-  },
-};
-window.addEventListener("DOMContentLoaded", gcodePopup.init);
-
 
 var tpUnits = 'G21';
 
@@ -149,10 +77,10 @@ var topView = function() {
     yy = 1.0;
     yz = 0.0;
 }
-var projection = function(inpoint) {
+var projection = function(wpos) {
     outpoint = {}
-    outpoint.x = inpoint.x * xx + inpoint.y * xy + inpoint.z * xz;
-    outpoint.y = inpoint.x * yx + inpoint.y * yy + inpoint.z * yz;
+    outpoint.x = wpos.x * xx + wpos.y * xy + wpos.z * xz;
+    outpoint.y = wpos.x * yx + wpos.y * yy + wpos.z * yz;
     return outpoint;
 }
 
@@ -166,8 +94,8 @@ var toolSave = null;
 var toolRadius = 6;
 var toolRectWH = toolRadius*2 + 4;  // Slop to encompass the entire image area
 
-var drawTool = function(pos) {
-    pp = projection(pos)
+var drawTool = function(dpos) {
+    pp = projection(dpos)
     toolX = xToPixel(pp.x)-toolRadius-2;
     toolY = yToPixel(pp.y)-toolRadius-2;
     toolSave = tp.getImageData(toolX, toolY, toolRectWH, toolRectWH);
@@ -539,9 +467,9 @@ var displayHandlers = {
 var ToolpathDisplayer = function() {
 };
 
-var offset;
+// var offset;
 
-ToolpathDisplayer.prototype.showToolpath = function(gcode, wpos, mpos) {
+ToolpathDisplayer.prototype.showToolpath = function(gcode, modal, initialPosition) {
     var drawBounds = false;
     switch (cameraAngle) {
       case 0:
@@ -562,32 +490,9 @@ ToolpathDisplayer.prototype.showToolpath = function(gcode, wpos, mpos) {
         obliqueView();
     }
 
-    inInches = id('units').innerText != 'mm';
-
-    // Assume WPOS in mm
-    // var factor = inInches ? 25.4 : 1.0;
-    factor = 1;
-
-    var initialPosition = {
-        x: wpos[0] * factor,
-        y: wpos[1] * factor,
-        z: wpos[2] * factor
-    };
-
-    var mposmm = {
-        x: mpos[0] * factor,
-        y: mpos[1] * factor,
-        z: mpos[2] * factor
-    };
-
-    offset = {
-        x: initialPosition.x - mposmm.x,
-        y: initialPosition.y - mposmm.y,
-        z: initialPosition.z - mposmm.z
-    };
-
     resetBbox();
     bboxHandlers.position = initialPosition;
+    bboxHandlers.modal = modal;
 
     if(drawBounds){
         drawMachineBounds(); //Adds the machine bounds to the bounding box
@@ -601,6 +506,7 @@ ToolpathDisplayer.prototype.showToolpath = function(gcode, wpos, mpos) {
     }
     initialMoves = true;
     displayHandlers.position = initialPosition;
+    displayHandlers.modal = modal;
     new Toolpath(displayHandlers).loadFromLinesSync(gcodeLines);
 
     drawTool(initialPosition);
@@ -609,17 +515,9 @@ ToolpathDisplayer.prototype.showToolpath = function(gcode, wpos, mpos) {
     }
 };
 
-ToolpathDisplayer.prototype.reDrawTool = function(modal, mpos) {
+ToolpathDisplayer.prototype.reDrawTool = function(modal, dpos) {
     if (toolSave != null) {
         tp.putImageData(toolSave, toolX, toolY);
-        var factor = 1;
-        // var factor = modal.units === 'G20' ? 25.4 : 1.0;
-
-        var dpos = {
-            x: mpos[0] * factor + offset.x,
-            y: mpos[1] * factor + offset.y,
-            z: mpos[2] * factor + offset.z
-        };
         drawTool(dpos);
     }
 }
@@ -639,39 +537,21 @@ ToolpathDisplayer.prototype.setYHome = function(yHomeInternal) {
 }
 
 ToolpathDisplayer.prototype.setXDir = function(xDir) {
-    if(xDir == "true"){
-        xHomeDir = 1;
-    }
-    else{
-        xHomeDir = -1
-    }
+    xHomeDir = (xDir == "true") ? 1 : -1;
 }
 ToolpathDisplayer.prototype.setYDir = function(yDir) {
-    if(yDir == "true"){
-        yHomeDir = 1;
-    }
-    else{
-        yHomeDir = -1
-    }
+    yHomeDir =  (yDir == "true") ? 1 : -1;
 }
 
 displayer = new ToolpathDisplayer();
 
-var updateGcodeViewerAngle = function() {
+ToolpathDisplayer.prototype.cycleCameraAngle = function(gcode, modal, position) {
     cameraAngle = cameraAngle + 1;
     if(cameraAngle > 3){
         cameraAngle = 0;
     }
 
-    const gcode = id('gcode').value;
-    displayer.showToolpath(gcode, WPOS, MPOS);
+    displayer.showToolpath(gcode, modal, position);
 }
 
-var showGcodePopup = function(){
-    const gcode = id('gcode').value;
-    gcodePopup.show();
-    displayer.showToolpath(gcode, WPOS, MPOS);
-}
-
-id("small-toolpath").addEventListener("mouseup", updateGcodeViewerAngle); 
-id("small-toolpath").addEventListener("dblclick", showGcodePopup); 
+canvas.addEventListener("mouseup", updateGcodeViewerAngle); 

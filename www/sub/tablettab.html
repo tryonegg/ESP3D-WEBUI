@@ -517,7 +517,7 @@
     </div>
     <!-- position:relative is necessary as a container for position:absolute in the expand button -->
     <div class="col-7" style="position:relative; height:100%">
-      <canvas id="small-toolpath" class="previewer" style="z-index: 0">
+      <canvas id="toolpath" class="previewer" style="z-index: 0">
       </canvas>
       <span id="filename"></span>
       <button
@@ -530,19 +530,5 @@
         []
       </button>
     </div>
-  </div>
-    <div style="display:block"> </div>
-
-    <div id="large-gcode-viewer" class="">
-      <div class="col-9">
-	<canvas id="large-gcode-viewer-canvas" class="previewer" border="1px solid black"></canvas>
-      </div>
-      <div class="col-1">
-        <button type="button" class="btn btn-close btn-default" aria-label="Close" onclick="gcodePopup.hide()">XXX</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="hidden" data-route="toolpath" id="toolpath">
   </div>
 </div>
