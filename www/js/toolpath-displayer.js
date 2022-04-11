@@ -23,6 +23,15 @@ var yHomePos = 2438/4;
 var xHomeDir = 1;
 var yHomeDir = 1;
 
+var tlX = -8.339;
+var tlY = 2209;
+var trX = 3505; 
+var trY = 2209;
+var blX = 0;
+var blY = 0;
+var brX = 3505;
+var brY = 0;
+
 //Draw buttons
 const tlC = document.getElementById("tlBtn").getContext("2d");
 tlC.fillStyle = "#b69fcb";
@@ -191,6 +200,53 @@ lC.closePath();
 lC.stroke();
 lC.fill();
 lC.restore();
+
+const hC = document.getElementById("hBtn").getContext("2d");
+
+const xO = 55;
+const yO = -45;
+
+// #path5094
+hC.beginPath();
+hC.fillStyle = 'rgb(183, 161, 208)';
+hC.strokeStyle = 'rgb(0, 0, 0)';
+hC.lineWidth = 0.472615;
+hC.lineCap = 'butt';
+hC.lineJoin = 'miter';
+hC.moveTo(xO + 55.719343, 197.549650 + yO);
+hC.lineTo(xO + 152.150650, 197.549650 + yO);
+hC.lineTo(xO + 152.609520, 74.078285 + yO);
+hC.lineTo(xO + 132.404810, 73.680279 + yO);
+hC.lineTo(xO + 131.393420, 110.310850 + yO);
+hC.lineTo(xO + 103.475730, 84.035976 + yO);
+hC.lineTo(xO + 54.341657, 131.433070 + yO);
+hC.fill();
+hC.stroke();
+    
+// #rect1898
+hC.beginPath();
+hC.fillStyle = 'rgb(218, 208, 230)';
+hC.lineWidth = 0.472615;
+hC.rect(xO + 74.087212, 146.169600 + yO, 29.847790, 50.981743);
+hC.fill();
+    
+// #path13430
+hC.beginPath();
+hC.fillStyle = 'rgb(151, 132, 181)';
+hC.strokeStyle = 'rgb(0, 0, 0)';
+hC.lineWidth = 0.472615;
+hC.lineCap = 'butt';
+hC.lineJoin = 'miter';
+hC.moveTo(xO + 103.475730, 84.035976 + yO);
+hC.lineTo(xO + 167.304170, 144.974770 + yO);
+hC.lineTo(xO + 181.080090, 132.229340 + yO);
+hC.lineTo(xO + 103.016580, 56.951581 + yO);
+hC.lineTo(xO + 24.953156, 131.432760 + yO);
+hC.lineTo(xO + 40.565818, 144.974770 + yO);
+hC.fill();
+hC.stroke();
+
+//---------------------------
 
 const playC = document.getElementById("playBtn").getContext("2d");
 playC.fillStyle = "#4aa85c";
@@ -386,6 +442,27 @@ var drawMachineBounds = function() {
     tp.strokeStyle = "green";
     tp.stroke();
 
+}
+
+var drawMachineBelts = function() {
+    console.log("Drawing machine belts");
+
+    const tl = projection({x: tlX - trX/2, y: tlY/2, z: 0});
+    const tr = projection({x: trX, y: trY, z: 0});
+    const bl = projection({x: blX - brX/2, y: blY - tlY/2, z: 0});
+    const br = projection({x: brX/2, y: brY - trY/2, z: 0});
+
+    tp.beginPath();
+    tp.strokeStyle = "grey";
+    tp.moveTo(0, 0);
+    tp.lineTo(tl.x, tl.y);
+    tp.moveTo(0, 0);
+    tp.lineTo(tr.x, tr.y);
+    tp.moveTo(0, 0);
+    tp.lineTo(bl.x, bl.y);
+    tp.moveTo(0, 0);
+    tp.lineTo(br.x, br.y);
+    tp.stroke();
 }
 
 var xOffset = 0;
@@ -691,7 +768,10 @@ var offset;
 ToolpathDisplayer.prototype.showToolpath = function(gcode, wpos, mpos, cameraAngle = 0) {
 
     cameraAngle = cameraAngle;
+
     var drawBounds = false;
+    var drawBelts  = false;
+
     switch (cameraAngle) {
       case 0:
         topView();
@@ -706,6 +786,11 @@ ToolpathDisplayer.prototype.showToolpath = function(gcode, wpos, mpos, cameraAng
       case 3:
         defaultView();
         drawBounds = true;
+        break;
+      case 4:
+        topView();
+        drawBounds = true;
+        drawBelts  = true;
         break;
       default:
         defaultView();
@@ -739,7 +824,10 @@ ToolpathDisplayer.prototype.showToolpath = function(gcode, wpos, mpos, cameraAng
     bboxHandlers.position = initialPosition;
 
     if(drawBounds){
-        drawMachineBounds(); //Adds the machine bounds to the bounding box
+        drawMachineBounds(); //Adds the machine bounds to the bounding box...this does not draw
+    }
+    if(drawBelts){
+        drawMachineBelts(); //Adds the belts to the bounding box...does not draw yet
     }
 
     var gcodeLines = gcode.split('\n');
@@ -753,8 +841,12 @@ ToolpathDisplayer.prototype.showToolpath = function(gcode, wpos, mpos, cameraAng
     new Toolpath(displayHandlers).loadFromLinesSync(gcodeLines);
 
     drawTool(initialPosition);
+
     if(drawBounds){
-        drawMachineBounds();
+        drawMachineBounds(); //Actually draws the bounding box
+    }
+    if(drawBelts){
+        drawMachineBelts(); //Actually draws the belts
     }
 };
 
@@ -808,7 +900,7 @@ displayer = new ToolpathDisplayer();
 
 var updateGcodeViewerAngle = function() {
     cameraAngle = cameraAngle + 1;
-    if(cameraAngle > 3){
+    if(cameraAngle > 4){
         cameraAngle = 0;
     }
 
