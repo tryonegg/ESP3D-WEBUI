@@ -445,12 +445,17 @@ var drawMachineBounds = function() {
 }
 
 var drawMachineBelts = function() {
-    console.log("Drawing machine belts");
+    console.log("Draw belts");
 
     const tl = projection({x: tlX - trX/2, y: tlY/2, z: 0});
-    const tr = projection({x: trX, y: trY, z: 0});
+    const tr = projection({x: trX/2, y: trY/2, z: 0});
     const bl = projection({x: blX - brX/2, y: blY - tlY/2, z: 0});
     const br = projection({x: brX/2, y: brY - trY/2, z: 0});
+
+    tpBbox.min.x = Math.min(tpBbox.min.x, bl.x);
+    tpBbox.min.y = Math.min(tpBbox.min.y, bl.y);
+    tpBbox.max.x = Math.max(tpBbox.max.x, tr.x);
+    tpBbox.max.y = Math.max(tpBbox.max.y, tr.y);
 
     tp.beginPath();
     tp.strokeStyle = "grey";
@@ -463,6 +468,83 @@ var drawMachineBelts = function() {
     tp.moveTo(0, 0);
     tp.lineTo(br.x, br.y);
     tp.stroke();
+
+    tp.fillStyle = "black";
+    tp.beginPath();
+    tp.arc(tl.x, tl.y, 10, 0, 2 * Math.PI);
+    tp.closePath();
+    tp.fill();
+    tp.beginPath();
+    tp.arc(tr.x, tr.y, 10, 0, 2 * Math.PI);
+    tp.closePath();
+    tp.fill();
+    tp.beginPath();
+    tp.arc(br.x, br.y, 10, 0, 2 * Math.PI);
+    tp.closePath();
+    tp.fill();
+    tp.beginPath();
+    tp.arc(bl.x, bl.y, 10, 0, 2 * Math.PI);
+    tp.closePath();
+    tp.fill();
+    
+
+    const squareSize = projection({x: 50, y: 0, z: 0});
+
+
+    var i = bl.x;
+    var j = bl.y;
+    while(i < tr.x){
+        while(j < tr.y){
+            drawARect(i,j,squareSize.x, computPositonGradient(i, j, tl, tr, bl, br));
+            j = j + squareSize.x;
+        }
+        j = bl.y;
+        i = i + squareSize.x;
+    }
+}
+
+var checkMinBeltLength = function(x1, y1, x2, y2){
+    const dist = Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
+    if(dist < 800){
+        return 1 - dist/800;
+    }
+    else{
+        return 0;
+    }
+}
+
+var computPositonGradient = function(x,y, tl, tr, bl, br){
+    var opacity = 0;
+    
+    //Check distance from the mounting points
+    opacity = opacity + checkMinBeltLength(x,y,tl.x, tl.y);
+    opacity = opacity + checkMinBeltLength(x,y,tr.x, tr.y);
+    opacity = opacity + checkMinBeltLength(x,y,bl.x, bl.y);
+    opacity = opacity + checkMinBeltLength(x,y,br.x, br.y);
+
+    opacity = opacity + computeTension(x,y, tl, tr, bl, br);
+
+    return opacity;
+}
+
+var computeTension = function(x,y, tl, tr, bl, br){
+    const A = Math.atan((y-tl.y)/(tr.x - x));
+    const B = Math.atan((y-tl.y)/(x-tl.x));
+
+    const T2 = 1 / (Math.cos(B) * Math.sin(A) / Math.cos(A) + Math.sin(B));
+
+    console.log("T2: " + T2);
+
+    return T2/-4;
+}
+
+var drawARect = function(x,y,size, opacity){
+
+    const posP = projection({x: x - size/2, y: y - size/2, z: 0});
+    tp.beginPath();
+    tp.fillStyle = "rgba(255, 0, 0, " + opacity + ")";
+    tp.rect(posP.x, posP.y, size, size);
+    tp.fill();
 }
 
 var xOffset = 0;
