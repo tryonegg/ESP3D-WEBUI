@@ -505,8 +505,8 @@ var drawMachineBelts = function() {
 
 var checkMinBeltLength = function(x1, y1, x2, y2){
     const dist = Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
-    if(dist < 800){
-        return 1 - dist/800;
+    if(dist < 1200){
+        return 1 - dist/1200;
     }
     else{
         return 0;
@@ -522,7 +522,7 @@ var computPositonGradient = function(x,y, tl, tr, bl, br){
     opacity = opacity + checkMinBeltLength(x,y,bl.x, bl.y);
     opacity = opacity + checkMinBeltLength(x,y,br.x, br.y);
 
-    opacity = opacity + computeTension(x,y, tl, tr, bl, br);
+    opacity = Math.max(opacity, computeTension(x,y, tl, tr, bl, br));
 
     return opacity;
 }
@@ -531,18 +531,47 @@ var computeTension = function(x,y, tl, tr, bl, br){
     const A = Math.atan((y-tl.y)/(tr.x - x));
     const B = Math.atan((y-tl.y)/(x-tl.x));
 
+    const T1 = 1 / (Math.cos(A) * Math.sin(B) / Math.cos(B) + Math.sin(A));
     const T2 = 1 / (Math.cos(B) * Math.sin(A) / Math.cos(A) + Math.sin(B));
 
-    console.log("T2: " + T2);
+    const T1Scaled = T1/-3;
+    const T2Scaled = T2/-3; //This is some arbitrary scaling to make it look right in terms of color
 
-    return T2/-4;
+    const max = Math.max(T1Scaled, T2Scaled);
+
+    if(max > .15){
+        return max;
+    }
+    else{
+        return 0;
+    }
+}
+
+// License: MIT - https://opensource.org/licenses/MIT
+// Author: Michele Locati <michele@locati.it>
+// Source: https://gist.github.com/mlocati/7210513
+function perc2color(perc) {
+    console.log(perc);
+    var r, g, b = 0;
+    if(perc < 50) {
+        r = 255;
+        g = Math.round(5.1 * perc);
+    }
+    else {
+        g = 255;
+        r = Math.round(510 - 5.10 * perc);
+    }
+    var h = r * 0x10000 + g * 0x100 + b * 0x1;
+
+    console.log(r + " " + g + " " + b)
+    return "rgba("+r+", "+g+", "+b+", .3)";//'#' + ('000000' + h.toString(16)).slice(-6);
 }
 
 var drawARect = function(x,y,size, opacity){
 
     const posP = projection({x: x - size/2, y: y - size/2, z: 0});
     tp.beginPath();
-    tp.fillStyle = "rgba(255, 0, 0, " + opacity + ")";
+    tp.fillStyle = perc2color(100 - 100*opacity);//"rgba(255, 0, 0, " + opacity + ")";
     tp.rect(posP.x, posP.y, size, size);
     tp.fill();
 }
