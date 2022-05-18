@@ -62,17 +62,13 @@ html {
     padding: 2px;
 }
 
-.btn-default.btn-select {
-    color: #fff;
-    background-color: #404040;
-    border-color: #383838;
+.tablettab .btn,
+.tablettab .form-control {
+  font-size: inherit;
 }
+
+.btn-default.btn-select,
 .btn-default.btn-select:focus,
-.btn-default.btn-select.focus {
-    color: #fff;
-    background-color: #404040;
-    border-color: #383838;
-}
 .btn-default.btn-select:hover {
     color: #fff;
     background-color: #404040;
@@ -85,7 +81,6 @@ html {
 .dropdown-menu {
   position: absolute;
   top: 100%;
-  left: 0;
   z-index: 1000;
   display: none;
   float: left;
@@ -213,7 +208,8 @@ html {
   padding-top: 5px;
   padding-left: 5px;
   padding-bottom: 5px;
-  font-size: 14px;
+  /* 8px works at a width of 300 */
+  font-size: 8px;
 }
 .tablettab .btn,
 .tablettab .position,
@@ -221,7 +217,6 @@ html {
   border-radius: 4px;
   border-style: outset;
   padding: 0.4rem 0rem;
-  font-size: 10px;
   width: 100%;
 }
 
@@ -322,6 +317,10 @@ select:disabled {
     overflow: hidden;
     padding-bottom: 12px;
 }
+#jog-distance {
+   text-align-last: right;
+}
+
 .run-controls {
     display: none;
 }
@@ -361,7 +360,6 @@ select:disabled {
   padding: 5px 10px;
 }
 .axis-label {
-  font-size: 14px;
   text-align: center;
 }
 .position {
@@ -371,7 +369,6 @@ select:disabled {
   background-color: honeydew;
 }
 .mposition {
-  font-size: 10px;
   width: 90%;
   float: right;
   text-align: left;
@@ -450,35 +447,64 @@ textarea {
   overflow: hidden;
 }
 
+/* Overrides of @media stuff in bootstrap.css that maybe should be changed there */
+.navbar-left {
+  float: left !important;
+}
+.navbar-right {
+  float: right !important;
+  margin-right: -15px;
+}
+.navbar-header {
+   float: left;
+}
+.navbar-right~.navbar-right {
+  margin-right: 0;
+}
+/* End of overrides */
+
+.tablettab .form-control {
+  height: unset;
+}
+@media (max-width: 512px) {
+  .navbar-brand {
+    display: none;
+  }
+}
+
+@media (min-width: 300px) {
+  .tablettab {
+    font-size: 8px;
+  }
+}
+
+@media (min-width: 400px) {
+  .tablettab {
+    font-size: 10px;
+  }
+}
+
 @media (min-width: 512px) {
-  .tablettab .btn,
-  .tablettab .position,
-  .tablettab .form-control {
-    font-size: 12px;
-  }
-  .tablettab .mposition {
+  .tablettab,
+  .tablettab .btn {
     font-size: 12px;
   }
 }
+
 @media (min-width: 640px) {
-  .tablettab .btn,
-  .tablettab .position,
-  .tablettab .form-control {
-    font-size: 14px;
-  }
-  .tablettab .mposition {
+  .tablettab,
+  .tablettab .btn {
     font-size: 14px;
   }
 }
+
 @media (min-width: 736px) {
-  {
-    font-size: 14px;
-  }
+  font-size: 14px;
   .tablettab .dropdown-menu {
     min-width: 180px;
   }
   .tablettab .dropdown-menu>li>a .fa {
-    width: 14px;
+    width: 1.7rem;
   }
   .axis-label {
     font-size: 18px;
@@ -489,16 +515,12 @@ textarea {
   .tablettab .btn,
   .tablettab .position,
   .tablettab .form-control {
-    font-size: 14px;
-    height: 30px;
+    font-size: 1.7rem;
   }
   .tablettab .mposition {
-    font-size: 14px;
+    font-size: 1.7rem;
   }
 
-  #jog-distance {
-    text-align-last: right;
-  }
   textarea, #messages, #gcode-states {
     font-size: 10px;
   }
@@ -523,14 +545,10 @@ textarea {
   .tablettab .btn,
   .tablettab .position,
   .tablettab .form-control {
-    font-size: 15px;
-    height: 30px;
+    font-size: 2rem;
   }
   .tablettab .mposition {
-    font-size: 15px;
-  }
-  #jog-distance {
-    text-align-last: right;
+    font-size: 2rem;
   }
   textarea, #messages, #gcode-states {
     font-size: 12px;

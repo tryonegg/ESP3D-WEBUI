@@ -65,7 +65,7 @@ toggleFullscreen = function() {
     if (document.fullscreenElement) {
         exitFullscreen();
     } else {
-        enterFullscreen;
+        enterFullscreen();
     }
 }
 
@@ -488,7 +488,7 @@ function tabletGrblState(grbl, response) {
                    "F" + modal.feedrate + " " +
                    "S" + modal.spindle + " ";
 
-    setHTML('gcode-states', modal.modes);
+    setHTML('gcode-states', modal.modes || "GCode State");
 
     if (grbl.lineNumber && (stateName == 'Run' || stateName == 'Hold' || stateName == 'Stop')) {
         setText('line', grbl.lineNumber);
@@ -896,10 +896,10 @@ function setBottomHeight() {
         return;
     }
     var residue = bodyHeight() - heightId('navbar') - controlHeight();
-    var msgElement = id('status');
     var tStyle = getComputedStyle(id('tablettab'))
     var tPad = parseFloat(tStyle.paddingTop) + parseFloat(tStyle.paddingBottom); 
-    tPad = 20;
+    tPad += 20;
+    var msgElement = id('status');
     msgElement.style.height = (residue - tPad) + 'px';
 }
 window.onresize = setBottomHeight;
