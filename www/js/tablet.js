@@ -6,7 +6,9 @@ function beep(vol, freq, duration){
 }
 
 function tabletClick() {
-    window.navigator.vibrate(200);
+    if (window.navigator && window.navigator.vibrate) {
+        window.navigator.vibrate(200);
+    }
     beep(3, 400, 10);
 }
 
