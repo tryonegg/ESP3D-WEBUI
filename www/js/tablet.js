@@ -573,10 +573,8 @@ function populateTabletFileSelector(obj) {
             return a.name.localeCompare(b.name);
         })
         files.forEach(function(file) {
-            if (file.size == -1) {   // size -1 indicates a directory
-                file.name += '/';
-            }
-            addOption(selector, file.name, false, file.name == selectedFile);
+            // size -1 indicates a directory
+            addOption(selector, file.size == -1 ? file.name + "/" : file.name, false, file.name == selectedFile);
         });
     } else {
         addOption(selector, "No files found", selectedFile == '');
