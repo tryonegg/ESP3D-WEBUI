@@ -618,14 +618,21 @@ function showGCode(gcode) {
     setRunnable();
 }
 
-// XXX these need to be somewhere else to ensure they are called at the right time
-SendPrinterCommand("$/axes/x/max_travel_mm");
-SendPrinterCommand("$/axes/x/homing/mpos_mm");
-SendPrinterCommand("$/axes/x/homing/positive_direction");
+var machineBboxAsked = false;
 
-SendPrinterCommand("$/axes/y/max_travel_mm");
-SendPrinterCommand("$/axes/y/homing/mpos_mm");
-SendPrinterCommand("$/axes/y/homing/positive_direction");
+function askMachineBbox() {
+    if (machineBboxAsked) {
+        return;
+    }
+    machineBboxAsked = true;
+    SendPrinterCommand("$/axes/x/max_travel_mm");
+    SendPrinterCommand("$/axes/x/homing/mpos_mm");
+    SendPrinterCommand("$/axes/x/homing/positive_direction");
+
+    SendPrinterCommand("$/axes/y/max_travel_mm");
+    SendPrinterCommand("$/axes/y/homing/mpos_mm");
+    SendPrinterCommand("$/axes/y/homing/positive_direction");
+}
 
 var gCodeFilename = '';
 
@@ -871,8 +878,26 @@ function fullscreenIfMobile() {
         toggleFullscreen();
     }
 }
+var oldStatusInterval = 3;
+var oldAutocheck = true;
+
+function slowStatus() {
+    id('statusInterval_check').value = oldStatusInterval;
+    on_autocheck_status(oldAutocheck);
+}
+
+function fastStatus() {
+    oldAutocheck = getAutocheck();
+    oldStatusInterval = id('statusInterval_check').value;
+    id('statusInterval_check').value = 0.3;
+    on_autocheck_status(true);
+}
 
 id('tablettablink').addEventListener('DOMActivate', fullscreenIfMobile, false);
+
+id('tablettab').addEventListener('activate', fastStatus, false);
+id('tablettab').addEventListener('activate', askMachineBbox, false);
+id('tablettab').addEventListener('deactivate', slowStatus, false);
 
 id("control-pad").classList.add("open");
 

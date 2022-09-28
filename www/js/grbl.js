@@ -140,7 +140,7 @@ function on_autocheck_status(use_value) {
     }
     if (typeof(use_value) !== 'undefined') setAutocheck(use_value);
     if (getAutocheck()) {
-        var interval = parseInt(getValue('statusInterval_check'));
+        var interval = parseFloat(getValue('statusInterval_check'));
         if (!isNaN(interval) && interval > 0 && interval < 100) {
             if (interval_status != -1) clearInterval(interval_status);
             interval_status = setInterval(function() {
