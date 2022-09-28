@@ -365,16 +365,17 @@ function show_grbl_probe_status(probed) {
     grbl_set_probe_detected(probed);
 }
 
-function SendRealtimeCmd(cmd) {
-    SendPrinterCommand(cmd, false, null, null, cmd.charCodeAt(0), 1);
+function SendRealtimeCmd(code) {
+    var cmd = String.fromCharCode(code)
+    SendPrinterCommand(cmd, false, null, null, code, 1);
 }
 
 function pauseGCode() {
-    SendRealtimeCmd("!");
+    SendRealtimeCmd(0x41);
 }
 
 function resumeGCode() {
-    SendRealtimeCmd("~");
+    SendRealtimeCmd(0x7e);
 }
 
 function stopGCode() {
@@ -413,7 +414,7 @@ function grblProcessStatus(response) {
 function grbl_reset() {
     if (probe_progress_status != 0)
         probe_failed_notification();
-    SendRealtimeCmd(String.fromCharCode(0x18));
+    SendRealtimeCmd(0x18);
 }
 
 function grblGetProbeResult(response) {
