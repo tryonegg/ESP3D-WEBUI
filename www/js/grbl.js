@@ -126,7 +126,7 @@ function onprobefeedrateChange() {
 
 function onprobetouchplatethicknessChange() {
     var thickness = parseFloat(getValue('probetouchplatethickness'));
-    if (thickness <= 0 || thickness > 999 || isNaN(thickness) || (thickness === null)) {
+    if (thickness < 0 || thickness > 999 || isNaN(thickness) || (thickness === null)) {
         alertdlg(translate_text_item("Out of range"), translate_text_item("Value of probe touch plate thickness must be between 0 mm and 9999 mm !"));
         return false;
     }
