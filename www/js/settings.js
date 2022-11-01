@@ -19,11 +19,6 @@ function refreshSettings(hide_setting_list) {
     displayNone('settings_refresh_btn');
 
     scl = [];
-    //removeIf(production)
-    var response_text = "{\"EEPROM\":[{\"F\":\"nvs\",\"P\":\"0\",\"T\":\"B\",\"V\":\"2\",\"H\":\"Wifi mode\",\"O\":[{\"AP\":\"1\"},{\"STA\":\"2\"}]},{\"F\":\"nvs\",\"P\":\"1\",\"T\":\"S\",\"V\":\"totolink_luc\",\"S\":\"32\",\"H\":\"Station SSID\",\"M\":\"1\"},{\"F\":\"nvs\",\"P\":\"34\",\"T\":\"S\",\"V\":\"********\",\"S\":\"64\",\"H\":\"Station Password\",\"M\":\"0\"},{\"F\":\"nvs\",\"P\":\"99\",\"T\":\"B\",\"V\":\"1\",\"H\":\"Station IP Mode\",\"O\":[{\"DHCP\":\"1\"},{\"Static\":\"2\"}]},{\"F\":\"nvs\",\"P\":\"100\",\"T\":\"A\",\"V\":\"192.168.0.1\",\"H\":\"Station Static IP\"},{\"F\":\"nvs\",\"P\":\"104\",\"T\":\"A\",\"V\":\"255.255.255.0\",\"H\":\"Station Static Mask\"},{\"F\":\"nvs\",\"P\":\"108\",\"T\":\"A\",\"V\":\"192.168.0.12\",\"H\":\"Station Static Gateway\"},{\"F\":\"nvs\",\"P\":\"130\",\"T\":\"S\",\"V\":\"lucesp\",\"H\":\"Hostname\" ,\"S\":\"32\", \"M\":\"1\"},{\"F\":\"nvs\",\"P\":\"112\",\"T\":\"I\",\"V\":\"115200\",\"H\":\"Baud Rate\",\"O\":[{\"9600\":\"9600\"},{\"19200\":\"19200\"},{\"38400\":\"38400\"},{\"57600\":\"57600\"},{\"115200\":\"115200\"},{\"230400\":\"230400\"},{\"250000\":\"250000\"}]},{\"F\":\"nvs\",\"P\":\"116\",\"T\":\"B\",\"V\":\"2\",\"H\":\"Station Nvs Mode\",\"O\":[{\"11b\":\"1\"},{\"11g\":\"2\"},{\"11n\":\"3\"}]},{\"F\":\"nvs\",\"P\":\"117\",\"T\":\"B\",\"V\":\"0\",\"H\":\"Sleep Mode\",\"O\":[{\"None\":\"0\"},{\"Light\":\"1\"},{\"Modem\":\"2\"}]},{\"F\":\"nvs\",\"P\":\"118\",\"T\":\"B\",\"V\":\"9\",\"H\":\"AP Channel\",\"O\":[{\"1\":\"1\"},{\"2\":\"2\"},{\"3\":\"3\"},{\"4\":\"4\"},{\"5\":\"5\"},{\"6\":\"6\"},{\"7\":\"7\"},{\"8\":\"8\"},{\"9\":\"9\"},{\"10\":\"10\"},{\"11\":\"11\"}]},{\"F\":\"nvs\",\"P\":\"119\",\"T\":\"B\",\"V\":\"2\",\"H\":\"Authentication\",\"O\":[{\"Open\":\"0\"},{\"WPA\":\"2\"},{\"WPA2\":\"3\"},{\"WPA/WPA2\":\"4\"}]},{\"F\":\"nvs\",\"P\":\"120\",\"T\":\"B\",\"V\":\"1\",\"H\":\"SSID Visible\",\"O\":[{\"No\":\"0\"},{\"Yes\":\"1\"}]},{\"F\":\"nvs\",\"P\":\"121\",\"T\":\"I\",\"V\":\"80\",\"H\":\"Web Port\",\"S\":\"65001\",\"M\":\"1\"},{\"F\":\"nvs\",\"P\":\"125\",\"T\":\"I\",\"V\":\"8881\",\"H\":\"Data Port\",\"S\":\"65001\",\"M\":\"1\"},{\"F\":\"nvs\",\"P\":\"176\",\"T\":\"S\",\"V\":\"********\",\"S\":\"16\",\"H\":\"Admin Password\",\"M\":\"1\"},{\"F\":\"nvs\",\"P\":\"197\",\"T\":\"S\",\"V\":\"********\",\"S\":\"16\",\"H\":\"User Password\",\"M\":\"1\"},{\"F\":\"nvs\",\"P\":\"218\",\"T\":\"S\",\"V\":\"MYESP\",\"S\":\"32\",\"H\":\"AP SSID\",\"M\":\"1\"},{\"F\":\"nvs\",\"P\":\"251\",\"T\":\"S\",\"V\":\"********\",\"S\":\"64\",\"H\":\"AP Password\",\"M\":\"0\"},{\"F\":\"nvs\",\"P\":\"329\",\"T\":\"B\",\"V\":\"2\",\"H\":\"AP IP Mode\",\"O\":[{\"DHCP\":\"1\"},{\"Static\":\"2\"}]},{\"F\":\"nvs\",\"P\":\"316\",\"T\":\"A\",\"V\":\"192.168.0.1\",\"H\":\"AP Static IP\"},{\"F\":\"nvs\",\"P\":\"320\",\"T\":\"A\",\"V\":\"255.255.255.0\",\"H\":\"AP Static Mask\"},{\"F\":\"nvs\",\"P\":\"324\",\"T\":\"A\",\"V\":\"192.168.0.1\",\"H\":\"AP Static Gateway\"},{\"F\":\"nvs\",\"P\":\"330\",\"T\":\"B\",\"V\":\"1\",\"H\":\"AP Network Mode\",\"O\":[{\"11b\":\"1\"},{\"11g\":\"2\"}]},{\"F\":\"tree\",\"P\":\"461\",\"T\":\"B\",\"V\":\"4\",\"H\":\"TargetFW\",\"O\":[{\"Repetier\":\"5\"},{\"Repetier for Davinci\":\"1\"},{\"Marlin\":\"2\"},{\"MarlinKimbra\":\"3\"},{\"Smoothieware\":\"4\"},{\"Unknown\":\"0\"}]},{\"F\":\"tree\",\"P\":\"129\",\"T\":\"B\",\"V\":\"3\",\"H\":\"Temperature Refresh Time\",\"S\":\"99\",\"M\":\"0\"},{\"F\":\"tree\",\"P\":\"164\",\"T\":\"I\",\"V\":\"1500\",\"H\":\"XY feedrate\",\"S\":\"9999\",\"M\":\"1\"},{\"F\":\"tree\",\"P\":\"168\",\"T\":\"I\",\"V\":\"110\",\"H\":\"Z feedrate\",\"S\":\"9999\",\"M\":\"1\"},{\"F\":\"tree\",\"P\":\"172\",\"T\":\"I\",\"V\":\"400\",\"H\":\"E feedrate\",\"S\":\"9999\",\"M\":\"1\"},{\"F\":\"tree\",\"P\":\"331\",\"T\":\"S\",\"V\":\"NO\",\"S\":\"128\",\"H\":\"Camera address\",\"M\":\"0\"},{\"F\":\"tree\",\"P\":\"460\",\"T\":\"B\",\"V\":\"3\",\"H\":\"Position Refresh Time\",\"S\":\"99\",\"M\":\"0\"}]}";
-    getESPsettingsSuccess(response_text);
-    return;
-    //endRemoveIf(production)
     var url = "/command?plain=" + encodeURIComponent("[ESP400]");
     SendGetHttp(url, getESPsettingsSuccess, getESPsettingsfailed)
 }
@@ -73,28 +68,10 @@ function build_select_for_setting_list(i, j) {
     return html;
 }
 
-function getFWshortnamefromid(value) {
-    var response = 0;
-    if (value == 1) response = "repetier4davinci";
-    else if (value == 5) response = "repetier";
-    else if (value == 2) response = "marlin";
-    else if (value == 3) response = "marlinkimbra";
-    else if (value == 4) response = "smoothieware";
-    else if (value == 6) response = "grbl";
-    else response = "???";
-    return response;
-}
-
 function update_UI_setting() {
     for (var i = 0; i < scl.length; i++) {
         switch (scl[i].pos) {
             //EP_TARGET_FW		461 
-            case "461":
-                target_firmware = getFWshortnamefromid(defval(i));
-                update_UI_firmware_target();
-                init_files_panel(false);
-                break;
-                // EP_IS_DIRECT_SD   850
             case "850":
                 direct_sd = (defval(i) == 1) ? true : false;
                 update_UI_firmware_target();
@@ -105,8 +82,6 @@ function update_UI_setting() {
                 Set_page_title(defval(i));
                 break;
         }
-
-
     }
 }
 //to generate setting editor in setting or setup

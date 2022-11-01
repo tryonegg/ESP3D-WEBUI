@@ -9,8 +9,7 @@ function updatedlg() {
     displayNone('uploadfw-button');
     id('updatemsg').innerHTML = "";
     id('fw-select').value = "";
-    if (target_firmware == "grbl-embedded") id('fw_update_dlg_title').innerHTML = translate_text_item("ESP3D Update").replace("ESP3D", "FluidNC");
-    if (target_firmware == "marlin-embedded") id('fw_update_dlg_title').innerHTML = translate_text_item("ESP3D Update").replace("ESP3D", "Marlin");
+    id('fw_update_dlg_title').innerHTML = translate_text_item("ESP3D Update").replace("ESP3D", "FluidNC");
     showModal();
 }
 

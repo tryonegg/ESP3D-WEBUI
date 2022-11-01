@@ -375,7 +375,6 @@ var Toolpath = function () {
             // G4: Dwell
             // Parameters
             //   Pnnn Time to wait, in milliseconds
-            //   Snnn Time to wait, in seconds (Only on Marlin and Smoothie)
             // Example
             //   G4 P200
             'G4': function G4(params) {},

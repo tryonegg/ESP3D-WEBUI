@@ -37,11 +37,7 @@ function Monitor_output_Update(message) {
         }
         Monitor_output = Monitor_output.slice(-300);
     }
-    var regex = /ok T:/g;  // Marlin temperature report
 
-    if (target_firmware == "repetier" || target_firmware == "repetier4davinci") {
-        regex = /T:/g;  // Repetier temperature report
-    }
     var output = "";
     var isverbosefilter = id("monitor_enable_verbose_mode").checked;
     for (var out of Monitor_output) {
@@ -64,13 +60,8 @@ function Monitor_output_Update(message) {
             ) {
                 continue;
             }
-            if ((target_firmware == "grbl") || (target_firmware == "grbl-embedded")) {
-                //no status
-                if (outlc.startsWith("<") || outlc.startsWith("[echo:")) continue;
-            } else {
-                //no temperatures
-                if (outlc.match(regex)) continue;
-            }
+            //no status
+            if (outlc.startsWith("<") || outlc.startsWith("[echo:")) continue;
         }
         if (out.startsWith("[#]")) {
             out = out.replace("[#]", "");

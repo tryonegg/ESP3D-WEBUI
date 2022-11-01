@@ -20,9 +20,7 @@ function showAxiscontrols() {
     displayBlock('JogBar');
     displayBlock('HomeZ');
     displayBlock('control_z_position_display');
-    if ((target_firmware == "grbl-embedded") || (target_firmware == "grbl")) {
-        displayTable('control_zm_position_row');
-    }
+    displayTable('control_zm_position_row');
     displayInline('z_velocity_display');
 
 }
@@ -30,11 +28,6 @@ function showAxiscontrols() {
 function loadmacrolist() {
     control_macrolist = [];
     var url = "/macrocfg.json" + "?" + Date.now();
-    //removeIf(production)
-    var response = "[{\"name\":\"\",\"glyph\":\"\",\"filename\":\"\",\"target\":\"\",\"class\":\"\",\"index\":0},{\"name\":\"\",\"glyph\":\"\",\"filename\":\"\",\"target\":\"\",\"class\":\"\",\"index\":1},{\"name\":\"\",\"glyph\":\"\",\"filename\":\"\",\"target\":\"\",\"class\":\"\",\"index\":2},{\"name\":\"\",\"glyph\":\"\",\"filename\":\"\",\"target\":\"\",\"class\":\"\",\"index\":3},{\"name\":\"\",\"glyph\":\"\",\"filename\":\"\",\"target\":\"\",\"class\":\"\",\"index\":4},{\"name\":\"\",\"glyph\":\"\",\"filename\":\"\",\"target\":\"\",\"class\":\"\",\"index\":5},{\"name\":\"\",\"glyph\":\"\",\"filename\":\"\",\"target\":\"\",\"class\":\"\",\"index\":6},{\"name\":\"\",\"glyph\":\"\",\"filename\":\"\",\"target\":\"\",\"class\":\"\",\"index\":7},{\"name\":\"\",\"glyph\":\"\",\"filename\":\"\",\"target\":\"\",\"class\":\"\",\"index\":8}]";
-    processMacroGetSuccess(response);
-    return;
-    //endRemoveIf(production)
     SendGetHttp(url, processMacroGetSuccess, processMacroGetFailed);
 }
 
@@ -117,11 +110,7 @@ function onPosIntervalChange() {
 }
 
 function get_Position() {
-    if ((target_firmware == "grbl") || (target_firmware == "grbl-embedded")) {
-        SendPrinterCommand("?", false, null, null, 114, 1);
-    } else {
-        SendPrinterCommand("M114", false, target_firmware == "marlin-embedded" ? null : process_Position, null, null, 114, 1);
-    }
+    SendPrinterCommand("?", false, null, null, 114, 1);
 }
 
 function Control_get_position_value(label, result_data) {
@@ -138,45 +127,36 @@ function Control_get_position_value(label, result_data) {
 }
 
 function process_Position(response) {
-    if ((target_firmware == "grbl") || (target_firmware == "grbl-embedded")) {
-        grblProcessStatus(response);
-    } else {
-        id('control_x_position').innerHTML = Control_get_position_value("X:", response);
-        id('control_y_position').innerHTML = Control_get_position_value("Y:", response);
-        id('control_z_position').innerHTML = Control_get_position_value("Z:", response);
-    }
+    grblProcessStatus(response);
 }
 
 function control_motorsOff() {
-    var command = "M84";
-    SendPrinterCommand(command, true);
+    SendPrinterCommand("$Motors/Disable", true);
 }
 
 function SendHomecommand(cmd) {
     if (id('lock_UI').checked) return;
-    if ((target_firmware == "grbl-embedded") || (target_firmware == "grbl")) {
-        switch (cmd) {
-            case 'G28':
-                cmd = '$H';
-                break;
-            case 'G28 X0':
-                cmd = '$HX';
-                break;
-            case 'G28 Y0':
-                cmd = '$HY';
-                break;
+    switch (cmd) {
+        case 'G28':
+            cmd = '$H';
+            break;
+        case 'G28 X0':
+            cmd = '$HX';
+            break;
+        case 'G28 Y0':
+            cmd = '$HY';
+            break;
 
-            case 'G28 Z0':
-                if (grblaxis > 3) {
-                    cmd = '$H' + id('control_select_axis').value;
-                } else cmd = '$HZ';
-                break;
-            default:
-                cmd = '$H';
-                break;
-        }
-
+        case 'G28 Z0':
+            if (grblaxis > 3) {
+                cmd = '$H' + id('control_select_axis').value;
+            } else cmd = '$HZ';
+            break;
+        default:
+            cmd = '$H';
+            break;
     }
+
     SendPrinterCommand(cmd, true, get_Position);
 }
 
@@ -200,20 +180,18 @@ function SendJogcommand(cmd, feedrate) {
         feedratevalue = parseInt(id('control_z_velocity').value);
         if (feedratevalue < 1 || isNaN(feedratevalue) || (feedratevalue === null)) {
             var letter = "Z";
-            if ((target_firmware == "grbl-embedded") && (grblaxis > 3)) letter = "Axis";
+            if (grblaxis > 3) letter = "Axis";
             alertdlg(translate_text_item("Out of range"), translate_text_item( letter +" Feedrate value must be at least 1 mm/min!"));
             id('control_z_velocity').value = preferenceslist[0].z_feedrate;
             return;
         }
     }
-    if ((target_firmware == "grbl-embedded") || (target_firmware == "grbl")) {
-        if(grblaxis > 3){
-            var letter = id('control_select_axis').value;
-            cmd = cmd.replace("Z", letter);
-        }
-        command = "$J=G91 G21 F" + feedratevalue + " " + cmd;
-        console.log(command);
-    } else command = "G91\nG1 " + cmd + " F" + feedratevalue + "\nG90";
+    if(grblaxis > 3){
+        var letter = id('control_select_axis').value;
+        cmd = cmd.replace("Z", letter);
+    }
+    command = "$J=G91 G21 F" + feedratevalue + " " + cmd;
+    console.log(command);
     SendPrinterCommand(command, true, get_Position);
 }
 
@@ -288,7 +266,7 @@ function control_build_macro_ui() {
 function macro_command(target, filename) {
     var cmd = ""
     if (target == "ESP") {
-        cmd = (target_firmware == "grbl-embedded" ? "$LocalFS/Run=" : "[ESP700]") + filename;
+        cmd = "$LocalFS/Run=" + filename;
     } else if (target == "SD") {
         files_print_filename(filename);
     } else if (target == "URI") {

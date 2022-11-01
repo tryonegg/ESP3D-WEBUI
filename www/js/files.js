@@ -49,28 +49,11 @@ function build_accept(file_filters_list) {
 }
 
 function init_files_panel(dorefresh) {
-    if (target_firmware == "smoothieware") {
-        files_currentPath = primary_sd;
-        id('files_refresh_primary_sd_btn').innerHTML = primary_sd.substring(0, primary_sd.length - 1);
-        id('files_refresh_secondary_sd_btn').innerHTML = secondary_sd.substring(0, secondary_sd.length - 1);
-        if (primary_sd.toLowerCase() != "none") displayInline('files_refresh_primary_sd_btn');
-        if (secondary_sd.toLowerCase() != "none") displayInline('files_refresh_secondary_sd_btn');
-        displayNone('files_createdir_btn');
-        displayNone('files_refresh_btn');
-    } else {
-        if (target_firmware == "???") displayNone('files_refresh_btn');
-        else displayInline('files_refresh_btn');
-        displayNone('files_refresh_primary_sd_btn');
-        displayNone('files_refresh_secondary_sd_btn');
-        if(target_firmware == "grbl") {
-            displayNone('files_refresh_printer_sd_btn');
-            displayNone('files_refresh_btn');
-            displayNone('print_upload_btn');
-            displayNone('files_createdir_btn');
-        }
-    }
-    if (!((target_firmware == "marlin") || (target_firmware == "???") ||(target_firmware == "grbl"))) displayInline('files_createdir_btn');
-    else displayNone('files_createdir_btn');
+    displayInline('files_refresh_btn');
+    displayNone('files_refresh_primary_sd_btn');
+    displayNone('files_refresh_secondary_sd_btn');
+
+    displayNone('files_createdir_btn');
     files_set_button_as_filter(files_filter_sd_list);
     var refreshlist = true;
     if (typeof dorefresh !== 'undefined') refreshlist = dorefresh;
@@ -106,11 +89,8 @@ function files_build_file_line(index) {
         if (entry.isdir == true) content += get_icon_svg("folder-open");
         else content += get_icon_svg("file");
         content += "</span ></td><td>";
-        if (direct_sd && (target_firmware == "marlin") && (typeof entry.sdname !== 'undefined')) {
-            content += entry.sdname;
-        } else {
-            content += entry.name;
-        }
+        content += entry.name;
+
         content += "</td></tr></table></div>";
         var sizecol = "col-md-2 col-sm-2";
         var timecol = "col-md-3 col-sm-3";
@@ -136,8 +116,7 @@ function files_build_file_line(index) {
         content += "<div class='pull-right'>";
         if (entry.isprintable) {
             content += "<button class='btn btn-xs btn-default'  onclick='files_print(" + index + ")' style='padding-top: 4px;'>";
-            if ((target_firmware == "grbl-embedded") || (target_firmware == "grbl")) content += get_icon_svg("play", "1em", "1em");
-            else content += get_icon_svg("print", "1em", "1em");
+            content += get_icon_svg("play", "1em", "1em");
             content += "</button>";
         }
         content += "&nbsp;";
@@ -158,19 +137,10 @@ function files_print(index) {
 
 function files_print_filename(filename) {
     var cmd = "";
-    if (target_firmware == "smoothieware") {
-        cmd = "play " + filename;
-    } else if (target_firmware == "grbl-embedded") {
-        get_status();
-        on_autocheck_status(true);
-        cmd = "$SD/Run=" + filename;
-    } else {
-        var newfilename = filename;
-        if ((current_source == tft_sd) || (current_source == tft_usb))newfilename = current_source+filename;
-        cmd = "M23 " + newfilename + "\nM24";
-    }
-    if (target_firmware == "grbl-embedded") SendPrinterCommand(cmd);
-    else SendPrinterSilentCommand(cmd);
+    get_status();
+    on_autocheck_status(true);
+    cmd = "$SD/Run=" + filename;
+    SendPrinterCommand(cmd);
 }
 
 function files_Createdir() {
@@ -182,20 +152,11 @@ function process_files_Createdir(answer) {
 }
 
 function files_create_dir(name) {
-    if (direct_sd && !((target_firmware == "smoothieware") && files_currentPath.startsWith(secondary_sd))) {
+    if (direct_sd) {
         var cmdpath = files_currentPath;
-        if (target_firmware == "smoothieware") cmdpath = files_currentPath.substring(primary_sd.length);
         var url = "/upload?path=" + encodeURIComponent(cmdpath) + "&action=createdir&filename=" + encodeURIComponent(name);
         displayBlock('files_nav_loader');
         SendGetHttp(url, files_directSD_list_success, files_directSD_list_failed);
-    } else {
-        var command = "";
-        if (target_firmware == "smoothieware") {
-            command = "mkdir " + files_currentPath + name;
-        } else {
-            command = "M32 " + files_currentPath + name;
-        }
-        SendPrinterCommand(command, true, files_proccess_and_update);
     }
 }
 
@@ -213,9 +174,8 @@ function process_files_Delete(answer) {
 
 function files_delete_file(index) {
     files_error_status = "Delete " + files_file_list[index].name;
-    if (direct_sd && !((target_firmware == "smoothieware") && files_currentPath.startsWith(secondary_sd))) {
+    if (direct_sd) {
         var cmdpath = files_currentPath;
-        if (target_firmware == "smoothieware") cmdpath = files_currentPath.substring(primary_sd.length);
         var url = "/upload?path=" + encodeURIComponent(cmdpath) + "&action=";
         if (files_file_list[index].isdir) {
             url += "deletedir&filename=";
@@ -225,16 +185,6 @@ function files_delete_file(index) {
         url += encodeURIComponent(files_file_list[index].sdname);
         displayBlock('files_nav_loader');
         SendGetHttp(url, files_directSD_list_success, files_directSD_list_failed);
-    } else {
-        var command = "";
-        if (target_firmware == "smoothieware") {
-            command = "rm " + files_currentPath + files_file_list[index].name;
-        } else {
-            command = "M30 ";
-            if ((current_source == tft_usb)|| (current_source == tft_sd))command +=current_source;
-            command += files_currentPath + files_file_list[index].name;
-        }
-        SendPrinterCommand(command, true, files_proccess_and_update);
     }
 }
 
@@ -271,10 +221,7 @@ function files_proccess_and_update(answer) {
 function files_is_clickable(index) {
     var entry = files_file_list[index];
     if (entry.isdir) return true;
-    if (direct_sd && !(target_firmware == "smoothieware" && files_currentPath.startsWith(secondary_sd))) return true;
-    //not yet implemented but possible with cat command ?
-    //if ( (target_firmware == "smoothieware") && entry.isprintable) return true;
-    return false;
+    return direct_sd;
 }
 
 function files_click_file(index) {
@@ -284,29 +231,16 @@ function files_click_file(index) {
         files_refreshFiles(path, true);
         return;
     }
-    if (direct_sd && (!(target_firmware == "smoothieware" && files_currentPath.startsWith(secondary_sd)) || (target_firmware != "smoothieware"))) {
+    if (direct_sd) {
         //console.log("file on direct SD");
-        var url = "";
-        if (target_firmware == "smoothieware") url = files_currentPath.replace(primary_sd, "SD/") + entry.sdname;
-        else url = "SD/" + files_currentPath + entry.sdname;
+        var url = "SD/" + files_currentPath + entry.sdname;
         window.location.href = encodeURIComponent(url.replace("//", "/"));
-        return;
-    }
-    if (target_firmware == "smoothieware" && entry.isprintable) {
-        //console.log("file on smoothie SD");
-        //todo use a cat command ?
         return;
     }
 }
 
 function files_showprintbutton(filename, isdir) {
     if (isdir == true) return false;
-    if (target_firmware == "grbl") {
-        var path = files_currentPath + filename.trim();
-        if ((path.indexOf(" ") != -1) || (path.indexOf("?") != -1) || (path.indexOf("!") != -1) || (path.indexOf("~") != -1)) {
-            return false;
-        }
-    }
     // This can happen if files_showprintbutton is called before the
     // files panel has been created
     if (typeof tfiles_filters == 'undefined') {
@@ -326,9 +260,8 @@ function files_showdeletebutton(index) {
     //can always deleted dile or dir ?
     //if /ext/ is serial it should failed as fw does not support it
     //var entry = files_file_list[index];    
-    //if (direct_sd && !( target_firmware == "smoothieware"  && files_currentPath.startsWith(secondary_sd))) return true;
+    //if (direct_sd) return true;
     //if (!entry.isdir) return true;
-    //if ( target_firmware == "smoothieware"  && files_currentPath.startsWith("/sd/")) return true
     return true;
 }
 
@@ -366,53 +299,9 @@ function files_refreshFiles(path, usecache) {
     displayBlock('files_list_loader');
     displayBlock('files_nav_loader');
     //this is pure direct SD
-    if (direct_sd && !(target_firmware == "smoothieware" && files_currentPath.startsWith(secondary_sd))) {
-        if (target_firmware == "smoothieware") cmdpath = path.substring(4);
+    if (direct_sd) {
         var url = "/upload?path=" + encodeURI(cmdpath);
-        //removeIf(production)
-        var response = "{\"files\":[{\"name\":\"test2.gco\",\"shortname\":\"test2.gco\",\"size\":\"992 B\",\"datetime\":\"2000-01-01 01:00:00\"},{\"name\":\"simpl3d.gcode\",\"shortname\":\"SIMPL3~1.GCO\",\"size\":\"0 B\",\"datetime\":\"2000-01-01 01:00:00\"},{\"name\":\"patt2.g\",\"shortname\":\"patt2.g\",\"size\":\"9.73 MB\",\"datetime\":\"2000-01-01 01:00:00\"},{\"name\":\"myfolder\",\"shortname\":\"myfolder\",\"size\":\"-1\",\"datetime\":\"2016-08-01 18:15:00\"},{\"name\":\"wconfig.ok\",\"shortname\":\"wconfig.ok\",\"size\":\"1.10 KB\",\"datetime\":\"2017-01-06 14:35:54\"},{\"name\":\"gpl.txt\",\"shortname\":\"gpl.txt\",\"size\":\"34.98 KB\",\"datetime\":\"2017-04-17 20:22:32\"},{\"name\":\"m1.g\",\"shortname\":\"m1.g\",\"size\":\"17 B\",\"datetime\":\"2000-01-01 01:00:00\"},{\"name\":\"m2.g\",\"shortname\":\"m2.g\",\"size\":\"17 B\",\"datetime\":\"2000-01-01 01:00:00\"},{\"name\":\"Test4.g\",\"shortname\":\"TEST4.G\",\"size\":\"20.47 KB\",\"datetime\":\"2000-01-01 01:00:00\"},{\"name\":\"README.md\",\"shortname\":\"README.md\",\"size\":\"11.83 KB\",\"datetime\":\"2017-04-17 20:25:08\"},{\"name\":\"test file.gcode\",\"shortname\":\"TESTFI~1.GCO\",\"size\":\"11 B\",\"datetime\":\"2000-01-01 01:00:00\"},{\"name\":\"M3.g\",\"shortname\":\"M3.g\",\"size\":\"32 B\",\"datetime\":\"2000-01-01 01:00:00\"}],\"path\":\"/\",\"total\":\"14 GB\",\"used\":\"28 MB\",\"occupation\":\"1\",\"mode\":\"direct\",\"status\":\"Ok\"}";
-        files_directSD_list_success(response);
-        return;
-        //endRemoveIf(production)
         SendGetHttp(url, files_directSD_list_success, files_directSD_list_failed);
-    } else {
-        //use ls or M20
-        if (target_firmware == "smoothieware") {
-            //workaround as ls do not like dirname ending with /
-            var command = "ls -s " + cleanpath(files_currentPath);
-            SendPrinterCommand(command, false, files_serial_ls_list_success, files_serial_ls_list_failed);
-            //
-        } else {
-            var command = "M20";
-            if (current_source == "SD:") {
-                id('fileSource').innerHTML="TFT SD";
-                if (path.endsWith("/")){
-                    var newpath = path.substring(0, path.length - 1);
-                    path= newpath;
-                }
-                command="M20 SD:"+ path;
-                
-                usecache = false;
-            } else if (current_source == "U:") {
-                id('fileSource').innerHTML="TFT USB";
-                if (path.endsWith("/")){
-                    var newpath = path.substring(0, path.length - 1);
-                    path= newpath;
-                }
-                command="M20 U:"+ path;
-                usecache = false;
-            } else {
-                //Standard M20
-                current_source = "/";
-                id('fileSource').innerHTML=translate_text_item("SD Files");
-            }
-            //to avoid to query when we already have the list
-            if (usecache) {
-                files_serial_M20_list_display();
-            } else {
-                SendPrinterCommand(command, false, files_serial_M20_list_success, files_serial_M20_list_failed);
-            }
-        }
     }
 }
 
@@ -503,16 +392,7 @@ function files_serial_M20_list_success(response_text) {
                 //console.log(file_name + " is a dir");
             } else {
                 //console.log(line + " is a file");
-                if ((target_firmware == "repetier") || (target_firmware == "repetier4davinci") || (target_firmware == "marlin")) {
-                    var pos = line.lastIndexOf(" ");
-                    if (pos != -1) {
-                        file_name = line.substr(0, pos);
-                        fsize = files_format_size(parseInt(line.substr(pos + 1)));
-                    } else {
-                        file_name = line;
-                        fsize = "";
-                    }
-                } else file_name = line;
+                file_name = line;
             }
             //console.log("pushing " + file_name );
             var isprint = files_showprintbutton(file_name, isdirectory);
@@ -603,11 +483,7 @@ function files_directSD_list_success(response_text) {
             var fsize = "";
             if (response.files[i].size == "-1") isdirectory = true;
             else fsize = response.files[i].size;
-            if (target_firmware == "marlin") {
-                file_name = response.files[i].shortname;
-            } else {
-                file_name = response.files[i].name;
-            }
+            file_name = response.files[i].name;
             var isprint = files_showprintbutton(file_name, isdirectory);
             var file_entry = {
                 name: file_name,
@@ -656,9 +532,7 @@ function files_directSD_list_failed(error_code, response) {
 }
 
 function need_up_level() {
-    if (target_firmware == "smoothieware" && (files_currentPath == primary_sd || files_currentPath == secondary_sd)) return false;
-    if (files_currentPath == "/") return false;
-    return true;
+    return files_currentPath != "/";
 }
 
 function files_go_levelup() {
@@ -733,22 +607,8 @@ function files_build_display_filelist(displaylist) {
     } else displayNone('files_space_sd_status');
 }
 
-function files_progress() {
-    var command = "progress";
-    if (target_firmware != "smoothieware") command = "M27";
-    SendPrinterCommand(command);
-}
-
 function files_abort() {
-    var command = "abort";
-    if (target_firmware != "smoothieware") {
-        if ((target_firmware == "marlin") || (target_firmware == "marlinkimbra")) {
-            command = "M108\nM108\nM108\nM524\nM27";
-        } if (target_firmware == "marlin-embedded") {
-            command = "M108\nM108\nM108\nM524\nM27";
-        } else command = "M112";
-    }
-    SendPrinterCommand(command);
+    SendPrinterCommand("abort");
 }
 
 function files_select_upload() {
@@ -758,40 +618,18 @@ function files_select_upload() {
 function files_check_if_upload() {
     var canupload = true;
     var files = id("files_input_file").files;
-    if (target_firmware == "marlin" && !direct_sd) {
-        for (var i = 0; i < files.length; i++) {
-            var filename = files[i].name;
-            //check base name can only by 8
-            var sizename = filename.indexOf(".");
-            if (sizename == -1) sizename = filename.length;
-            if (sizename > 8) canupload = false;
-            //check extension cano be more than 4 ".xxx"
-            if ((filename.length - sizename) > 4) canupload = false;
-            //check only one dot
-            if (filename.indexOf(".") != filename.lastIndexOf(".")) canupload = false;
-        }
-        if (canupload == false) {
-            alertdlg(translate_text_item("Error"), translate_text_item("Please use 8.3 filename only."));
-            return;
-        }
-    }
-    if (direct_sd && !(target_firmware == "smoothieware" && files_currentPath.startsWith(secondary_sd))) {
+    if (direct_sd) {
         SendPrinterCommand("[ESP200]", false, process_check_sd_presence);
     } else {
-        //try ls
-        if (target_firmware == "smoothieware") {
-            var cmd = "ls " + cleanpath(files_currentPath);
-            SendPrinterCommand(cmd, false, process_check_sd_presence);
-        } else { //no reliable way to know SD is present or not so let's upload
-            files_start_upload();
-        }
+        //no reliable way to know SD is present or not so let's upload
+        files_start_upload();
     }
 }
 
 function process_check_sd_presence(answer) {
     //console.log(answer);
     //for direct SD there is a SD check
-    if (direct_sd && !(target_firmware == "smoothieware" && files_currentPath.startsWith(secondary_sd))) {
+    if (direct_sd) {
         if (answer.indexOf("o SD card") > -1) {
             alertdlg(translate_text_item("Upload failed"), translate_text_item("No SD card detected"));
             files_error_status = "No SD card"
@@ -800,17 +638,8 @@ function process_check_sd_presence(answer) {
             displayTable('files_status_sd_status');
         } else files_start_upload();
     } else { //for smoothiware ls say no directory
-        if (target_firmware == "smoothieware") {
-            if (answer.indexOf("ould not open directory") > -1) {
-                alertdlg(translate_text_item("Upload failed"), translate_text_item("No SD card detected"));
-                files_error_status = "No SD card"
-                files_build_display_filelist(false);
-                id('files_sd_status_msg').innerHTML = translate_text_item(files_error_status, true);
-                displayTable('files_status_sd_status');
-            } else files_start_upload();
-        } else files_start_upload();
+        files_start_upload();
     }
-    //no check for marlin / repetier as no reliable test IFAIK
 }
 
 function files_start_upload() {
@@ -821,15 +650,10 @@ function files_start_upload() {
     }
     var url = "/upload";
     var path = files_currentPath;
-    if (direct_sd && (target_firmware == "smoothieware") && (files_currentPath.startsWith(primary_sd))) {
+    if (direct_sd) {
         path = files_currentPath.substring(primary_sd.length);
-    }
-    if (!direct_sd || (target_firmware == "smoothieware" && files_currentPath.startsWith(secondary_sd))) {
+    } else {
         url = "/upload_serial";
-        if (target_firmware == "smoothieware") {
-            if (files_currentPath.startsWith(secondary_sd)) path = files_currentPath.substring(secondary_sd.length);
-            else path = files_currentPath.substring(primary_sd.length);
-        }
     }
     //console.log("upload from " + path );
     var files = id("files_input_file").files;
@@ -853,11 +677,9 @@ function files_start_upload() {
     id('files_currentUpload_msg').innerHTML = file.name;
     displayBlock('files_uploading_msg');
     displayNone('files_navigation_buttons');
-    if (direct_sd && !(target_firmware == "smoothieware" && files_currentPath.startsWith(secondary_sd))) {
+    if (direct_sd) {
         SendFileHttp(url, formData, FilesUploadProgressDisplay, files_directSD_list_success, files_directSD_list_failed);
         //console.log("send file");
-    } else {
-        SendFileHttp(url, formData, FilesUploadProgressDisplay, files_proccess_and_update, files_serial_M20_list_failed);
     }
     id("files_input_file").value = "";
 }

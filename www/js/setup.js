@@ -60,13 +60,8 @@ function setupdlg() {
     disableStep("wizard_line2", "step2link");
     disableStep("wizard_line3", "step3link");
 
-    if (!direct_sd || (target_firmware == "grbl-embedded") || (target_firmware == "marlin-embedded")) {
-        displayNone("step3link");
-        displayNone("wizard_line4")
-    } else {
-        displayBlock("step3link");
-        displayBlock("wizard_line4")
-    }
+    displayNone("step3link");
+    displayNone("wizard_line4")
     disableStep("wizard_line4", "endsteplink");
 
     var content = table( td(get_icon_svg("flag") + "&nbsp;") + td(build_language_list("language_selection")));
@@ -101,11 +96,9 @@ function continue_setup_wizard() {
             enablestep2();
             break;
         case 3:
-            if (!direct_sd || (target_firmware == "grbl-embedded") || (target_firmware == "marlin-embedded")) {
-                active_wizard_page++;
-                id("wizard_line3").style.background = "#337AB7";
-                enablestep4();
-            } else enablestep3();
+            active_wizard_page++;
+            id("wizard_line3").style.background = "#337AB7";
+            enablestep4();
             break;
         case 4:
             enablestep4();
@@ -124,18 +117,6 @@ function enablestep1() {
     id("wizard_button").innerHTML = translate_text_item("Continue");
     openStep("wizard_line1", "step1link");
     content += heading("FluidNC Settings");
-    if (!((target_firmware == "grbl-embedded") || (target_firmware == "marlin-embedded"))) {
-
-        content += translate_text_item("Save your printer's firmware base:");
-        content += build_control_from_pos(EP_TARGET_FW);
-        content += translate_text_item("This is mandatory to get ESP working properly.");
-        content += spacer();
-
-        content += translate_text_item("Save your printer's board current baud rate:");
-        content += build_control_from_pos(EP_BAUD_RATE);
-        content += translate_text_item("Printer and ESP board must use same baud rate to communicate properly.") + "<br>";
-        content += spacer();
-    }
     content += item("Define ESP name:", EP_HOSTNAME);
 
     id("step1").innerHTML = content
@@ -167,10 +148,6 @@ function enablestep2() {
     content += spacer();
 
     content += item("Password for access point:", EP_AP_PASSWORD);
-    if (!((target_firmware == "grbl-embedded") || (target_firmware == "marlin-embedded"))) {
-        content += spacer();
-        content += item("Define security:", EP_AUTH_TYPE);
-    }
 
     content += endDiv();
 
@@ -182,8 +159,7 @@ function enablestep2() {
 function define_sd_role(index) {
     if (setting_configList[index].defaultvalue == 1) {
         displayBlock("setup_SD");
-        if (target_firmware == "smoothieware") displayBlock("setup_primary_SD");
-        else displayNone("setup_primary_SD");;
+        displayNone("setup_primary_SD");;
     } else {
         displayNone("setup_SD");
         displayNone("setup_primary_SD");

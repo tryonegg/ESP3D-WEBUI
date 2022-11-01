@@ -1,7 +1,7 @@
             <div id="filePanel" class="col-lg-3 col-md-6">
                     <div class="panel panel-default" data-ng-controller="FileCtrl as fileVM">
                         <div class="panel-heading">
-                            <span translate>Files</span><span>:&nbsp;</span><span data-ng-bind="fileVM.currentRoot" data-ng-show="fileVM.visible_for('Smoothieware')"></span>
+                            <span translate>Files</span><span>:&nbsp;</span>
                             <div class="pull-right" ng-if="fileVM.uploading">
                                 <table><tr>
                                 <td><span>Uploading </span></td><td>&nbsp;</td>
@@ -15,9 +15,6 @@
                             </div>
                             <div class="pull-right" ng-if="!fileVM.uploading">
                                 <button class="btn btn-xs btn-primary glyphicon" data-ng-hide="fileVM.showfilter()" ng-class="{false : 'glyphicon-filter' , true : 'glyphicon-list-alt'}[fileVM.filterfiles]" data-ng-click="fileVM.filterfiles=!fileVM.filterfiles;fileVM.refreshFileslist();"></button>
-                                <button class="btn btn-xs btn-primary" data-ng-show="!fileVM.visible_for('Smoothieware')"  data-ng-click="fileVM.refreshFiles(fileVM.currentRoot)" translate>Refresh</button>
-                                <button class="btn btn-xs btn-primary" data-ng-show="fileVM.visible_for('Smoothieware')" data-ng-click="fileVM.refreshFiles('/sd/')" translate>/sd</button>
-                                <button class="btn btn-xs btn-primary" data-ng-show="fileVM.visible_for('Smoothieware')" data-ng-click="fileVM.refreshFiles('/ext/')" translate>/ext</button>
                                 <button class="btn btn-xs btn-primary" data-ng-click="fileVM.progress()" translate>Progress</button>
                                 <button class="btn btn-xs btn-primary" data-ng-click="fileVM.abort()" translate>Abort</button>
                                 <button class="btn btn-xs btn-primary" data-ng-click="fileVM.setsd()"  ngf-validate-async-fn="fileVM.validate($file)" data-ngf-select="fileVM.uploadFile($file)" data-ngf-accept="'.g,.gco,.gcode'" translate>Upload</button>
