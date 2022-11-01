@@ -86,11 +86,29 @@ function control_changeaxis(){
     }
 }
 
+var usingAutoReport = false;
+function tryAutoReport() {
+    SendPrinterCommand("$Report/Interval=100", true,
+                       function() {
+                           console.log("RI got ok");
+                           usingAutoReport = true;
+                           displayNone("autocheck");
+                           id("autoreport").hidden = false;
+                           if (interval_status != -1) {
+                               clearInterval(interval_status);
+                           }
+                       },
+                       function() {
+                           console.log("RI got error");
+                           usingAutoReport = false;
+                       },
+                       99.1, 1);
+}
+
 function init_grbl_panel() {
     grbl_set_probe_detected(false);
-    if (target_firmware == "grbl-embedded") {
-        on_autocheck_status(true);
-    }
+    tryAutoReport();
+    setTimeout(function() { on_autocheck_status(true); }, 1000);
 }
 
 function grbl_clear_status() {
@@ -134,6 +152,10 @@ function onprobetouchplatethicknessChange() {
 }
 
 function on_autocheck_status(use_value) {
+    if (usingAutoReport) {
+        setAutocheck(false);
+        return;
+    }
     if (probe_progress_status != 0) {
         setAutocheck(true);
         return;
@@ -549,6 +571,11 @@ function grblHandleMessage(msg) {
             // Finish collecting settings
             getESPconfigSuccess(collectedSettings);
             collectedSettings = null;
+            if (grbl_errorfn) {
+                grbl_errorfn();
+                grbl_errorfn = null;
+                grbl_processfn = null;
+            }
         } else {
             // Continue collecting settings
             collectedSettings += msg;
@@ -564,6 +591,12 @@ function grblHandleMessage(msg) {
     // Handlers for standard Grbl protocol messages
 
     if (msg.startsWith('ok')) {
+        console.log("ok " + grbl_processfn);
+        if (grbl_processfn) {
+            grbl_processfn();
+            grbl_processfn = null;
+            grbl_errorfn = null;
+        }
         return;
     }
     if (msg.startsWith('[PRB:')) {
@@ -572,6 +605,13 @@ function grblHandleMessage(msg) {
     }
     if (msg.startsWith('[MSG:')) {
         return;
+    }
+    if (msg.startsWith('error:')) {
+        if (grbl_errorfn) {
+            grbl_errorfn();
+            grbl_errorfn = null;
+            grbl_processfn = null;
+        }
     }
     if (msg.startsWith('error:') || msg.startsWith('ALARM:') || msg.startsWith('Hold:') || msg.startsWith('Door:')) {
         if (grbl_error_msg.length == 0) {

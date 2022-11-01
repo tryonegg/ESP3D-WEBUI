@@ -5,28 +5,29 @@
                 <div class="pull-left">
                     <b><span translate>GRBL</span></b>
                 </div>
-                <div class="pull-right">
-                    <div class="panel-flex-row">
-                        <table class="checkbox">
-                            <tr>
-                                <td>&nbsp;&nbsp;</td>
-                                <td>
-                                    <label>
-                                        <input type="checkbox" id="autocheck_status" onclick="on_autocheck_status()" />
-                                        <span translate>auto-check every:</span>
-                                    </label>
-                                </td>
-                            </tr>
-                        </table>
-                        <table class="input-group">
-                            <tr>
-                                <td>
-                                    <input class="form-control w4" type="number" min="0.1" max="99" id="statusInterval_check" value=3 onchange="onstatusIntervalChange()" />
-                                    <span class="input-group-addon form_control" translate>sec</span>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
+                <div class="pull-right"  id="autoreport" hidden>
+                  <span >Autoreport interval: 100 ms</span>
+                </div>
+                <div class="pull-right panel-flex-row"  id="autocheck">
+                  <table class="checkbox">
+                    <tr>
+                      <td>&nbsp;&nbsp;</td>
+                      <td>
+                        <label>
+                          <input type="checkbox" id="autocheck_status" onclick="on_autocheck_status()" />
+                          <span translate>auto-check every:</span>
+                        </label>
+                      </td>
+                    </tr>
+                  </table>
+                  <table class="input-group">
+                    <tr>
+                      <td>
+                        <input class="form-control w4" type="number" min="0.1" max="99" id="statusInterval_check" value=3 onchange="onstatusIntervalChange()" />
+                        <span class="input-group-addon form_control" translate>sec</span>
+                      </td>
+                    </tr>
+                  </table>
                 </div>
             </div>
         </div>

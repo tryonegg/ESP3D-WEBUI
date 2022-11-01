@@ -1,3 +1,7 @@
+var grbl_processfn = null;
+var grbl_errorfn = null;
+
+function noop() {}
 function SendPrinterCommand(cmd, echo_on, processfn, errorfn, id, max_id) {
     var url = "/command?commandText=";
     var push_cmd = true;
@@ -16,6 +20,12 @@ function SendPrinterCommand(cmd, echo_on, processfn, errorfn, id, max_id) {
     if (typeof errorfn === 'undefined' || errorfn == null) errorfn = SendPrinterCommandFailed;
     cmd = encodeURI(cmd);
     cmd = cmd.replace("#", "%23");
+    if (!cmd.startsWith("[ESP")) {
+        grbl_processfn = processfn;
+        grbl_errorfn = errorfn;
+        processfn = noop;
+        errorfn = noop;
+    }
     SendGetHttp(url + cmd, processfn, errorfn, id, max_id);
     //console.log(cmd);
 }
