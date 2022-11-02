@@ -90,7 +90,6 @@ var usingAutoReport = false;
 function tryAutoReport() {
     SendPrinterCommand("$Report/Interval=100", true,
                        function() {
-                           console.log("RI got ok");
                            usingAutoReport = true;
                            displayNone("autocheck");
                            id("autoreport").hidden = false;
@@ -99,7 +98,6 @@ function tryAutoReport() {
                            }
                        },
                        function() {
-                           console.log("RI got error");
                            usingAutoReport = false;
                        },
                        99.1, 1);
@@ -440,7 +438,6 @@ function grbl_reset() {
 }
 
 function grblGetProbeResult(response) {
-    console.log("yes");
     var tab1 = response.split(":");
     if (tab1.length > 2) {
         var status = tab1[2].replace("]", "");
@@ -450,7 +447,6 @@ function grblGetProbeResult(response) {
                 var tab2 = tab1[1].split(",");
                 var v = 0.0;
                 v = parseFloat(tab2[2]);
-                console.log("z:" + v.toString());
                 cmd += v;
                 SendPrinterCommand(cmd, true, null, null, 53, 1);
                 cmd = 'G10 L20 P0 Z' + getValue('probetouchplatethickness');
@@ -512,6 +508,7 @@ function grblGetModal(msg) {
             }
         }
     });
+    tabletUpdateModal();
 }
 
 // Whenever [MSG: BeginData] is seen, subsequent lines are collected
@@ -591,7 +588,6 @@ function grblHandleMessage(msg) {
     // Handlers for standard Grbl protocol messages
 
     if (msg.startsWith('ok')) {
-        console.log("ok " + grbl_processfn);
         if (grbl_processfn) {
             grbl_processfn();
             grbl_processfn = null;
