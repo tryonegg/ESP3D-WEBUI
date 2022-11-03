@@ -18,14 +18,14 @@ function SendPrinterCommand(cmd, echo_on, processfn, errorfn, id, max_id) {
     //endRemoveIf(production)
     if (typeof processfn === 'undefined' || processfn == null) processfn = SendPrinterCommandSuccess;
     if (typeof errorfn === 'undefined' || errorfn == null) errorfn = SendPrinterCommandFailed;
-    cmd = encodeURI(cmd);
-    cmd = cmd.replace("#", "%23");
     if (!cmd.startsWith("[ESP")) {
         grbl_processfn = processfn;
         grbl_errorfn = errorfn;
         processfn = noop;
         errorfn = noop;
     }
+    cmd = encodeURI(cmd);
+    cmd = cmd.replace("#", "%23");
     SendGetHttp(url + cmd, processfn, errorfn, id, max_id);
     //console.log(cmd);
 }
