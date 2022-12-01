@@ -531,6 +531,17 @@ function files_directSD_list_failed(error_code, response) {
     files_serial_M20_list_failed(error_code, response);
 }
 
+function files_directSD_upload_failed(error_code, response) {
+    if (esp_error_code !=0){
+         alertdlg (translate_text_item("Error") + " (" + esp_error_code + ")", esp_error_message);
+         esp_error_code = 0;
+    } else {
+        alertdlg (translate_text_item("Error"), translate_text_item("Upload failed"));
+    }
+    displayNone('files_uploading_msg');
+    displayBlock('files_navigation_buttons');
+}
+
 function need_up_level() {
     return files_currentPath != "/";
 }
@@ -678,7 +689,7 @@ function files_start_upload() {
     displayBlock('files_uploading_msg');
     displayNone('files_navigation_buttons');
     if (direct_sd) {
-        SendFileHttp(url, formData, FilesUploadProgressDisplay, files_directSD_list_success, files_directSD_list_failed);
+        SendFileHttp(url, formData, FilesUploadProgressDisplay, files_directSD_list_success, files_directSD_upload_failed);
         //console.log("send file");
     }
     id("files_input_file").value = "";
