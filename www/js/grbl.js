@@ -86,22 +86,6 @@ function control_changeaxis(){
     }
 }
 
-var usingAutoReport = false;
-function tryAutoReport() {
-    SendPrinterCommand("$Report/Interval=100", true,
-                       function() {
-                           usingAutoReport = true;
-                           displayNone("autocheck");
-                           id("autoreport").hidden = false;
-                           if (interval_status != -1) {
-                               clearInterval(interval_status);
-                           }
-                       },
-                       function() {
-                           usingAutoReport = false;
-                       },
-                       99.1, 1);
-}
 
 function init_grbl_panel() {
     grbl_set_probe_detected(false);
@@ -147,6 +131,42 @@ function onprobetouchplatethicknessChange() {
         return false;
     }
     return true;
+}
+
+var usingAutoReport = false;
+function tryAutoReport() {
+    SendPrinterCommand("$Report/Interval=100", true,
+                       function() {
+                           usingAutoReport = true;
+                           setChecked('autoreport_status', true);
+                           // displayNone("autocheck");
+                           // id("autoreport").hidden = false;
+                           on_autocheck_status(false);
+                           if (interval_status != -1) {
+                               clearInterval(interval_status);
+                           }
+                       },
+                       function() {
+                           usingAutoReport = false;
+                           setAutocheck(false);
+                           setChecked('autoreport_status', false);
+                       },
+                       99.1, 1);
+}
+
+function on_autoreport_status() {
+    if (id('autoreport_status').checked) {
+        if (!usingAutoReport) {
+            tryAutoReport();
+        }
+    } else {
+        if (usingAutoReport) {
+            SendPrinterCommand("$Report/Interval=0", true, null, null, 99.0, 1);
+            usingAutoReport = false;
+            setChecked('autoreport_status', false);
+            setAutocheck(true);
+        }
+    }
 }
 
 function on_autocheck_status(use_value) {
