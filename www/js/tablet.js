@@ -931,32 +931,10 @@ function fullscreenIfMobile() {
         toggleFullscreen();
     }
 }
-var oldStatusInterval = 3;
-var oldAutocheck = true;
-
-function slowStatus() {
-    statusIntervalElement = id('statusInterval_check');
-    if (statusIntervalElement) {
-        statusIntervalElement.value = oldStatusInterval;
-        on_autocheck_status(oldAutocheck);
-    }
-}
-
-function fastStatus() {
-    statusIntervalElement = id('statusInterval_check');
-    if (statusIntervalElement) {
-        oldAutocheck = getAutocheck();
-        oldStatusInterval = id('statusInterval_check').value;
-        id('statusInterval_check').value = 0.3;
-        on_autocheck_status(true);
-    }
-}
 
 id('tablettablink').addEventListener('DOMActivate', fullscreenIfMobile, false);
 
-id('tablettab').addEventListener('activate', fastStatus, false);
 id('tablettab').addEventListener('activate', askMachineBbox, false);
-id('tablettab').addEventListener('deactivate', slowStatus, false);
 
 id("control-pad").classList.add("open");
 

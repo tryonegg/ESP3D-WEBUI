@@ -3,6 +3,16 @@ body {
     font-size: 14px;
 }
 
+label {
+    display: inline-flex;
+    flex-wrap: nowrap;
+    align-content: end;
+    margin-right: 0.5rem;
+    margin-left: 0.2rem;
+}
+.report input[type="radio"] {
+  margin-left: 1rem;
+}
 .form_control {
     height: 34px !important;
 }

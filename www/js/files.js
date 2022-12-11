@@ -138,7 +138,9 @@ function files_print(index) {
 function files_print_filename(filename) {
     var cmd = "";
     get_status();
-    on_autocheck_status(true);
+    if (reportType == 'none') {
+        tryAutoReport(); // will fall back to polled if autoreport fails
+    }
     cmd = "$SD/Run=" + filename;
     SendPrinterCommand(cmd);
 }

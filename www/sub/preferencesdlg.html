@@ -77,6 +77,7 @@
                     </div>
                 </div>
                 <div id="control_preferences" class="panel-body">
+
                     <div id="preferences_pos_Interval_check_group">
                         <table>
                             <tr>
@@ -220,6 +221,28 @@
                     </div>
                 </div>
                 <div id="grbl_preferences" class="panel-body">
+                    <div id="preferences_autoReport_Interval_group">
+                        <table>
+                            <tr>
+                                <td>
+                                    <span><span translate>AutoReport Interval</span>:&nbsp;</span>
+                                </td>
+                                <td>
+                                    <div class="input-group has-control">
+                                        <input class="form-control w4" type="number" min="50" max="30000" id="preferences_autoReport_Interval" onchange="Checkvalues('preferences_autoReport_Interval')" />
+                                        <span id="preferences_autoReport_Interval_icon" class="form-control-feedback ico_feedback"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <input class="hide_it"></input>
+                                        <span class="input-group-addon form_control" translate>ms</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <br>
                     <div id="preferences_status_Interval_check_group">
                         <table>
                             <tr>

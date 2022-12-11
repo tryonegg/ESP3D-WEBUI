@@ -1,47 +1,30 @@
 <div id="grblPanel" class="panel panel-default panel-flex-col panel-min-width">
     <div class="panel-heading ">
-        <div class="row ">
+        <div class="panel-flex-row ">
             <div class="col-md-12">
-                <div class="pull-left">
+                <div>
                     <b><span translate>GRBL</span></b>
                 </div>
-<!--
-                <div class="pull-right"  id="autoreport" hidden>
-                  <span >Autoreport interval: 100 ms</span>
-                </div>
--->
-                <div class="pull-right panel-flex-row"  id="autocheck">
-<!--                  <table class="checkbox"> -->
-                    <tr>
-                      <td>&nbsp;&nbsp;</td>
-                      <td>
-                        <label>
-                          <input type="checkbox" id="autoreport_status" onclick="on_autoreport_status()" />
-                          <span translate>auto-report</span>
-                        </label>
-                      </td>
-                    </tr>
-<!--                  </table>
-                  <table class="checkbox">
--->
-                    <tr>
-                      <td>&nbsp;&nbsp;</td>
-                      <td>
-                        <label>
-                          <input type="checkbox" id="autocheck_status" onclick="on_autocheck_status()" />
-                          <span translate>auto-check every:</span>
-                        </label>
-                      </td>
-                    </tr>
-                  </table>
-                  <table class="input-group">
-                    <tr>
-                      <td>
-                        <input class="form-control w4" type="number" min="0.1" max="99" id="statusInterval_check" value=3 onchange="onstatusIntervalChange()" />
-                        <span class="input-group-addon form_control" translate>sec</span>
-                      </td>
-                    </tr>
-                  </table>
+                <div></div>
+                <div class="report"  id="autocheck">
+                    <label translate>Reports:</label>
+
+                    <span>
+                        <input type="radio" id="report_none" name="status_report" value="none" onchange="onReportType(this)" />
+                        <label for="report_none" translate>None</label>
+                    </span>
+                    <span>
+                        <input type="radio" id="report_auto" name="status_report" value="auto" onchange="onReportType(this)" />
+                        <label for="report_auto" translate>Auto</label>
+                        <input class="w4" type="number" min="50" max="30000" id="autoReportInterval" value=50 onchange="onAutoReportIntervalChange()" />
+                        <label for="autoReportInterval" translate>ms</label>
+                    </span>
+                    <span>
+                        <input type="radio" id="report_poll" name="status_report" value="poll" onchange="onReportType(this)" />
+                        <label for="report_poll" translate>Poll</label>
+                        <input class="w4" type="number" min="0.1" max="99" id="statusInterval_check" value=3 onchange="onstatusIntervalChange()" />
+                        <label for="statusInterval_check" translate>sec</label>
+                    </span>
                 </div>
             </div>
         </div>

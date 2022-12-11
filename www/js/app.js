@@ -302,7 +302,7 @@ function Disable_interface(lostconnection) {
     id('camera_frame').src = "";
     //No auto check
     on_autocheck_position(false);
-    on_autocheck_status(false);
+    reportNone();
     if (async_webcommunication) {
         event_source.removeEventListener('ActiveID', ActiveID_events, false);
         event_source.removeEventListener('InitID', Init_events, false);

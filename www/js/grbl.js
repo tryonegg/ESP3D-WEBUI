@@ -18,7 +18,7 @@ function setClickability(element, visible) {
     setDisplay(element, visible ? 'table-row' : 'none');
 }
 
-var autocheck = 'autocheck_status';
+var autocheck = 'report_auto';
 function getAutocheck() {
     return getChecked(autocheck);
 }
@@ -90,7 +90,6 @@ function control_changeaxis(){
 function init_grbl_panel() {
     grbl_set_probe_detected(false);
     tryAutoReport();
-    setTimeout(function() { on_autocheck_status(true); }, 1000);
 }
 
 function grbl_clear_status() {
@@ -133,85 +132,103 @@ function onprobetouchplatethicknessChange() {
     return true;
 }
 
-var usingAutoReport = false;
-function tryAutoReport() {
-    SendPrinterCommand("$Report/Interval=100", true,
-                       function() {
-                           usingAutoReport = true;
-                           setChecked('autoreport_status', true);
-                           // displayNone("autocheck");
-                           // id("autoreport").hidden = false;
-                           on_autocheck_status(false);
-                           if (interval_status != -1) {
-                               clearInterval(interval_status);
-                           }
-                       },
-                       function() {
-                           usingAutoReport = false;
-                           setAutocheck(false);
-                           setChecked('autoreport_status', false);
-                       },
-                       99.1, 1);
-}
+var reportType = 'none';
 
-function on_autoreport_status() {
-    if (id('autoreport_status').checked) {
-        if (!usingAutoReport) {
-            tryAutoReport();
-        }
-    } else {
-        if (usingAutoReport) {
-            SendPrinterCommand("$Report/Interval=0", true, null, null, 99.0, 1);
-            usingAutoReport = false;
-            setChecked('autoreport_status', false);
-            setAutocheck(true);
-        }
-    }
-}
-
-function on_autocheck_status(use_value) {
-    if (usingAutoReport) {
-        setAutocheck(false);
-        return;
-    }
-    if (probe_progress_status != 0) {
-        setAutocheck(true);
-        return;
-    }
-    if (typeof(use_value) !== 'undefined') setAutocheck(use_value);
-    if (getAutocheck()) {
-        var interval = parseFloat(getValue('statusInterval_check'));
-        if (!isNaN(interval) && interval > 0 && interval < 100) {
-            if (interval_status != -1) clearInterval(interval_status);
-            interval_status = setInterval(function() {
-                get_status()
-            }, interval * 1000);
-        } else {
-            setAutocheck(false);
-            setValue('statusInterval_check', 0);
-            if (interval_status != -1) clearInterval(interval_status);
-            interval_status = -1;
-        }
-    } else {
-        if (interval_status != -1) clearInterval(interval_status);
+function disablePolling() {
+    setAutocheck(false);
+    // setValue('statusInterval_check', 0);
+    if (interval_status != -1) {
+        clearInterval(interval_status);
         interval_status = -1;
     }
 
-    if (!getAutocheck()) {
-        grbl_clear_status();
+    grbl_clear_status();
+    reportType = 'none';
+}
+
+function enablePolling() {
+    var interval = parseFloat(getValue('statusInterval_check'));
+    if (!isNaN(interval) && interval > 0 && interval < 100) {
+        if (interval_status != -1) {
+            clearInterval(interval_status);
+        }
+        interval_status = setInterval(function() {
+            get_status()
+        }, interval * 1000);
+        reportType = 'polled';
+        setChecked('report_poll', true);
+    } else {
+        setValue("statusInterval_check", 0);
+        alertdlg(translate_text_item("Out of range"), translate_text_item("Value of auto-check must be between 0s and 99s !!"));
+        disablePolling();
     }
 }
 
-function onstatusIntervalChange() {
-    var interval = parseInt(getValue('statusInterval_check'));
-    if (!isNaN(interval) && interval > 0 && interval < 100) {
-        on_autocheck_status();
-    } else {
-        setAutocheck(true);
-        setValue("statusInterval_check", 0);
-        if (interval != 0) alertdlg(translate_text_item("Out of range"), translate_text_item("Value of auto-check must be between 0s and 99s !!"));
-        on_autocheck_status();
+function tryAutoReport() {
+    if (reportType == 'polled') {
+        disablePolling();
     }
+    reportType == 'auto';
+    interval = id('autoReportInterval').value;
+    setChecked('report_auto', true);
+    reportType = 'auto';
+    SendPrinterCommand("$Report/Interval="+interval, true,
+                       // Do nothing more on success
+                       function() {},
+
+                       // Fall back to polling if the firmware does not support auto-reports
+                       function() {    
+                           enablePolling();
+                       },
+
+                       99.1, 1);
+}
+function onAutoReportIntervalChange() {
+    tryAutoReport();
+}
+
+function disableAutoReport() {
+    SendPrinterCommand("$Report/Interval=0", true, null, null, 99.0, 1);
+    setChecked('report_auto', false);
+}
+
+function reportNone() {
+    switch (reportType) {
+        case 'polled':
+            disablePolling();
+            break;
+        case 'auto':
+            disableAutoReport();
+            break;
+    }
+    setChecked('report_none', true);
+    reportType = 'none';
+}
+
+function reportPolled() {
+    if (reportType == 'auto') {
+        disableAutoReport();
+    }
+    enablePolling();
+}
+
+function onReportType(e) {
+    switch (e.value) {
+        case 'none':
+            reportNone();
+            break;
+        case 'auto':
+            tryAutoReport()
+            break;
+        case 'poll':
+            reportPolled();
+            break;
+    }
+}
+
+
+function onstatusIntervalChange() {
+    enablePolling();
 }
 
 //TODO handle authentication issues
@@ -630,6 +647,9 @@ function grblHandleMessage(msg) {
         }
     }
     if (msg.startsWith('error:') || msg.startsWith('ALARM:') || msg.startsWith('Hold:') || msg.startsWith('Door:')) {
+        if (probe_progress_status != 0) {
+            probe_failed_notification();
+        }
         if (grbl_error_msg.length == 0) {
             grbl_error_msg = translate_text_item(msg.trim());
         }
@@ -651,10 +671,17 @@ function StartProbeProcess() {
     cmd += parseFloat(getValue('probemaxtravel')) + ' F' + parseInt(getValue('probefeedrate'));
     console.log(cmd);
     probe_progress_status = 1;
-    on_autocheck_status(true);
+    var restoreReport = false;
+    if (reportType == 'none') {
+        tryAutoReport(); // will fall back to polled if autoreport fails
+        restoreReport = true;
+    }
     SendPrinterCommand(cmd, true, null, null, 38.2, 1);
     setClickability('probingbtn', false);
     setClickability('probingtext', true);
     grbl_error_msg = '';
     setHTML('grbl_status_text', grbl_error_msg);
+    if (restoreReport) {
+        reportNone();
+    }
 }

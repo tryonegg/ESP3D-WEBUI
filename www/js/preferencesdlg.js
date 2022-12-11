@@ -14,6 +14,7 @@ var defaultpreferenceslist = "[{\
                                             \"enable_probe\":\"false\",\
                                             \"enable_control_panel\":\"true\",\
                                             \"enable_grbl_panel\":\"false\",\
+                                            \"autoreport_interval\":\"50\",\
                                             \"interval_positions\":\"3\",\
                                             \"interval_status\":\"3\",\
                                             \"xy_feedrate\":\"1000\",\
@@ -52,6 +53,7 @@ function initpreferences() {
                                             \"enable_probe\":\"false\",\
                                             \"enable_control_panel\":\"true\",\
                                             \"enable_grbl_panel\":\"true\",\
+                                            \"autoreport_interval\":\"50\",\
                                             \"interval_positions\":\"3\",\
                                             \"interval_status\":\"3\",\
                                             \"xy_feedrate\":\"1000\",\
@@ -212,7 +214,7 @@ function applypreferenceslist() {
     if (preferenceslist[0].enable_grbl_panel === 'true') displayFlex('grblPanel');
     else {
         displayNone('grblPanel');
-        on_autocheck_status(false);
+        reportNone(false);
     }
 
     if (preferenceslist[0].enable_control_panel === 'true') displayFlex('controlPanel');
@@ -258,6 +260,7 @@ function applypreferenceslist() {
         } else id('monitor_enable_autoscroll').checked = false;
     } else displayNone('commandsPanel');
 
+    id('autoReportInterval').value = parseInt(preferenceslist[0].autoreport_interval);
     id('posInterval_check').value = parseInt(preferenceslist[0].interval_positions);
     id('statusInterval_check').value = parseInt(preferenceslist[0].interval_status);
     id('control_xy_velocity').value = parseInt(preferenceslist[0].xy_feedrate);
@@ -361,6 +364,10 @@ function build_dlg_preferences_list() {
     if (typeof(preferenceslist[0].enable_commands_panel) !== 'undefined') {
         id('show_commands_panel').checked = (preferenceslist[0].enable_commands_panel === 'true');
     } else id('show_commands_panel').checked = false;
+    //autoreport interval
+    if (typeof(preferenceslist[0].autoreport_interval) !== 'undefined') {
+        id('preferences_autoReport_Interval').value = parseInt(preferenceslist[0].autoreport_interval);
+    } else id('preferences_autoReport_Interval').value = parseInt(default_preferenceslist[0].autoreport_interval);
     //interval positions
     if (typeof(preferenceslist[0].interval_positions) !== 'undefined') {
         id('preferences_pos_Interval_check').value = parseInt(preferenceslist[0].interval_positions);
@@ -463,6 +470,7 @@ function closePreferencesDialog() {
             (typeof(preferenceslist[0].enable_files_panel) === 'undefined') ||
             (typeof(preferenceslist[0].has_TFT_SD) === 'undefined') ||
             (typeof(preferenceslist[0].has_TFT_USB) === 'undefined') ||
+            (typeof(preferenceslist[0].autoreport_interval) === 'undefined') ||
             (typeof(preferenceslist[0].interval_positions) === 'undefined') ||
             (typeof(preferenceslist[0].interval_status) === 'undefined') ||
             (typeof(preferenceslist[0].enable_autoscroll) === 'undefined') ||
@@ -499,6 +507,7 @@ function closePreferencesDialog() {
             //commands
             if (id('show_commands_panel').checked != (preferenceslist[0].enable_commands_panel === 'true')) modified = true;
             //interval positions
+            if (id('preferences_autoReport_Interval').value != parseInt(preferenceslist[0].autoReport_interval)) modified = true;
             if (id('preferences_pos_Interval_check').value != parseInt(preferenceslist[0].interval_positions)) modified = true;
             //interval status
             if (id('preferences_status_Interval_check').value != parseInt(preferenceslist[0].interval_status)) modified = true;
@@ -561,7 +570,8 @@ function SavePreferences(current_preferences) {
     }
     console.log("save prefs");
     if (((typeof(current_preferences) != 'undefined') && !current_preferences) || (typeof(current_preferences) == 'undefined')) {
-        if (!Checkvalues("preferences_pos_Interval_check") ||
+        if (!Checkvalues("preferences_autoReport_Interval") ||
+            !Checkvalues("preferences_pos_Interval_check") ||
             !Checkvalues("preferences_status_Interval_check") ||
             !Checkvalues("preferences_control_xy_velocity") ||
             !Checkvalues("preferences_filters") ||
@@ -593,6 +603,7 @@ function SavePreferences(current_preferences) {
         saveprefs += "\",\"probemaxtravel\":\"" + id('preferences_probemaxtravel').value;
         saveprefs += "\",\"probefeedrate\":\"" + id('preferences_probefeedrate').value;
         saveprefs += "\",\"probetouchplatethickness\":\"" + id('preferences_probetouchplatethickness').value;
+        saveprefs += "\",\"autoreport_interval\":\"" + id('preferences_autoReport_Interval').value;
         saveprefs += "\",\"interval_positions\":\"" + id('preferences_pos_Interval_check').value;
         saveprefs += "\",\"interval_status\":\"" + id('preferences_status_Interval_check').value;
         saveprefs += "\",\"xy_feedrate\":\"" + id('preferences_control_xy_velocity').value;
@@ -658,6 +669,13 @@ function Checkvalues(id_2_check) {
     var status = true;
     var value = 0;
     switch (id_2_check) {
+        case "preferences_autoReport_Interval":
+            value = parseInt(id(id_2_check).value);
+            if (!(!isNaN(value) && value >= 50 && value <= 30000)) {
+                error_message = translate_text_item("Value of auto-report must be between 50ms and 30000ms !!");
+                status = false;
+            }
+            break;
         case "preferences_status_Interval_check":
         case "preferences_pos_Interval_check":
             value = parseInt(id(id_2_check).value);
@@ -725,9 +743,10 @@ function Checkvalues(id_2_check) {
         id(id_2_check + "_group").classList.remove("has-error");
         id(id_2_check + "_icon").innerHTML = "";
     } else {
-        id(id_2_check + "_group").classList.add("has-feedback");
+        // has-feedback hides the value so it is hard to fix it
+        // id(id_2_check + "_group").classList.add("has-feedback");
         id(id_2_check + "_group").classList.add("has-error");
-        id(id_2_check + "_icon").innerHTML = get_icon_svg("remove");
+        // id(id_2_check + "_icon").innerHTML = get_icon_svg("remove");
         alertdlg(translate_text_item("Out of range"), error_message);
     }
     return status;
