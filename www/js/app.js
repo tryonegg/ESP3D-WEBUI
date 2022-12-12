@@ -35,28 +35,6 @@ var enable_ping = true;
 var esp_error_message ="";
 var esp_error_code = 0;
 
-function beep(duration, frequency) {
-    var audioCtx;
-    if (typeof window.AudioContext !== 'undefined') {
-        audioCtx = new window.AudioContext();
-    } else if (typeof window.webkitAudioContext() !== 'undefined') {
-        audioCtx = new window.webkitAudioContext();
-    } else if (typeof window.audioContext !== 'undefined') {
-        audioCtx = new window.audioContext();
-    }
-    // = new (window.AudioContext() || window.webkitAudioContext() || window.audioContext());
-    var oscillator = audioCtx.createOscillator();
-    var gainNode = audioCtx.createGain();
-    oscillator.connect(gainNode);
-    gainNode.connect(audioCtx.destination);
-    gainNode.gain.value = 1;
-    oscillator.frequency.value = frequency;
-    oscillator.start();
-    setTimeout(function() {
-        oscillator.stop();
-    }, duration);
-}
-
 function Init_events(e) {
     page_id = e.data;
     console.log("connection id = " + page_id);
