@@ -2,7 +2,7 @@
   "name": "ESP3D-WebUI",
   "description": "Web UI for ESP3D",
   "devDependencies": {
-    "del": "latest",
+    "del": "6.0.0",
     "deprecated": "latest",
     "fs": "latest",
     "gulp": "^4.0.2",
