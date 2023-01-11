@@ -94,6 +94,17 @@ function concatApp() {
     )
 }
 
+var execSync = require('child_process').execSync;
+
+function replaceVersion() {
+    return gulp.src('dist/index.html')
+        .pipe(replace(/replaceVERSION/g, function (match, p1) {
+            var buildNumber = execSync('git rev-parse --short HEAD').toString().replace(/\r?\n|\r/g, "");
+            return 'github.com/MitchBradley/ESP3D-WEBUI@' + buildNumber;
+        }))
+        .pipe(gulp.dest('dist'))
+}
+
 function replaceSVG() {
     return gulp.src('dist/index.html')
         .pipe(replace(/<!-- replaceSVG -->(.*?)<!-- \/replaceSVG -->/g, function (match, p1) {
@@ -323,11 +334,11 @@ function compress() {
         .pipe(size());
 }
 
-
 gulp.task(clean);
 gulp.task(lint);
 gulp.task(Copy);
 gulp.task(Copytest);
+gulp.task(replaceVersion)
 gulp.task(replaceSVG);
 gulp.task(concatApp);
 gulp.task(concatApptest);
@@ -338,8 +349,8 @@ gulp.task(clearlang)
 
 var defaultSeries = gulp.series(clean,  lint, Copy, concatApp, minifyApp, includehtml, includehtml, smoosh);
 //var packageSeries = gulp.series(clean,  lint, Copy, concatApp, minifyApp, smoosh, compress);
-var packageSeries = gulp.series(clean,  lint, Copy, concatApp, includehtml, includehtml, replaceSVG, clearlang, minifyApp, smoosh, compress, clean2);
-var package2Series = gulp.series(clean,  lint, Copy, concatApp, includehtml, includehtml, replaceSVG, smoosh);
+var packageSeries = gulp.series(clean,  lint, Copy, concatApp, includehtml, includehtml, replaceVersion, replaceSVG, clearlang, minifyApp, smoosh, compress, clean2);
+var package2Series = gulp.series(clean,  lint, Copy, concatApp, includehtml, includehtml, replaceVersion, replaceSVG, smoosh);
 var package2testSeries = gulp.series(clean,  lint, Copytest, concatApptest, includehtml, includehtml, replaceSVG, smoosh);
 
 gulp.task('default', defaultSeries);
