@@ -8,7 +8,7 @@ function SendPrinterCommand(cmd, echo_on, processfn, errorfn, id, max_id, extra_
     if (typeof echo_on !== 'undefined') {
         push_cmd = echo_on;
     }
-    if (cmd.trim().length == 0) return;
+    if (cmd.length == 0) return;
     if (push_cmd) Monitor_output_Update("[#]" + cmd + "\n");
     //removeIf(production)
     console.log(cmd);
@@ -35,7 +35,7 @@ function SendPrinterCommand(cmd, echo_on, processfn, errorfn, id, max_id, extra_
 
 function SendPrinterSilentCommand(cmd, processfn, errorfn, id, max_id) {
     var url = "/command_silent?commandText=";
-    if (cmd.trim().length == 0) return;
+    if (cmd.length == 0) return;
     //removeIf(production)
     console.log(cmd);
     if (typeof processfn !== 'undefined') processfn("Test response");
