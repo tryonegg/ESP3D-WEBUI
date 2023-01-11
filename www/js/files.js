@@ -663,11 +663,6 @@ function files_start_upload() {
     }
     var url = "/upload";
     var path = files_currentPath;
-    if (direct_sd) {
-        path = files_currentPath.substring(primary_sd.length);
-    } else {
-        url = "/upload_serial";
-    }
     //console.log("upload from " + path );
     var files = id("files_input_file").files;
 

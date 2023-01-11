@@ -649,7 +649,7 @@ function populateTabletFileSelector(obj) {
 }
 
 function tabletGetFileList(path) {
-    SendGetHttp('/upload?path=' + encodeURI(path), files_directSD_list_success, null);
+    SendGetHttp('/upload?path=' + encodeURI(path), files_directSD_list_success);
 }
 
 function tabletInit() {
