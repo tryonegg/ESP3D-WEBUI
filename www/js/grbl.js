@@ -685,3 +685,14 @@ function StartProbeProcess() {
         reportNone();
     }
 }
+
+var spindleSpeedSetTimeout;
+var spindleTabSpindleSpeed = 1;
+
+function setSpindleSpeed(speed){
+    if(spindleSpeedSetTimeout) clearTimeout(spindleSpeedSetTimeout)
+    if(speed >= 1) {
+        spindleTabSpindleSpeed = speed
+        spindleSpeedSetTimeout = setTimeout(() => SendPrinterCommand('S' + spindleTabSpindleSpeed, false, null, null, 1, 1), 500)
+    }
+}

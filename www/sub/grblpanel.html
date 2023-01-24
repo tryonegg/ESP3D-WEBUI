@@ -113,6 +113,9 @@
                 <button class="tablinks" onclick="opentab(event, 'grblcontroltab', 'grbluitabscontent', 'grbluitablinks')" id="grblcontroltablink">
                     <span translate>Override</span>
                 </button>
+                <button class="tablinks" onclick="opentab(event, 'grblspindletab', 'grbluitabscontent', 'grbluitablinks')" id="grblspindletablink">
+                    <span translate>Spindle</span>
+                </button>
                 <button class="tablinks hide_it" onclick="opentab(event, 'grblprobetab', 'grbluitabscontent', 'grbluitablinks')" id="grblprobetablink">
                     <span translate>Probe</span>
                 </button>
@@ -357,6 +360,68 @@
                                             </table>
                                         </button>
                                     </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div id="grblspindletab" class="tabcontent">
+                            <table width="100%">
+                                <tr>
+                                    <td style="height:10px;"></td>
+                                </tr>
+                                <tr>
+                                    <td class="td_center">
+                                        <button class="btn btn-default" onclick="SendPrinterCommand('M3 S' + spindleTabSpindleSpeed, false, null, null, 1, 1);" style="margin: 0 5px">
+                                            On Fwd
+                                            <svg width="1.3em" height="1.2em" viewBox="0 0 1300 1200">
+                                                <g transform="translate(30,1200) scale(1, -1)">
+                                                    <path fill="currentColor" d="M865 565l-494 -494q-23 -23 -41 -23q-14 0 -22 13.5t-8 38.5v1000q0 25 8 38.5t22 13.5q18 0 41 -23l494 -494q14 -14 14 -35t-14 -35z"></path>
+                                                </g>
+                                            </svg>
+                                        </button>
+
+                                        <button class="btn btn-default" onclick="SendPrinterCommand('M4 S' + spindleTabSpindleSpeed, false, null, null, 1, 1);" style="margin: 0 5px">
+                                            On Rew
+                                            <svg width="1.3em" height="1.2em" viewBox="0 0 1300 1200">
+                                                <g transform="translate(30,1200) scale(1, -1)">
+                                                    <path fill="currentColor" d="M335 635l494 494q29 29 50 20.5t21 -49.5v-1000q0 -41 -21 -49.5t-50 20.5l-494 494q-14 14 -14 35t14 35z"></path>
+                                                </g>
+                                            </svg>
+                                        </button>
+
+                                        <button class="btn btn-default" onclick="SendPrinterCommand('M5 S0', false, null, null, 1, 1);" style="margin: 0 5px">
+                                           Off
+                                            <svg width="1.3em" height="1.2em" viewBox="0 0 1300 1200">
+                                                <g transform="translate(30,1200) scale(1, -1)">
+                                                    <path fill="currentColor" d="M1100 950v-800q0 -21 -14.5 -35.5t-35.5 -14.5h-800q-21 0 -35.5 14.5t-14.5 35.5v800q0 21 14.5 35.5t35.5 14.5h800q21 0 35.5 -14.5t14.5 -35.5z"></path>
+                                                </g>
+                                            </svg>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="height:15px;"></td>
+                                </tr>
+                                <tr>
+                                    <td class="td_center">
+                                        <table class="input-group" style="margin:auto">
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <span class="input-group-addon form_control">Speed:</span>
+                                                        <input class="hide_it">
+                                                    </td>
+                                                    <td>
+                                                        <span class="input-group-addon hide_it"></span>
+                                                        <input class="form-control w8" type="number" min="1" value="1" onchange="setSpindleSpeed(this.value)" onkeyup="setSpindleSpeed(this.value)">
+                                                        <span class="input-group-addon form_control">rpm</span>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="height:10px;"></td>
                                 </tr>
                             </table>
                         </div>
