@@ -53,7 +53,6 @@ function init_files_panel(dorefresh) {
     displayNone('files_refresh_primary_sd_btn');
     displayNone('files_refresh_secondary_sd_btn');
 
-    displayNone('files_createdir_btn');
     files_set_button_as_filter(files_filter_sd_list);
     var refreshlist = true;
     if (typeof dorefresh !== 'undefined') refreshlist = dorefresh;
