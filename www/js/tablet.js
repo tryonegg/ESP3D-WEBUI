@@ -1,4 +1,5 @@
 var gCodeLoaded = false;
+var gCodeDisplayable = false;
 
 var snd = null;
 var sndok = true;
@@ -388,7 +389,7 @@ var green = '#86f686';
 var red = '#f64646';
 var gray = '#f6f6f6';
 
-function setRunnable() {
+function setRunControls() {
     if (gCodeLoaded) {
         // A GCode file is ready to go
         setLeftButton(true, green, 'Start', runGCode);
@@ -449,10 +450,6 @@ function tabletGrblState(grbl, response) {
             break;
     }
 
-    // if (cnc.filename == '') {
-    //	canStart = false;
-    //}
-
     var cannotClick = stateName == 'Run' || stateName == 'Hold';
     // Recompute the layout only when the state changes
     if (oldCannotClick != cannotClick) {
@@ -478,7 +475,7 @@ function tabletGrblState(grbl, response) {
             setRightButton(false, gray, 'Pause', null);
             break;
         case 'Idle':
-            setRunnable();
+            setRunControls();
             break;
         case 'Hold':
             setLeftButton(true, green, 'Resume', resumeGCode);
@@ -561,9 +558,13 @@ function tabletGrblState(grbl, response) {
 
     if (grbl.lineNumber && (stateName == 'Run' || stateName == 'Hold' || stateName == 'Stop')) {
         setText('line', grbl.lineNumber);
-        scrollToLine(grbl.lineNumber);
+        if (gCodeDisplayable) {
+            scrollToLine(grbl.lineNumber);
+        }
     }
-    displayer.reDrawTool(modal, arrayToXYZ(WPOS));
+    if (gCodeDisplayable) {
+        displayer.reDrawTool(modal, arrayToXYZ(WPOS));
+    }
 
     var digits = modal.units == 'G20' ? 4 : 2;
 
@@ -578,25 +579,13 @@ function tabletGrblState(grbl, response) {
     });
 }
 
-function addOption(selector, name, isDisabled, isSelected) {
+function addOption(selector, name, value, isDisabled, isSelected) {
     var opt = document.createElement('option');
     opt.appendChild(document.createTextNode(name));
     opt.disabled = isDisabled;
     opt.selected = isSelected;
-    opt.value = name;
+    opt.value = value;
     selector.appendChild(opt);
-}
-var filename = 'TEST.NC';
-var watchPath = '';
-
-function gotFiles(response_text) {
-    try {
-        var obj = JSON.parse(response_text);
-        populateTabletFileSelector(obj);
-    } catch (e) {
-        console.error("Parsing error:", e);
-        error = true;
-    }
 }
 
 function toggleVisualizer() {
@@ -621,35 +610,54 @@ function expandVisualizer() {
     setBottomHeight();
 }
 
-function populateTabletFileSelector(obj) {
+var gCodeFilename = '';
+
+function populateTabletFileSelector(files, path) {
     var selector = id('filelist');
 
-    var selectedFile = filename.split('/').slice(-1)[0];
+    var selectedFile = gCodeFilename.split('/').slice(-1)[0];
 
     selector.length = 0;
+    selector.selectedIndex = 0;
 
-    if (obj.files) {
-        var inRoot = watchPath === '';
-        var legend = inRoot ? 'Load GCode File' : 'In ' + watchPath;
-        addOption(selector, legend, selectedFile == '');
-
-        if (!inRoot) {
-            addOption(selector, '..', false, false);
-        }
-        var files = obj.files.sort(function (a, b) {
-            return a.name.localeCompare(b.name);
-        })
-        files.forEach(function(file) {
-            // size -1 indicates a directory
-            addOption(selector, file.size == -1 ? file.name + "/" : file.name, false, file.name == selectedFile);
-        });
-    } else {
-        addOption(selector, "No files found", selectedFile == '');
+    if (!files.length) {
+        addOption(selector, "No files found", -3, true, selectedFile == '');
+        return;
     }
+    var inRoot = path === '/';
+    var legend = 'Load GCode File from /SD' + path;
+    addOption(selector, legend, -2, true, true);  // A different one might be selected later
+
+    if (!inRoot) {
+        addOption(selector, '..', -1, false, false);
+    }
+    var gCodeFileFound = false;
+    files.forEach(function(file, index) {
+        if (file.isprintable) {
+            var found = file.name == selectedFile;
+            if (found) {
+                gCodeFileFound = true;
+            }
+            addOption(selector, file.name, index, false, found);
+        }
+    });
+    if (!gCodeFileFound) {
+        gCodeFilename = '';
+        gCodeDisplayable = false;
+        setHTML('filename', '');
+        showGCode('');
+    }
+
+    files.forEach(function(file, index) {
+        if (file.isdir) {
+            addOption(selector, file.name + "/", index, false, false);
+        }
+    });
 }
 
 function tabletGetFileList(path) {
-    SendGetHttp('/upload?path=' + encodeURI(path), files_directSD_list_success);
+    gCodeFilename = '';
+    SendGetHttp('/upload?path=' + encodeURI(path), files_list_success);
 }
 
 function tabletInit() {
@@ -668,21 +676,23 @@ function arrayToXYZ(a) {
 function showGCode(gcode) {
     gCodeLoaded = gcode != '';
     if (!gCodeLoaded) {
-	gcode = "(No GCode loaded)";
-    }
-
-    id('gcode').value = gcode;
-    if (gCodeLoaded) {
+        id('gcode').value = "(No GCode loaded)";
+        displayer.clear();
+    } else {
+        id('gcode').value = gcode;
         var initialPosition = {
             x: WPOS[0],
             y: WPOS[1],
             z: WPOS[2]
         };
 
-        displayer.showToolpath(gcode, modal, arrayToXYZ(WPOS));
+        if (gCodeDisplayable) {
+            displayer.showToolpath(gcode, modal, arrayToXYZ(WPOS));
+        }
     }
+
     // XXX this needs to take into account error states
-    setRunnable();
+    setRunControls();
 }
 
 var machineBboxAsked = false;
@@ -700,8 +710,6 @@ function askMachineBbox() {
     SendPrinterCommand("$/axes/y/homing/mpos_mm");
     SendPrinterCommand("$/axes/y/homing/positive_direction");
 }
-
-var gCodeFilename = '';
 
 function nthLineEnd(str, n){
     if (n <= 0)
@@ -740,24 +748,53 @@ function runGCode() {
     expandVisualizer();
 }
 
-function loadGCode() {
-    tabletClick();
-    var filelist = id('filelist');
-    var filename =  filelist.options[filelist.selectedIndex].textContent;
-    if (filename === '..') {
-        watchPath = watchPath.slice(0, -1).replace(/[^/]*$/,'');
-        filename = '';
-        tabletGetFileList(watchPath);
-    } else if (filename.endsWith('/')) {
-        watchPath = watchPath + filename;
-        filename = '';
-        tabletGetFileList(watchPath);
+function tabletSelectGCodeFile(filename) {
+    var selector = id('filelist');
+    var options = Array.from(selector.options);
+    var option = options.find(item => item.text == filename);
+    option.selected = true;
+}
+function tabletLoadGCodeFile(path, size) {
+    gCodeFilename = path;
+    if ((isNaN(size) && (size.endsWith("MB") || size.endsWith("GB"))) || size > 1000000) {
+        setHTML('filename', gCodeFilename + " (too large to show)");
+        showGCode("GCode file too large to display (> 1MB)");
+        gCodeDisplayable = false;
+        displayer.clear();
     } else {
-        gCodeFilename = watchPath + filename;
+        gCodeDisplayable = true;
         setHTML('filename', gCodeFilename);
-        fetch(encodeURIComponent('SD/' + gCodeFilename))
+        fetch(encodeURIComponent('SD' + gCodeFilename))
             .then(response => response.text() )
             .then(gcode => showGCode(gcode) );
+    }
+}
+
+function selectFile() {
+    tabletClick();
+    var filelist = id('filelist');
+    var index = Number(filelist.options[filelist.selectedIndex].value);
+    if (index === -3) {
+        // No files
+        return;
+    }
+    if (index === -2) {
+        // Blank entry selected
+        return;
+    }
+    if (index === -1) {
+        // Go up
+        gCodeFilename = '';
+        files_go_levelup();
+        return;
+    }
+    var file = files_file_list[index];
+    var filename = file.name;
+    if (file.isdir) {
+        gCodeFilename = '';
+        files_enter_dir(filename);
+    } else {
+        tabletLoadGCodeFile(files_currentPath + filename, file.size);
     }
 }
 function toggleDropdown() {

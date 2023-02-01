@@ -3,7 +3,7 @@
 var root = window;
 
 var canvas = id("toolpath");
-var tp = canvas.getContext("2d");
+var tp = canvas.getContext("2d", { willReadFrequently: true });
 var tpRect;
 
 tp.lineWidth = 0.1;
@@ -40,8 +40,7 @@ var resetBbox = function() {
     tpBbox.min.y = Infinity;
     tpBbox.max.x = -Infinity;
     tpBbox.max.y = -Infinity;
-    tpBboxIsSet = false;
-
+    bboxIsSet = false;
 }
 
 // Project the 3D toolpath onto the 2D Canvas
@@ -156,6 +155,7 @@ var drawMachineBounds = function() {
     tpBbox.min.y = Math.min(tpBbox.min.y, p0.y);
     tpBbox.max.x = Math.max(tpBbox.max.x, p2.x);
     tpBbox.max.y = Math.max(tpBbox.max.y, p2.y);
+    bboxIsSet = true;
 
     tp.beginPath();
     tp.moveTo(p0.x, p0.y);
@@ -175,25 +175,31 @@ var scaler = 1;
 var xToPixel = function(x) { return scaler * x + xOffset; }
 var yToPixel = function(y) { return -scaler * y + yOffset; }
 
-var transformCanvas = function() {
-    toolSave = null;
-    if (tpRect == undefined) {
-        tpRect = canvas.parentNode.getBoundingClientRect();
-        canvas.width = tpRect.width;
-        canvas.height = tpRect.height;
-    }
-
+var clearCanvas = function() {
     // Reset the transform and clear the canvas
     tp.setTransform(1,0,0,1,0,0);
+
+//    if (tpRect == undefined) {
+        var tpRect = canvas.parentNode.getBoundingClientRect();
+        canvas.width = tpRect.width ? tpRect.width : 400;
+        canvas.height = tpRect.height ? tpRect.height : 400;
+//    }
+
     tp.fillStyle = "white";
     tp.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+var transformCanvas = function() {
+    toolSave = null;
+
+    clearCanvas();
 
     var imageWidth;
     var imageHeight;
     var inset;
     if (!bboxIsSet) {
-        imageWidth = canvas.width;
-        imageHeight = canvas.height;
+        // imageWidth = canvas.width;
+        // imageHeight = canvas.height;
         inset = 0;
         scaler = 1;
         xOffset = 0;
@@ -472,6 +478,10 @@ var ToolpathDisplayer = function() {
 };
 
 // var offset;
+
+ToolpathDisplayer.prototype.clear = function() {
+    clearCanvas();
+}
 
 ToolpathDisplayer.prototype.showToolpath = function(gcode, modal, initialPosition) {
     var drawBounds = false;

@@ -10,6 +10,10 @@ label {
     margin-right: 0.5rem;
     margin-left: 0.2rem;
 }
+.filesize {
+  text-align: right;
+}
+
 .report input[type="radio"] {
   margin-left: 1rem;
 }

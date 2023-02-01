@@ -1,7 +1,6 @@
 var files_currentPath = "/";
 var files_filter_sd_list = false;
 var files_file_list = [];
-var files_file_list_cache = [];
 var files_status_list = [];
 var files_current_file_index = -1;
 var files_error_status = "";
@@ -23,7 +22,7 @@ function update_files_list() {
     for (var i = 0; i < files_file_list.length; i++) {
         var isdirectory = files_file_list[i].isdir;
         var file_name = files_file_list[i].name;
-        files_file_list[i].isprintable = files_showprintbutton(file_name, isdirectory);
+        files_file_list[i].isprintable = files_isgcode(file_name, isdirectory);
     }
     files_build_display_filelist();
 }
@@ -73,6 +72,30 @@ function files_filter_button(item) {
     files_build_display_filelist();
 }
 
+function formatFileSize(size) {
+    nSize = Number(size);
+    if (isNaN(nSize)) {
+        return size;
+    }
+    if (nSize > 1000000000000) {
+        nFix = nSize/1000000000000;
+        return nFix.toFixed(2) + " TB";
+    }
+    if (nSize > 1000000000) {
+        nFix = nSize/1000000000;
+        return nFix.toFixed(2) + " GB";
+    }
+    if (nSize > 1000000) {
+        nFix = nSize/1000000;
+        return nFix.toFixed(2) + " MB";
+    }
+    if (nSize > 1000) {
+        nFix = nSize/1000;
+        return nFix.toFixed(2) + " KB";
+    }
+    return nSize + " B";
+}
+
 function files_build_file_line(index) {
     var content = "";
     var entry = files_file_list[index];
@@ -91,11 +114,11 @@ function files_build_file_line(index) {
         content += entry.name;
 
         content += "</td></tr></table></div>";
-        var sizecol = "col-md-2 col-sm-2";
+        var sizecol = "col-md-2 col-sm-2 filesize";
         var timecol = "col-md-3 col-sm-3";
         var iconcol = "col-md-2 col-sm-2";
         if (!entry.isdir && entry.datetime == "") {
-            sizecol = "col-md-4 col-sm-4";
+            sizecol = "col-md-4 col-sm-4 filesize";
             timecol = "hide_it";
             iconcol = "col-md-3 col-sm-3";
         }
@@ -103,7 +126,7 @@ function files_build_file_line(index) {
         if (is_clickable) {
             content += "style='cursor:pointer;' onclick='files_click_file(" + index + ")' ";
         }
-        var size= entry.size;
+        var size= formatFileSize(entry.size);
         if (entry.isdir)size="";
         content += ">" +  size + "</div>";
         content += "<div class='" + timecol + "'";
@@ -131,16 +154,20 @@ function files_build_file_line(index) {
 }
 
 function files_print(index) {
-    files_print_filename(files_currentPath + files_file_list[index].name);
+    var file = files_file_list[index];
+    var path = files_currentPath + file.name
+    tabletSelectGCodeFile(file.name);
+    tabletLoadGCodeFile(path, file.size);
+    files_print_filename(path);
 }
 
-function files_print_filename(filename) {
+function files_print_filename(path) {
     var cmd = "";
     get_status();
     if (reportType == 'none') {
         tryAutoReport(); // will fall back to polled if autoreport fails
     }
-    cmd = "$SD/Run=" + filename;
+    cmd = "$SD/Run=" + path;
     SendPrinterCommand(cmd);
 }
 
@@ -157,7 +184,7 @@ function files_create_dir(name) {
         var cmdpath = files_currentPath;
         var url = "/upload?path=" + encodeURIComponent(cmdpath) + "&action=createdir&filename=" + encodeURIComponent(name);
         displayBlock('files_nav_loader');
-        SendGetHttp(url, files_directSD_list_success, files_directSD_list_failed);
+        SendGetHttp(url, files_list_success, files_list_failed);
     }
 }
 
@@ -185,7 +212,7 @@ function files_delete_file(index) {
         }
         url += encodeURIComponent(files_file_list[index].sdname);
         displayBlock('files_nav_loader');
-        SendGetHttp(url, files_directSD_list_success, files_directSD_list_failed);
+        SendGetHttp(url, files_list_success, files_list_failed);
     }
 }
 
@@ -225,11 +252,13 @@ function files_is_clickable(index) {
     return direct_sd;
 }
 
+function files_enter_dir(name) {
+    files_refreshFiles(files_currentPath + name + "/", true);
+}
 function files_click_file(index) {
     var entry = files_file_list[index];
     if (entry.isdir) {
-        var path = files_currentPath + entry.name + "/";
-        files_refreshFiles(path, true);
+        files_enter_dir(entry.name);
         return;
     }
     if (direct_sd) {
@@ -240,7 +269,7 @@ function files_click_file(index) {
     }
 }
 
-function files_showprintbutton(filename, isdir) {
+function files_isgcode(filename, isdir) {
     if (isdir == true) return false;
     // This can happen if files_showprintbutton is called before the
     // files panel has been created
@@ -302,7 +331,7 @@ function files_refreshFiles(path, usecache) {
     //this is pure direct SD
     if (direct_sd) {
         var url = "/upload?path=" + encodeURI(cmdpath);
-        SendGetHttp(url, files_directSD_list_success, files_directSD_list_failed);
+        SendGetHttp(url, files_list_success, files_list_failed);
     }
 }
 
@@ -325,92 +354,6 @@ function files_format_size(size) {
     return tsize;
 }
 
-function files_serial_M20_list_display() {
-    var path = "";
-    if (files_currentPath.length > 1) path = files_currentPath.substring(1);
-    var folderlist = "";
-    for (var i = 0; i < files_file_list_cache.length; i++) {
-        //console.log("processing " + files_file_list_cache[i].name)
-        var file_name = files_file_list_cache[i].name;
-        if (file_name.startsWith(path) || (current_source == tft_usb)|| (current_source == tft_sd)) {
-            //console.log("need display " + file_name)
-            if (!((current_source == tft_usb)|| (current_source == tft_sd)))file_name = file_name.substring(path.length);
-            //console.log ("file name is :" + file_name)
-            if (file_name.length > 0) {
-                var endpos = file_name.indexOf("/");
-                if (endpos > -1) file_name = file_name.substring(0, endpos + 1);
-                var isdirectory = files_file_list_cache[i].isdir;
-                var isprint = files_file_list_cache[i].isprintable;
-                //to workaround the directory is not listed on its own like in marlin
-                if (file_name.endsWith("/")) {
-                    isdirectory = true;
-                    isprint = false;
-                    file_name = file_name.substring(0, file_name.length - 1);
-                }
-                var file_entry = {
-                    name: file_name,
-                    size: files_file_list_cache[i].size,
-                    isdir: isdirectory,
-                    datetime: files_file_list_cache[i].datetime,
-                    isprintable: isprint
-                };
-                var tag = "*" + file_name + "*";
-                if ((isdirectory && folderlist.indexOf(tag) == -1) || !isdirectory) {
-                    //console.log("add to list " + file_name)
-                    files_file_list.push(file_entry);
-                    if (isdirectory) {
-                        folderlist += tag;
-                    }
-                }
-            }
-        }
-    }
-    files_build_display_filelist();
-}
-
-function files_serial_M20_list_success(response_text) {
-    var path = "";
-    var tlist = response_text.split("\n");
-    if (files_currentPath.length > 1) path = files_currentPath.substring(1);
-    var folderlist = "";
-    files_file_list_cache = [];
-    for (var i = 0; i < tlist.length; i++) {
-        var line = tlist[i].trim();
-        var isdirectory = false;
-        var file_name = "";
-        var fsize = "";
-        var d = "";
-        line = line.replace("\r", "");
-        if (!((line.length == 0) || (line.indexOf("egin file list") > 0) || (line.indexOf("nd file list") > 0) || (line.startsWith("ok ") > 0)|| (line.indexOf(":") > 0) || (line == "ok")  || (line == "wait"))) {
-            //for marlin
-            if (line.startsWith("/")) {
-                line = line.substring(1);
-            }
-            //if directory it is ending with /
-            if (line.endsWith("/")) {
-                isdirectory = true;
-                file_name = line;
-                //console.log(file_name + " is a dir");
-            } else {
-                //console.log(line + " is a file");
-                file_name = line;
-            }
-            //console.log("pushing " + file_name );
-            var isprint = files_showprintbutton(file_name, isdirectory);
-            //var tag = "*" + file_name + "*";
-            var file_entry = {
-                name: file_name,
-                size: fsize,
-                isdir: isdirectory,
-                datetime: d,
-                isprintable: isprint
-            };
-            files_file_list_cache.push(file_entry);
-        }
-    }
-    files_serial_M20_list_display();
-}
-
 function files_is_filename(file_name) {
     var answer = true;
     var s_name = String(file_name);
@@ -424,43 +367,7 @@ function files_is_filename(file_name) {
     return answer;
 }
 
-function files_serial_ls_list_success(response_text) {
-    var tlist = response_text.split("\n");
-    for (var i = 0; i < tlist.length; i++) {
-        var line = tlist[i].trim();
-        var isdirectory = false;
-        var file_name = "";
-        var fsize = "";
-        var d = ""
-        var command = "ls -s " +  cleanpath(files_currentPath);
-        if (line == command) continue;
-        if (line.length != 0) {
-            if (line.endsWith("/")) {
-                isdirectory = true;
-                file_name = line.substring(0, line.length - 1);
-            } else {
-                var pos = line.lastIndexOf(" ");
-                file_name = line.substr(0, pos);
-                fsize = files_format_size(parseInt(line.substr(pos + 1)));
-            }
-            var isprint = files_showprintbutton(file_name, isdirectory);
-            if (files_is_filename(file_name)) {
-                var file_entry = {
-                    name: file_name,
-                    size: fsize,
-                    isdir: isdirectory,
-                    datetime: d,
-                    isprintable: isprint
-                };
-                files_file_list.push(file_entry);
-            }
-        }
-    }
-    files_build_display_filelist();
-}
-
-
-function files_directSD_list_success(response_text) {
+function files_list_success(response_text) {
     displayBlock('files_navigation_buttons');
     var error = false;
     var response;
@@ -471,24 +378,24 @@ function files_directSD_list_success(response_text) {
         error = true;
     }
     if (error || typeof response.status == 'undefined') {
-        files_directSD_list_failed(406, translate_text_item("Wrong data", true));
+        files_list_failed(406, translate_text_item("Wrong data", true));
         return;
     }
-    populateTabletFileSelector(response);
     files_file_list = [];
-    files_status_list = [];
     if (typeof response.files != 'undefined') {
         for (var i = 0; i < response.files.length; i++) {
             var file_name = "";
             var isdirectory = false;
             var fsize = "";
-            if (response.files[i].size == "-1") isdirectory = true;
-            else fsize = response.files[i].size;
+            if (response.files[i].size == "-1")
+                isdirectory = true;
+            else
+                fsize = response.files[i].size;
             file_name = response.files[i].name;
-            var isprint = files_showprintbutton(file_name, isdirectory);
+            var isprint = files_isgcode(file_name, isdirectory);
             var file_entry = {
                 name: file_name,
-                sdname: response.files[i].name,
+                sdname: file_name,
                 size: fsize,
                 isdir: isdirectory,
                 datetime: response.files[i].datetime,
@@ -497,12 +404,16 @@ function files_directSD_list_success(response_text) {
             files_file_list.push(file_entry);
         }
     }
+    files_file_list.sort(function (a, b) {
+        return a.name.localeCompare(b.name);
+    })
     var vtotal = "-1";
     var vused = "-1";
     var voccupation = "-1";
     if (typeof response.total != 'undefined') vtotal = response.total;
     if (typeof response.used != 'undefined') vused = response.used;
     if (typeof response.occupation != 'undefined') voccupation = response.occupation;
+    files_status_list = [];
     files_status_list.push({
         status: translate_text_item(response.status),
         path: response.path,
@@ -513,7 +424,7 @@ function files_directSD_list_success(response_text) {
     files_build_display_filelist();
 }
 
-function files_serial_M20_list_failed(error_code, response) {
+function files_list_failed(error_code, response) {
     displayBlock('files_navigation_buttons');
     if (esp_error_code !=0){
          alertdlg (translate_text_item("Error") + " (" + esp_error_code + ")", esp_error_message);
@@ -522,14 +433,6 @@ function files_serial_M20_list_failed(error_code, response) {
         alertdlg (translate_text_item("Error"), translate_text_item("No connection"));
     }
     files_build_display_filelist(false);
-}
-
-function files_serial_ls_list_failed(error_code, response) {
-    files_serial_M20_list_failed(error_code, response);
-}
-
-function files_directSD_list_failed(error_code, response) {
-    files_serial_M20_list_failed(error_code, response);
 }
 
 function files_directSD_upload_failed(error_code, response) {
@@ -559,9 +462,11 @@ function files_go_levelup() {
 }
 
 function files_build_display_filelist(displaylist) {
-    var content = "";
-    displayNone('files_uploading_msg');
     if (typeof displaylist == 'undefined') displaylist = true;
+
+    populateTabletFileSelector(files_file_list, files_currentPath);
+
+    displayNone('files_uploading_msg');
     displayNone('files_list_loader');
     displayNone('files_nav_loader');
     if (!displaylist) {
@@ -571,14 +476,12 @@ function files_build_display_filelist(displaylist) {
         displayNone('files_fileList');
         return;
     }
+    var content = "";
     if (need_up_level()) {
         content += "<li class='list-group-item list-group-hover' style='cursor:pointer' onclick='files_go_levelup()''>";
         content += "<span >" + get_icon_svg("level-up") + "</span>&nbsp;&nbsp;<span translate>Up...</span>";
         content += "</li>";
     }
-    files_file_list.sort(function(a, b) {
-        return compareStrings(a.name, b.name);
-    });
     for (var index = 0; index < files_file_list.length; index++) {
         if (files_file_list[index].isdir == false) content += files_build_file_line(index);
     }
@@ -685,7 +588,7 @@ function files_start_upload() {
     displayBlock('files_uploading_msg');
     displayNone('files_navigation_buttons');
     if (direct_sd) {
-        SendFileHttp(url, formData, FilesUploadProgressDisplay, files_directSD_list_success, files_directSD_upload_failed);
+        SendFileHttp(url, formData, FilesUploadProgressDisplay, files_list_success, files_directSD_upload_failed);
         //console.log("send file");
     }
     id("files_input_file").value = "";
