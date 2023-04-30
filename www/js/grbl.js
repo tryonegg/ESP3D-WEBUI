@@ -123,6 +123,15 @@ function onprobefeedrateChange() {
     return true;
 }
 
+function onproberetractChange() {
+    var thickness = parseFloat(getValue('proberetract'));
+    if (thickness < 0 || thickness > 999 || isNaN(thickness) || (thickness === null)) {
+        alertdlg(translate_text_item("Out of range"), translate_text_item("Value of probe retract must be between 0 mm and 9999 mm !"));
+        return false;
+    }
+    return true;
+}
+
 function onprobetouchplatethicknessChange() {
     var thickness = parseFloat(getValue('probetouchplatethickness'));
     if (thickness < 0 || thickness > 999 || isNaN(thickness) || (thickness === null)) {
@@ -486,8 +495,11 @@ function grblGetProbeResult(response) {
                 v = parseFloat(tab2[2]);
                 cmd += v;
                 SendPrinterCommand(cmd, true, null, null, 53, 1);
-                cmd = 'G10 L20 P0 Z' + getValue('probetouchplatethickness');
-                SendPrinterCommand(cmd, true, null, null, 10, 1);
+                // cmd = 'G10 L20 P0 Z' + getValue('probetouchplatethickness');
+                // SendPrinterCommand(cmd, true, null, null, 10, 1);
+                retract = 1;
+                cmd = 'G0 Z' + getValue('proberetract');
+                SendPrinterCommand(cmd, true, null, null, 0, 1);
                 cmd = "G90";
                 SendPrinterCommand(cmd, true, null, null, 90, 1);
                 finalize_probing();
@@ -665,10 +677,11 @@ function StartProbeProcess() {
     var cmd = "G38.2 G91 Z-";
     if (!onprobemaxtravelChange() ||
         !onprobefeedrateChange() ||
+        !onproberetractChange() ||
         !onprobetouchplatethicknessChange()) {
         return;
     }
-    cmd += parseFloat(getValue('probemaxtravel')) + ' F' + parseInt(getValue('probefeedrate'));
+    cmd += parseFloat(getValue('probemaxtravel')) + ' F' + parseInt(getValue('probefeedrate')) + ' P' + getValue('probetouchplatethickness');
     console.log(cmd);
     probe_progress_status = 1;
     var restoreReport = false;

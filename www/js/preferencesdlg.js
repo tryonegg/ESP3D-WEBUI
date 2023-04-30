@@ -34,6 +34,7 @@ var defaultpreferenceslist = "[{\
                                             \"enable_grbl_probe_panel\":\"false\",\
                                             \"probemaxtravel\":\"40\",\
                                             \"probefeedrate\":\"100\",\
+                                            \"proberetract\":\"1.0\",\
                                             \"probetouchplatethickness\":\"0.5\"\
                                             }]";
 var preferences_file_name = '/preferences.json';
@@ -73,6 +74,7 @@ function initpreferences() {
                                             \"enable_grbl_probe_panel\":\"false\",\
                                             \"probemaxtravel\":\"40\",\
                                             \"probefeedrate\":\"100\",\
+                                            \"proberetract\":\"1.0\",\
                                             \"probetouchplatethickness\":\"0.5\"\
                                             }]";
 
@@ -291,6 +293,7 @@ function applypreferenceslist() {
 
     id('probemaxtravel').value = parseFloat(preferenceslist[0].probemaxtravel);
     id('probefeedrate').value = parseInt(preferenceslist[0].probefeedrate);
+    id('proberetract').value = parseFloat(preferenceslist[0].proberetract);
     id('probetouchplatethickness').value = parseFloat(preferenceslist[0].probetouchplatethickness);
     build_file_filter_list(preferenceslist[0].f_filters);
 }
@@ -415,6 +418,10 @@ function build_dlg_preferences_list() {
     if ((typeof(preferenceslist[0].probefeedrate) !== 'undefined') && (preferenceslist[0].probefeedrate.length != 0)) {
         id('preferences_probefeedrate').value = parseInt(preferenceslist[0].probefeedrate);
     } else id('preferences_probefeedrate').value = parseInt(default_preferenceslist[0].probefeedrate);
+    //proberetract
+    if ((typeof(preferenceslist[0].proberetract) !== 'undefined') && (preferenceslist[0].proberetract.length != 0)) {
+        id('preferences_proberetract').value = parseFloat(preferenceslist[0].proberetract);
+    } else id('preferences_proberetract').value = parseFloat(default_preferenceslist[0].proberetract);
     //probetouchplatethickness
     if ((typeof(preferenceslist[0].probetouchplatethickness) !== 'undefined') && (preferenceslist[0].probetouchplatethickness.length != 0)) {
         id('preferences_probetouchplatethickness').value = parseFloat(preferenceslist[0].probetouchplatethickness);
@@ -466,6 +473,7 @@ function closePreferencesDialog() {
             (typeof(preferenceslist[0].enable_grbl_probe_panel) === 'undefined') ||
             (typeof(preferenceslist[0].probemaxtravel) === 'undefined') ||
             (typeof(preferenceslist[0].probefeedrate) === 'undefined') ||
+            (typeof(preferenceslist[0].proberetract) === 'undefined') ||
             (typeof(preferenceslist[0].probetouchplatethickness) === 'undefined') ||
             (typeof(preferenceslist[0].enable_files_panel) === 'undefined') ||
             (typeof(preferenceslist[0].has_TFT_SD) === 'undefined') ||
@@ -540,6 +548,8 @@ function closePreferencesDialog() {
         if (id('preferences_probemaxtravel').value != parseFloat(preferenceslist[0].probemaxtravel)) modified = true;
         //probefeedrate
         if (id('preferences_probefeedrate').value != parseInt(preferenceslist[0].probefeedrate)) modified = true;
+        //proberetract
+        if (id('preferences_proberetract').value != parseFloat(preferenceslist[0].proberetract)) modified = true;
         //probetouchplatethickness
         if (id('preferences_probetouchplatethickness').value != parseFloat(preferenceslist[0].probetouchplatethickness)) modified = true;
     }
@@ -577,6 +587,7 @@ function SavePreferences(current_preferences) {
             !Checkvalues("preferences_filters") ||
             !Checkvalues("preferences_probemaxtravel") ||
             !Checkvalues("preferences_probefeedrate") ||
+            !Checkvalues("preferences_proberetract") ||
             !Checkvalues("preferences_probetouchplatethickness")
         ) return;
         if (grblaxis > 2) {
@@ -602,6 +613,7 @@ function SavePreferences(current_preferences) {
         saveprefs += "\",\"has_TFT_USB\":\"" + id('has_tft_usb').checked;
         saveprefs += "\",\"probemaxtravel\":\"" + id('preferences_probemaxtravel').value;
         saveprefs += "\",\"probefeedrate\":\"" + id('preferences_probefeedrate').value;
+        saveprefs += "\",\"proberetract\":\"" + id('preferences_proberetract').value;
         saveprefs += "\",\"probetouchplatethickness\":\"" + id('preferences_probetouchplatethickness').value;
         saveprefs += "\",\"autoreport_interval\":\"" + id('preferences_autoReport_Interval').value;
         saveprefs += "\",\"interval_positions\":\"" + id('preferences_pos_Interval_check').value;
@@ -718,6 +730,13 @@ function Checkvalues(id_2_check) {
             value = parseInt(id(id_2_check).value);
             if (!(!isNaN(value) && value >= 1 && value <= 9999)) {
                 error_message = translate_text_item("Value of maximum probe travel must be between 1 mm and 9999 mm !");
+                status = false;
+            }
+            break;
+        case "preferences_proberetract":
+            value = parseInt(id(id_2_check).value);
+            if (!(!isNaN(value) && value >= 0 && value <= 9999)) {
+                error_message = translate_text_item("Value of probe retract must be between 0 mm and 9999 mm !");
                 status = false;
             }
             break;
