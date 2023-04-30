@@ -414,6 +414,7 @@ function show_grbl_status(stateName, message, hasSD) {
 }
 
 function finalize_probing() {
+    SendPrinterCommand("G90", true, null, null, 90, 1);
     probe_progress_status = 0;
     setClickability('probingbtn', true);
     setClickability('probingtext', false);
@@ -497,11 +498,7 @@ function grblGetProbeResult(response) {
                 SendPrinterCommand(cmd, true, null, null, 53, 1);
                 // cmd = 'G10 L20 P0 Z' + getValue('probetouchplatethickness');
                 // SendPrinterCommand(cmd, true, null, null, 10, 1);
-                retract = 1;
-                cmd = 'G0 Z' + getValue('proberetract');
-                SendPrinterCommand(cmd, true, null, null, 0, 1);
-                cmd = "G90";
-                SendPrinterCommand(cmd, true, null, null, 90, 1);
+                SendPrinterCommand('G0 Z' + getValue('proberetract'), true, null, null, 0, 1);
                 finalize_probing();
             }
         } else {
