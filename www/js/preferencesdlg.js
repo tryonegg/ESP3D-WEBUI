@@ -87,7 +87,7 @@ function initpreferences() {
 }
 
 function getpreferenceslist() {
-    var url = preferences_file_name + "?" + Date.now();
+    var url = preferences_file_name;
     preferenceslist = [];
     //removeIf(production)
     var response = defaultpreferenceslist;

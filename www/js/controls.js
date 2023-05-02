@@ -27,7 +27,7 @@ function showAxiscontrols() {
 
 function loadmacrolist() {
     control_macrolist = [];
-    var url = "/macrocfg.json" + "?" + Date.now();
+    var url = "/macrocfg.json";
     SendGetHttp(url, processMacroGetSuccess, processMacroGetFailed);
 }
 

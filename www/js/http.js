@@ -138,8 +138,10 @@ function ProcessGetHttp(url, resultfn, errorfn) {
         }
     }
 
-    url += (url.indexOf("?") == -1) ? "?" : "&";
-    url += "PAGEID=" + page_id;
+    if (url.startsWith("/command")) {
+        url += (url.indexOf("?") == -1) ? "?" : "&";
+        url += "PAGEID=" + page_id;
+    }
     //console.log("GET:" + url);
     xmlhttp.open("GET", url, true);
     xmlhttp.send();
@@ -243,8 +245,6 @@ function ProcessFileHttp(url, postdata, progressfn, resultfn, errorfn) {
             }
         }
     }
-    url += (url.indexOf("?") == -1) ? "?" : "&";
-    url += "PAGEID=" + page_id;
     //console.log(url);
     xmlhttpupload.open("POST", url, true);
     if (typeof progressfn != 'undefined' && progressfn != null) xmlhttpupload.upload.addEventListener("progress", progressfn, false);
