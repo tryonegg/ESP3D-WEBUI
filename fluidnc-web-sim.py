@@ -1,26 +1,39 @@
 #!/usr/bin/env python3
 
-# This is a simple web server that partially emulates the FluidNC web server
-# It lets you test some aspects of WebUI without uploading index.html.gz to
-# an actual FluidNC ESP32
-# To use it, run
-#   python3 fluidnc-web-sim.py
+# Usage: ./fluidnc-web-sim.py [ FluidNC_IP_address ]
 # Then browse to localhost:8080
+
+# If the FluidNC_IP_address is omitted, fluidnc-web-sim will try to
+# get the FluidNC IP address by resolving the address fluidnc.local
+
+# This is a simple web server that serves index.html from a local file,
+# and forwards other requests to a FluidNC system.
+# It lets you test new WebUI builds without uploading index.html.gz to
+# the FluidNC MCU.
+
+# You might have to install some Python packages first, like zeroconf and flask
+# For example "pip install flask zeroconf"
+
+# It serves index.html directly from dist/index.html , which is where the
+# WebUI build process puts that file.
 #
-# You might have to install some Python packages first.
+# There is an alternate mode where this program can do some things directly,
+# without needing a running FluidNC instance.  To enable the alternate mode,
+# set the 'proxy' variable below to False.
 #
-# It uses the most recently compiled index.html from the dist subdirectory
-# The test_files/ directory contains 'localfs/' and 'sd/' directory whose
-# files that are presented as though they were in the FluidNC localfs FLASH
-# filesystem and the FluidNC SD card filesystem.
+# When proxy is False, this program serves file from the "test_files/" directory.
+# Its subdirectories 'localfs/' and 'sd/' contain files that are presented as
+# though they were in the FluidNC FLASH and SD card filesystems.
 #
-# The emulation is incomplete.  In particular, the following things are
-# not implemented:
+# The non-proxy-mode emulation is incomplete.  In particular, the following things
+# are unimplemented:
 #  - File upload
 #  - OTA
 #  - changing settings
 #  - Running GCode - or anything that involves making FluidNC do any motion things
 # But you can load the UI into your browser and do file downloads and whatnot
+
+proxy = True
 
 import asyncio
 import os
@@ -31,6 +44,8 @@ import websockets
 import json
 import warnings
 import shutil
+import requests
+from zeroconf import Zeroconf, ServiceBrowser, ServiceStateChange
 
 try:
   from flask import Flask, request, Response, send_from_directory
@@ -38,6 +53,62 @@ except:
   print("flash module missing; try 'pip3 install flask'")
   sys.exit(1)
 
+def resolve_mdns(hostname):
+    resolved_addresses = []
+
+    class MyListener:
+        def update_service(self, zeroconf, type, name):
+            pass
+
+        def remove_service(self, zeroconf, type, name):
+            pass
+
+        def add_service(self, zeroconf, type, name):
+            info = zeroconf.get_service_info(type, name)
+            if info:
+                resolved_addresses.append(info.parsed_addresses()[0])
+
+    zeroconf = Zeroconf()
+    listener = MyListener()
+    browser = ServiceBrowser(zeroconf, '_http._tcp.local.', listener)
+
+    try:
+        zeroconf.get_service_info('_http._tcp.local.', hostname + '._http._tcp.local.')
+    finally:
+        zeroconf.close()
+
+    return resolved_addresses
+
+fluidnc_ip = ''
+def set_fluidnc_ip():
+    global fluidnc_ip
+    if len(sys.argv) == 2:
+        fluidnc_ip = sys.argv[1]
+        print(            "Proxying to FluidNC at", fluidnc_ip)
+        return
+    addresses = resolve_mdns('fluidnc.local')
+    if len(addresses) == 0:
+        print('fluidnc.local does not resolve; specify the FluidNC IP address on the command line')
+        sys.exit(1)
+    if len(addresses) == 1:
+        fluidnc_ip = addresses[0]
+        print("Proxying to FluidNC at", fluidnc_ip)
+    else:
+        print('fluidnc.local resolves to multiple addresses; specify the FluidNC IP address on the command line')
+        sys.exit(1)
+
+if proxy:
+    set_fluidnc_ip()
+
+def fluidnc_url():
+    return 'http://' + fluidnc_ip + '/'
+
+def fluidnc_websocket():
+    if proxy:
+        return '81:' + fluidnc_ip
+    return '8081:localhost'
+
+# 8081:localhost
 python_path = sys.executable
 script_path = os.path.realpath(__file__)
 domain = 'localhost'
@@ -110,7 +181,7 @@ sdfiles = '{"files":[{"name":"localfs","shortname":"localfs","size":"-1","dateti
 
 gresp = "[GC:G1 G54 G17 G21 G90 G94 M5 M9 T0 F1000 S0]"
 
-esp800resp = 'FW version: FluidNC v3.6.7 (Devt-5692a7c1-dirty) # FW target:grbl-embedded  # FW HW:Direct SD  # primary sd:/sd # secondary sd:none  # authentication:no # webcommunication: Sync: 8081:localhost # hostname:fluidnc # axis:3'
+esp800resp = 'FW version: FluidNC v3.6.7 (Devt-5692a7c1-dirty) # FW target:grbl-embedded  # FW HW:Direct SD  # primary sd:/sd # secondary sd:none  # authentication:no # webcommunication: Sync: ' + fluidnc_websocket() + ' # hostname:fluidnc # axis:3'
 
 esp400resp = '''
 {"EEPROM":[
@@ -137,25 +208,66 @@ esp400resp = '''
 connection_list = []
 CONNECTIONS =  set()
 
+
+def obsolete():
+    plainval = request.args.get('plain')
+
+def do_proxy(request):
+    print("url1", request.url);
+    # Forward the request to the desired endpoint
+    url = request.url.replace(request.host_url, fluidnc_url())
+    print("url2", url);
+    try:
+        response = requests.request(
+            method=request.method,
+            url=url,
+            headers=request.headers,
+            data=request.get_data(),
+            cookies=request.cookies,
+            stream=True
+        )
+
+        # Create a Flask response with the remote server's response data
+        flask_response = response.raw
+
+        # Set response headers
+        headers = [(name, value) for name, value in response.headers.items()]
+        flask_response.headers.extend(headers)
+
+        return flask_response
+    except requests.exceptions.RequestException as e:
+        # Handle any errors that occur during the request
+        error_message = {'error': str(e)}
+        return error_message, 500
+
 @app.route('/command')
 def do_command():
     plainval = request.args.get('plain')
+
+    # Respond directly to ESP800 instead of proxying it to FluidNC, because
+    # we want to provide the correct websocket address
+    if plainval == '[ESP800]':
+        return esp800resp
+
+    if proxy:
+        return do_proxy(request)
+
+    # If not proxying, respond to a few commands
     if plainval != None:
-        if plainval == '[ESP800]':
-            return esp800resp
-        elif plainval == '[ESP400]':
+        if plainval == '[ESP400]':
             return esp400resp
-    commandtextval = request.args.get('commandText')
-    if commandtextval != None:
-        print("commandText:", commandtextval)
-        if commandtextval == '$G':
-            if len(CONNECTIONS):
-                wsock = CONNECTIONS[0]
-                wsock.send(gresp)
-                # return ""
-    return "\r\n"
+        commandtextval = request.args.get('commandText')
+        if commandtextval != None:
+            print("commandText:", commandtextval)
+            if commandtextval == '$G':
+                if len(CONNECTIONS):
+                    wsock = CONNECTIONS[0]
+                    wsock.send(gresp)
+    return ""
 
 def handle_files(fs, request):
+    if proxy:
+        return do_proxy(request)
     method = request.method
     action = request.args.get('action')
     filename = request.args.get('filename')
@@ -211,6 +323,8 @@ def do_files():
 
 @app.route('/<path:filename>', methods=['GET'])
 def do_get_file(filename):
+    if proxy:
+        return do_proxy(request)
     print("/ ", filename)
     if filename.startswith('SD/'):
         filename = filename[3:]
@@ -249,21 +363,20 @@ async def message_control(websocket, path):
         await unregister(websocket)
 
 
-if len(sys.argv) == 2:
-    if sys.argv[1] == 'run_socket':
-        start_server = websockets.serve(message_control, domain, ws_port, subprotocols=['arduino'])
+if not proxy:
+    if len(sys.argv) == 2:
+        if sys.argv[1] == 'run_socket':
+            start_server = websockets.serve(message_control, domain, ws_port, subprotocols=['arduino'])
+            asyncio.get_event_loop().run_until_complete(start_server)
+            asyncio.get_event_loop().run_forever()
+        else:
+            time.sleep(1)
+            print("Triggering websocket server")
+            return_value = (subprocess.Popen([
+                python_path,
+                script_path,
+                'run_socket'
+            ]))
 
-        asyncio.get_event_loop().run_until_complete(start_server)
-        asyncio.get_event_loop().run_forever()
-
-else:
-    time.sleep(1)
-    print("Triggering websocket server")
-    return_value = (subprocess.Popen([
-        python_path,
-        script_path,
-        'run_socket'
-    ]))
-
-    print("Starting flask server")
-    app.run(port=http_port)
+print("Starting flask server")
+app.run(port=http_port)
