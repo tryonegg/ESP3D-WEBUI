@@ -89,7 +89,6 @@ function control_changeaxis(){
 
 function init_grbl_panel() {
     grbl_set_probe_detected(false);
-    tryAutoReport();
 }
 
 function grbl_clear_status() {
@@ -157,6 +156,14 @@ function disablePolling() {
 
 function enablePolling() {
     var interval = parseFloat(getValue('statusInterval_check'));
+    if (!isNaN(interval) && interval == 0) {
+        if (interval_status != -1) {
+            clearInterval(interval_status);
+        }
+        disablePolling();
+        reportNone();
+        return;
+    }
     if (!isNaN(interval) && interval > 0 && interval < 100) {
         if (interval_status != -1) {
             clearInterval(interval_status);
@@ -166,11 +173,12 @@ function enablePolling() {
         }, interval * 1000);
         reportType = 'polled';
         setChecked('report_poll', true);
-    } else {
-        setValue("statusInterval_check", 0);
-        alertdlg(translate_text_item("Out of range"), translate_text_item("Value of auto-check must be between 0s and 99s !!"));
-        disablePolling();
+        return;
     }
+    setValue("statusInterval_check", 0);
+    alertdlg(translate_text_item("Out of range"), translate_text_item("Value of auto-check must be between 0s and 99s !!"));
+    disablePolling();
+    reportNone();
 }
 
 function tryAutoReport() {
@@ -178,7 +186,11 @@ function tryAutoReport() {
         disablePolling();
     }
     reportType == 'auto';
-    interval = id('autoReportInterval').value;
+    var interval = id('autoReportInterval').value;
+    if (interval == 0) {
+        enablePolling();
+        return;
+    }
     setChecked('report_auto', true);
     reportType = 'auto';
     SendPrinterCommand("$Report/Interval="+interval, true,

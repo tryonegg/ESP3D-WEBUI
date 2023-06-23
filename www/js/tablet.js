@@ -313,7 +313,7 @@ function tabletShowResponse(response) {
     messages.value = response;
 }
 
-var setJogSelector = function(units) {
+function setJogSelector(units) {
     var buttonDistances = [];
     var menuDistances = [];
     var selected = 0;

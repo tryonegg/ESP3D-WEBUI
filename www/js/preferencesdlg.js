@@ -262,9 +262,21 @@ function applypreferenceslist() {
         } else id('monitor_enable_autoscroll').checked = false;
     } else displayNone('commandsPanel');
 
-    id('autoReportInterval').value = parseInt(preferenceslist[0].autoreport_interval);
+    var autoReportValue = parseInt(preferenceslist[0].autoreport_interval);
+    var autoReportChanged = id('autoReportInterval').value != autoReportValue;
+    if (autoReportChanged) {
+        id('autoReportInterval').value = autoReportValue;
+    }
+    var statusIntervalValue = parseInt(preferenceslist[0].interval_status);
+    statusIntervalChanged =  id('statusInterval_check').value != statusIntervalValue;
+    if (statusIntervalChanged) {
+        id('statusInterval_check').value = statusIntervalValue;
+    }
+    if (autoReportChanged || statusIntervalChanged) {
+        onAutoReportIntervalChange();
+    }
+
     id('posInterval_check').value = parseInt(preferenceslist[0].interval_positions);
-    id('statusInterval_check').value = parseInt(preferenceslist[0].interval_status);
     id('control_xy_velocity').value = parseInt(preferenceslist[0].xy_feedrate);
     id('control_z_velocity').value = parseInt(preferenceslist[0].z_feedrate);
 
@@ -683,12 +695,18 @@ function Checkvalues(id_2_check) {
     switch (id_2_check) {
         case "preferences_autoReport_Interval":
             value = parseInt(id(id_2_check).value);
-            if (!(!isNaN(value) && value >= 50 && value <= 30000)) {
-                error_message = translate_text_item("Value of auto-report must be between 50ms and 30000ms !!");
+            if (!(!isNaN(value) && (value == 0 || (value >= 50 && value <= 30000)))) {
+                error_message = translate_text_item("Value of auto-report must be 0 or between 50ms and 30000ms !!");
                 status = false;
             }
             break;
         case "preferences_status_Interval_check":
+            value = parseInt(id(id_2_check).value);
+            if (!(!isNaN(value) && value >= 0 && value <= 100)) {
+                error_message = translate_text_item("Value of auto-check must be between 0s and 99s !!");
+                status = false;
+            }
+            break;
         case "preferences_pos_Interval_check":
             value = parseInt(id(id_2_check).value);
             if (!(!isNaN(value) && value >= 1 && value <= 100)) {
