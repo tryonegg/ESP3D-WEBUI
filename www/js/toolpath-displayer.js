@@ -395,10 +395,22 @@ var bboxHandlers = {
 	var minX = mx ? pc.x - radius : Math.min(ps.x, pe.x);
 	var minY = my ? pc.y - radius : Math.min(ps.y, pe.y);
 
-	tpBbox.min.x = Math.min(tpBbox.min.x, minX);
-	tpBbox.min.y = Math.min(tpBbox.min.y, minY);
-	tpBbox.max.x = Math.max(tpBbox.max.x, maxX);
-	tpBbox.max.y = Math.max(tpBbox.max.y, maxY);
+	var minZ = Math.min(start.z, end.z);
+	var maxZ = Math.min(start.z, end.z);
+
+        const p0 = projection({x: minX, y: minY, z: minZ});
+        const p1 = projection({x: minX, y: maxY, z: minZ});
+        const p2 = projection({x: maxX, y: maxY, z: minZ});
+        const p3 = projection({x: maxX, y: minY, z: minZ});
+        const p4 = projection({x: minX, y: minY, z: maxZ});
+        const p5 = projection({x: minX, y: maxY, z: maxZ});
+        const p6 = projection({x: maxX, y: maxY, z: maxZ});
+        const p7 = projection({x: maxX, y: minY, z: maxZ});
+
+	tpBbox.min.x = Math.min(tpBbox.min.x, p0.x, p1.x, p2.x, p3.x, p4.x, p5.x, p6.x, p7.x);
+	tpBbox.min.y = Math.min(tpBbox.min.y, p0.y, p1.y, p2.y, p3.y, p4.y, p5.y, p6.y, p7.y);
+	tpBbox.max.x = Math.max(tpBbox.max.x, p0.x, p1.x, p2.x, p3.x, p4.x, p5.x, p6.x, p7.x);
+	tpBbox.max.y = Math.max(tpBbox.max.y, p0.y, p1.y, p2.y, p3.y, p4.y, p5.y, p6.y, p7.y);
         bboxIsSet = true;
     }
 };
