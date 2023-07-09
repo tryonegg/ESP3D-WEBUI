@@ -2,6 +2,7 @@ var http_communication_locked = false;
 var http_cmd_list = [];
 var processing_cmd = false;
 var xmlhttpupload;
+var page_id = ""
 
 var max_cmd = 20;
 

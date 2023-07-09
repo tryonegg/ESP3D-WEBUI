@@ -1,5 +1,4 @@
 var ESP3D_authentication = false;
-var page_id = "";
 var convertDHT2Fahrenheit = false;
 var ws_source;
 var event_source;
