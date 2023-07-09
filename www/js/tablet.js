@@ -520,7 +520,6 @@ function tabletGrblState(grbl, response) {
 	runTime = minutes + ':' + seconds;
     } else {
         startTime = now.getTime();
-        runTime = "0:00";
     }
 
     setText('runtime', runTime);
