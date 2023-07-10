@@ -115,12 +115,12 @@ function files_build_file_line(index) {
 
         content += "</td></tr></table></div>";
         var sizecol = "col-md-2 col-sm-2 filesize";
-        var timecol = "col-md-3 col-sm-3";
-        var iconcol = "col-md-2 col-sm-2";
+        var timecol = "col-md-2 col-sm-2";
+        var iconcol = "col-md-3 col-sm-3";
         if (!entry.isdir && entry.datetime == "") {
-            sizecol = "col-md-4 col-sm-4 filesize";
+            sizecol = "col-md-3 col-sm-3 filesize";
             timecol = "hide_it";
-            iconcol = "col-md-3 col-sm-3";
+            iconcol = "col-md-4 col-sm-4";
         }
         content += "<div class='" + sizecol + "'";
         if (is_clickable) {
@@ -142,9 +142,13 @@ function files_build_file_line(index) {
             content += "</button>";
         }
         content += "&nbsp;";
+        if (!entry.isdir) {
+            content += "<button class='btn btn-xs btn-default' onclick='files_download(" + index + ")'  style='padding-top: 4px;'>" + get_icon_svg("download", "1em", "1em") + "</button>";
+        }
         if (files_showdeletebutton(index)) {
             content += "<button class='btn btn-xs btn-danger' onclick='files_delete(" + index + ")'  style='padding-top: 4px;'>" + get_icon_svg("trash", "1em", "1em") + "</button>";
         }
+        content += "<button class='btn btn-xs btn-default' onclick='files_rename(" + index + ")'  style='padding-top: 4px;'>" + get_icon_svg("wrench", "1em", "1em") + "</button>";
         content += "</div>";
         content += "</div>";
         content += "</div>";
@@ -255,13 +259,42 @@ function files_is_clickable(index) {
 function files_enter_dir(name) {
     files_refreshFiles(files_currentPath + name + "/", true);
 }
+function process_files_Createdir(answer) {
+    if (answer.length > 0) files_create_dir(answer.trim());
+}
+
+var old_file_name;
+function files_rename(index) {
+    var entry = files_file_list[index];
+    old_file_name = entry.sdname;
+    inputdlg(translate_text_item("New file name"), translate_text_item("Name:"), process_files_rename, old_file_name);
+}
+function process_files_rename(new_file_name) {
+    if (new_file_name == null || new_file_name == "") {
+        return;
+    }
+    files_error_status = "Rename " + old_file_name;
+
+    var cmdpath = files_currentPath;
+    var url = "/upload?path=" + encodeURIComponent(cmdpath) + "&action=rename";
+    url += "&filename=" + encodeURIComponent(old_file_name);
+    url += "&newname=" + encodeURIComponent(new_file_name);
+    displayBlock('files_nav_loader');
+    SendGetHttp(url, files_list_success, files_list_failed);
+}
+function files_download(index) {
+    var entry = files_file_list[index];
+    //console.log("file on direct SD");
+    var url = "SD/" + files_currentPath + entry.sdname;
+    window.location.href = encodeURIComponent(url.replace("//", "/"));
+}
 function files_click_file(index) {
     var entry = files_file_list[index];
     if (entry.isdir) {
         files_enter_dir(entry.name);
         return;
     }
-    if (direct_sd) {
+    if (false && direct_sd) {  // Don't download on click; use the button
         //console.log("file on direct SD");
         var url = "SD/" + files_currentPath + entry.sdname;
         window.location.href = encodeURIComponent(url.replace("//", "/"));

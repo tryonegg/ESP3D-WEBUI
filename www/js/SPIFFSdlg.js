@@ -53,9 +53,14 @@ function processSPIFFS_Createdir(answer) {
     if (answer.length > 0) SPIFFSSendCommand("createdir", answer.trim());
 }
 
-function SPIFFSDelete(filename) {
-    SPIFFS_currentfile = filename;
-    confirmdlg(translate_text_item("Please Confirm"), translate_text_item("Confirm deletion of file: ") + filename, processSPIFFSDelete);
+function SPIFFSDownload(url) {
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = url;
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+
 }
 
 function processSPIFFSDelete(answer) {
@@ -63,7 +68,12 @@ function processSPIFFSDelete(answer) {
     SPIFFS_currentfile = "";
 }
 
-function SPIFFSDeletedir(filename) {
+function SPIFFSDelete(filename) {
+    SPIFFS_currentfile = filename;
+    confirmdlg(translate_text_item("Please Confirm"), translate_text_item("Confirm deletion of file: ") + filename, processSPIFFSDelete);
+}
+
+function SPIFFSDeleteDir(filename) {
     SPIFFS_currentfile = filename;
     confirmdlg(translate_text_item("Please Confirm"), translate_text_item("Confirm deletion of directory: ") + filename, processSPIFFSDeleteDir);
 }
@@ -71,6 +81,22 @@ function SPIFFSDeletedir(filename) {
 function processSPIFFSDeleteDir(answer) {
     if (answer == "yes") SPIFFSSendCommand("deletedir", SPIFFS_currentfile);
     SPIFFS_currentfile = "";
+}
+
+function SPIFFSRename(filename) {
+    old_file_name = filename;
+    inputdlg(translate_text_item("New file name"), translate_text_item("Name:"), processSPIFFSRename, old_file_name);
+}
+
+
+function processSPIFFSRename(new_file_name) {
+    if (new_file_name == null || new_file_name == "") {
+        return;
+    }
+    var url = "/files?action=rename" + "&path=" + encodeURIComponent(SPIFFS_currentpath);
+    url += "&filename=" + encodeURIComponent(old_file_name);
+    url += "&newname=" + encodeURIComponent(new_file_name);
+    SendGetHttp(url, SPIFFSsuccess, SPIFFSfailed);
 }
 
 function SPIFFSSendCommand(action, filename) {
@@ -105,6 +131,10 @@ function SPIFFSfailed(errorcode, response) {
     console.log("Error " + errorcode + " : " + response);
 }
 
+function SPIFFSbutton(filename, method, btn_class, icon) {
+       return "<td width='0%'  style='vertical-align:middle'><button class=\"btn " + btn_class + " btn-xs\" style='padding: 5px 5px 0px 5px;' onclick=\"" + method + "('" + filename + "')\">" + get_icon_svg(icon) + "</button></td>";
+}
+
 function SPIFFSdispatchfilestatus(jsonresponse) {
     var content = "";
     content = translate_text_item("Total:") + " " + jsonresponse.total;
@@ -127,28 +157,32 @@ function SPIFFSdispatchfilestatus(jsonresponse) {
         //first display files
         if (String(jsonresponse.files[i].size) != "-1") {
             content += "<tr>";
+            let filesize = jsonresponse.files[i].size;
+            let pathname = jsonresponse.path;
+            let filename = jsonresponse.files[i].name;
             content += "<td  style='vertical-align:middle; color:#5BC0DE'>" + get_icon_svg("file") + "</td>";
-            content += "<td  width='100%'  style='vertical-align:middle'><a href=\"" + jsonresponse.path + jsonresponse.files[i].name + "\" target=_blank download><button  class=\"btn btn-link no_overflow\">";
-            content += jsonresponse.files[i].name;
-            content += "</button></a></td><td nowrap  style='vertical-align:middle'>";
-            content += jsonresponse.files[i].size;
-            content += "</td><td width='0%'  style='vertical-align:middle'><button class=\"btn btn-danger btn-xs\" style='padding: 5px 5px 0px 5px;' onclick=\"SPIFFSDelete('" + jsonresponse.files[i].name + "')\">";
-            content += get_icon_svg("trash");
-            content += "</button></td></tr>";
+            // content += "<td  width='100%'  style='vertical-align:middle'><a href=\"" + pathname + filename + "\" target=_blank download><button  class=\"btn btn-link no_overflow\">" + filename + "</button></a></td>"
+            content += "<td  width='100%'  style='vertical-align:middle'>" + filename + "</td>"
+            content += "<td nowrap  style='vertical-align:middle; text-align:right'>" + filesize + "</td>";
+            content += SPIFFSbutton(pathname + filename, "SPIFFSDownload", "btn-default", "download");
+            content += SPIFFSbutton(filename, "SPIFFSDelete", "btn-danger", "trash");
+            content += SPIFFSbutton(filename, "SPIFFSRename", "btn-default", "wrench");
+            content += "</tr>";
         }
     }
 
     //then display directories
     for (var i = 0; i < jsonresponse.files.length; i++) {
         if (String(jsonresponse.files[i].size) == "-1") {
+            let filename = jsonresponse.files[i].name;
             content += "<tr>";
             content += "<td style='vertical-align:middle ; color:#5BC0DE'>" + get_icon_svg("folder-close") + "</td>";
-            content += "<td width='100%'  style='vertical-align:middle'><button class=\"btn btn-link\" onclick=\"SPIFFSselect_dir('" + jsonresponse.files[i].name + "');\">";
-            content += jsonresponse.files[i].name;
-            content += "</button></td><td>";
-            content += "</td><td width='0%' style='vertical-align:middle'><button class=\"btn btn-danger btn-xs\" style='padding: 5px 4px 0px 4px;' onclick=\"SPIFFSDeletedir('" + jsonresponse.files[i].name + "')\">";
-            content += get_icon_svg("trash");
-            content += "</button></td></tr>";
+            content += "<td width='100%'  style='vertical-align:middle'><button class=\"btn btn-link\" onclick=\"SPIFFSselect_dir('" + filename + "');\">" + filename + "</button></td>";
+            content += "<td nowrap  style='vertical-align:middle'></td>"; // No size field
+            content += "<tr></tr>";  // Spacer for nonexistent download button
+            content += SPIFFSbutton(filename, "SPIFFSDeleteDir", "btn-danger", "trash");
+            content += SPIFFSbutton(filename, "SPIFFSRename", "btn-default", "wrench");
+            content += "</tr>";
         }
 
     }
