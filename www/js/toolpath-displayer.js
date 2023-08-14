@@ -396,7 +396,7 @@ var bboxHandlers = {
 	var minY = my ? pc.y - radius : Math.min(ps.y, pe.y);
 
 	var minZ = Math.min(start.z, end.z);
-	var maxZ = Math.min(start.z, end.z);
+	var maxZ = Math.max(start.z, end.z);
 
         const p0 = projection({x: minX, y: minY, z: minZ});
         const p1 = projection({x: minX, y: maxY, z: minZ});

@@ -189,77 +189,70 @@ var Toolpath = function () {
                     _this.setModal({ motion: 'G2' });
                 }
 
-                var v1 = {
-                    x: _this.position.x,
-                    y: _this.position.y,
-                    z: _this.position.z
-                };
-                var v2 = {
+                let v1 = _this.position;
+                let v2 = {
                     x: _this.translateX(params.X),
                     y: _this.translateY(params.Y),
                     z: _this.translateZ(params.Z)
                 };
-                var v0 = { // fixed point
+                let v0 = { // fixed point
                     x: _this.translateI(params.I),
                     y: _this.translateJ(params.J),
                     z: _this.translateK(params.K)
                 };
-                var isClockwise = true;
-                var targetPosition = { x: v2.x, y: v2.y, z: v2.z };
+                let isClockwise = true;
+                let targetPosition = { x: v2.x, y: v2.y, z: v2.z };
 
                 if (_this.isXYPlane()) {
-                    var _ref = [v1.x, v1.y, v1.z]; // XY-plane
-
-                    v1.x = _ref[0];
-                    v1.y = _ref[1];
-                    v1.z = _ref[2];
-                    var _ref2 = [v2.x, v2.y, v2.z];
+                    let _ref1 = [v1.x, v1.y, v1.z]; // XY-plane
+                    v1.x = _ref1[0];
+                    v1.y = _ref1[1];
+                    v1.z = _ref1[2];
+                    let _ref2 = [v2.x, v2.y, v2.z];
                     v2.x = _ref2[0];
                     v2.y = _ref2[1];
                     v2.z = _ref2[2];
-                    var _ref3 = [v0.x, v0.y, v0.z];
-                    v0.x = _ref3[0];
-                    v0.y = _ref3[1];
-                    v0.z = _ref3[2];
+                    let _ref0 = [v0.x, v0.y, v0.z];
+                    v0.x = _ref0[0];
+                    v0.y = _ref0[1];
+                    v0.z = _ref0[2];
                 } else if (_this.isZXPlane()) {
-                    var _ref4 = [v1.z, v1.x, v1.y]; // ZX-plane
-
-                    v1.x = _ref4[0];
-                    v1.y = _ref4[1];
-                    v1.z = _ref4[2];
-                    var _ref5 = [v2.z, v2.x, v2.y];
-                    v2.x = _ref5[0];
-                    v2.y = _ref5[1];
-                    v2.z = _ref5[2];
-                    var _ref6 = [v0.z, v0.x, v0.y];
-                    v0.x = _ref6[0];
-                    v0.y = _ref6[1];
-                    v0.z = _ref6[2];
+                    let _ref1 = [v1.z, v1.x, v1.y]; // ZX-plane
+                    v1.x = _ref1[0];
+                    v1.y = _ref1[1];
+                    v1.z = _ref1[2];
+                    let _ref2 = [v2.z, v2.x, v2.y];
+                    v2.x = _ref2[0];
+                    v2.y = _ref2[1];
+                    v2.z = _ref2[2];
+                    let _ref0 = [v0.z, v0.x, v0.y];
+                    v0.x = _ref0[0];
+                    v0.y = _ref0[1];
+                    v0.z = _ref0[2];
                 } else if (_this.isYZPlane()) {
-                    var _ref7 = [v1.y, v1.z, v1.x]; // YZ-plane
-
-                    v1.x = _ref7[0];
-                    v1.y = _ref7[1];
-                    v1.z = _ref7[2];
-                    var _ref8 = [v2.y, v2.z, v2.x];
-                    v2.x = _ref8[0];
-                    v2.y = _ref8[1];
-                    v2.z = _ref8[2];
-                    var _ref9 = [v0.y, v0.z, v0.x];
-                    v0.x = _ref9[0];
-                    v0.y = _ref9[1];
-                    v0.z = _ref9[2];
+                    let _ref1 = [v1.y, v1.z, v1.x]; // YZ-plane
+                    v1.x = _ref1[0];
+                    v1.y = _ref1[1];
+                    v1.z = _ref1[2];
+                    let _ref2 = [v2.y, v2.z, v2.x];
+                    v2.x = _ref2[0];
+                    v2.y = _ref2[1];
+                    v2.z = _ref2[2];
+                    let _ref0 = [v0.y, v0.z, v0.x];
+                    v0.x = _ref0[0];
+                    v0.y = _ref0[1];
+                    v0.z = _ref0[2];
                 } else {
                     console.error('The plane mode is invalid', _this.modal.plane);
                     return;
                 }
 
                 if (params.R) {
-                    var radius = _this.translateR(Number(params.R) || 0);
-                    var x = v2.x - v1.x;
-                    var y = v2.y - v1.y;
-                    var distance = Math.sqrt(x * x + y * y);
-                    var height = Math.sqrt(4 * radius * radius - x * x - y * y) / 2;
+                    let radius = _this.translateR(Number(params.R) || 0);
+                    let x = v2.x - v1.x;
+                    let y = v2.y - v1.y;
+                    let distance = Math.hypot(x, y);
+                    let height = Math.sqrt(4 * radius * radius - x * x - y * y) / 2;
 
                     if (isClockwise) {
                         height = -height;
@@ -268,8 +261,8 @@ var Toolpath = function () {
                         height = -height;
                     }
 
-                    var offsetX = x / 2 - y / distance * height;
-                    var offsetY = y / 2 + x / distance * height;
+                    let offsetX = x / 2 - y / distance * height;
+                    let offsetY = y / 2 + x / distance * height;
 
                     v0.x = v1.x + offsetX;
                     v0.y = v1.y + offsetY;
@@ -285,73 +278,71 @@ var Toolpath = function () {
                     _this.setModal({ motion: 'G3' });
                 }
 
-                var v1 = _this.position;
-                var v2 = {
+                let v1 = _this.position;
+                let v2 = {
                     x: _this.translateX(params.X),
                     y: _this.translateY(params.Y),
                     z: _this.translateZ(params.Z)
                 };
-                var v0 = { // fixed point
+                let v0 = { // fixed point
                     x: _this.translateI(params.I),
                     y: _this.translateJ(params.J),
                     z: _this.translateK(params.K)
                 };
-                var isClockwise = false;
-                var targetPosition = { x: v2.x, y: v2.y, z: v2.z };
+                let isClockwise = false;
+                let targetPosition = { x: v2.x, y: v2.y, z: v2.z };
 
                 if (_this.isXYPlane()) {
-                    var _ref10 = [v1.x, v1.y, v1.z]; // XY-plane
+                    let _ref1 = [v1.x, v1.y, v1.z]; // XY-plane
 
-                    v1.x = _ref10[0];
-                    v1.y = _ref10[1];
-                    v1.z = _ref10[2];
-                    var _ref11 = [v2.x, v2.y, v2.z];
-                    v2.x = _ref11[0];
-                    v2.y = _ref11[1];
-                    v2.z = _ref11[2];
-                    var _ref12 = [v0.x, v0.y, v0.z];
-                    v0.x = _ref12[0];
-                    v0.y = _ref12[1];
-                    v0.z = _ref12[2];
+                    v1.x = _ref1[0];
+                    v1.y = _ref1[1];
+                    v1.z = _ref1[2];
+                    let _ref2 = [v2.x, v2.y, v2.z];
+                    v2.x = _ref2[0];
+                    v2.y = _ref2[1];
+                    v2.z = _ref2[2];
+                    let _ref0 = [v0.x, v0.y, v0.z];
+                    v0.x = _ref0[0];
+                    v0.y = _ref0[1];
+                    v0.z = _ref0[2];
                 } else if (_this.isZXPlane()) {
-                    var _ref13 = [v1.z, v1.x, v1.y]; // ZX-plane
-
-                    v1.x = _ref13[0];
-                    v1.y = _ref13[1];
-                    v1.z = _ref13[2];
-                    var _ref14 = [v2.z, v2.x, v2.y];
-                    v2.x = _ref14[0];
-                    v2.y = _ref14[1];
-                    v2.z = _ref14[2];
-                    var _ref15 = [v0.z, v0.x, v0.y];
-                    v0.x = _ref15[0];
-                    v0.y = _ref15[1];
-                    v0.z = _ref15[2];
+                    let _ref1 = [v1.z, v1.x, v1.y]; // ZX-plane
+                    v1.x = _ref1[0];
+                    v1.y = _ref1[1];
+                    v1.z = _ref1[2];
+                    let _ref2 = [v2.z, v2.x, v2.y];
+                    v2.x = _ref2[0];
+                    v2.y = _ref2[1];
+                    v2.z = _ref2[2];
+                    let _ref0 = [v0.z, v0.x, v0.y];
+                    v0.x = _ref0[0];
+                    v0.y = _ref0[1];
+                    v0.z = _ref0[2];
                 } else if (_this.isYZPlane()) {
-                    var _ref16 = [v1.y, v1.z, v1.x]; // YZ-plane
-
-                    v1.x = _ref16[0];
-                    v1.y = _ref16[1];
-                    v1.z = _ref16[2];
-                    var _ref17 = [v2.y, v2.z, v2.x];
-                    v2.x = _ref17[0];
-                    v2.y = _ref17[1];
-                    v2.z = _ref17[2];
-                    var _ref18 = [v0.y, v0.z, v0.x];
-                    v0.x = _ref18[0];
-                    v0.y = _ref18[1];
-                    v0.z = _ref18[2];
+                    let _ref1 = [v1.y, v1.z, v1.x]; // YZ-plane
+                    v1.x = _ref1[0];
+                    v1.y = _ref1[1];
+                    v1.z = _ref1[2];
+                    let _ref2 = [v2.y, v2.z, v2.x];
+                    v2.x = _ref2[0];
+                    v2.y = _ref2[1];
+                    v2.z = _ref2[2];
+                    let _ref0 = [v0.y, v0.z, v0.x];
+                    v0.x = _ref0[0];
+                    v0.y = _ref0[1];
+                    v0.z = _ref0[2];
                 } else {
                     console.error('The plane mode is invalid', _this.modal.plane);
                     return;
                 }
 
                 if (params.R) {
-                    var radius = _this.translateR(Number(params.R) || 0);
-                    var x = v2.x - v1.x;
-                    var y = v2.y - v1.y;
-                    var distance = Math.sqrt(x * x + y * y);
-                    var height = Math.sqrt(4 * radius * radius - x * x - y * y) / 2;
+                    let radius = _this.translateR(Number(params.R) || 0);
+                    let x = v2.x - v1.x;
+                    let y = v2.y - v1.y;
+                    let distance = Math.hypot(x, y);
+                    let height = Math.sqrt(4 * radius * radius - x * x - y * y) / 2;
 
                     if (isClockwise) {
                         height = -height;
@@ -360,8 +351,8 @@ var Toolpath = function () {
                         height = -height;
                     }
 
-                    var offsetX = x / 2 - y / distance * height;
-                    var offsetY = y / 2 + x / distance * height;
+                    let offsetX = x / 2 - y / distance * height;
+                    let offsetY = y / 2 + x / distance * height;
 
                     v0.x = v1.x + offsetX;
                     v0.y = v1.y + offsetY;
