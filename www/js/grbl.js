@@ -426,7 +426,8 @@ function show_grbl_status(stateName, message, hasSD) {
 }
 
 function finalize_probing() {
-    SendPrinterCommand("G90", true, null, null, 90, 1);
+    // No need for this when using the FluidNC-specific G38.6 probe command.
+    // SendPrinterCommand("G90", true, null, null, 90, 1);
     probe_progress_status = 0;
     setClickability('probingbtn', true);
     setClickability('probingtext', false);
@@ -683,7 +684,11 @@ function grblHandleMessage(msg) {
 }
 
 function StartProbeProcess() {
-    var cmd = "G38.2 G91 Z-";
+    // G38.6 is FluidNC-specific.  It is like G38.2 except that the units
+    // are always G21 units, i.e. mm in the usual case, and distance is
+    // always incremental.  This avoids problems with probing when in G20
+    // inches mode and undoing a preexisting G91 incremental mode
+    var cmd = "G38.6 Z-";
     if (!onprobemaxtravelChange() ||
         !onprobefeedrateChange() ||
         !onproberetractChange() ||
@@ -698,7 +703,7 @@ function StartProbeProcess() {
         tryAutoReport(); // will fall back to polled if autoreport fails
         restoreReport = true;
     }
-    SendPrinterCommand(cmd, true, null, null, 38.2, 1);
+    SendPrinterCommand(cmd, true, null, null, 38.6, 1);
     setClickability('probingbtn', false);
     setClickability('probingtext', true);
     grbl_error_msg = '';
