@@ -503,15 +503,8 @@ function grblGetProbeResult(response) {
         var status = tab1[2].replace("]", "");
         if (parseInt(status.trim()) == 1) {
             if (probe_progress_status != 0) {
-                var cmd = "G53 G0 Z";
-                var tab2 = tab1[1].split(",");
-                var v = 0.0;
-                v = parseFloat(tab2[2]);
-                cmd += v;
-                SendPrinterCommand(cmd, true, null, null, 53, 1);
-                // cmd = 'G10 L20 P0 Z' + getValue('probetouchplatethickness');
-                // SendPrinterCommand(cmd, true, null, null, 10, 1);
-                SendPrinterCommand('G0 Z' + getValue('proberetract'), true, null, null, 0, 1);
+                var cmd = "$J=G90 G21 F1000 Z" + (parseFloat(getValue('probetouchplatethickness')) +                                                       parseFloat(getValue('proberetract')));
+                SendPrinterCommand(cmd, true, null, null, 0, 1);
                 finalize_probing();
             }
         } else {
