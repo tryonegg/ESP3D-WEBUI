@@ -309,6 +309,11 @@ function files_isgcode(filename, isdir) {
     if (typeof tfiles_filters == 'undefined') {
         return false;
     }
+    // This can happen if files_showprintbutton is called before the
+    // files panel has been created
+    if (typeof tfiles_filters == 'undefined') {
+        return false;
+    }
     if (tfiles_filters.length == 0) {
         return true;
     }
@@ -414,6 +419,7 @@ function files_list_success(response_text) {
         files_list_failed(406, translate_text_item("Wrong data", true));
         return;
     }
+    populateTabletFileSelector(response);
     files_file_list = [];
     if (typeof response.files != 'undefined') {
         for (var i = 0; i < response.files.length; i++) {

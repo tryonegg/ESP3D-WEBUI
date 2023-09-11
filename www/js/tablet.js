@@ -77,13 +77,16 @@ exitFullscreen = function() {
 }
 
 toggleFullscreen = function() {
-    var messages = id('messages');
+    // var messages = id('messages');
 
-    if (document.fullscreenElement) {
-        exitFullscreen();
-    } else {
-        enterFullscreen();
-    }
+    // if (document.fullscreenElement) {
+    //     document.exitFullscreen();
+    //     messages.rows = 2;
+    // } else {
+    //     document.documentElement.requestFullscreen();
+    //     messages.rows = 4;
+    // }
+    // messages.scrollTop = messages.scrollHeight;
 }
 
 inputFocused = function() {
@@ -95,6 +98,7 @@ inputBlurred = function() {
 }
 
 zeroAxis = function(axis) {
+    console.log("Zeroing: " + axis);
     tabletClick();
     setAxisByValue(axis, 0);
 }
@@ -219,7 +223,10 @@ sendMove = function(cmd) {
         moveTo(s);
     };
 
-    var distance = Number(id('jog-distance').value) || 0;
+    var distance = Number(id('disM').innerText) || 0;
+    if(cmd.includes('Z')){
+        distance = Number(id('disZ').innerText) || 0;
+    }
 
     var fn = {
         'G28': function() {
@@ -329,29 +336,29 @@ function setJogSelector(units) {
         selected = '10';
     }
     var buttonNames = ['jog00', 'jog01', 'jog02', 'jog03', 'jog10', 'jog11', 'jog12', 'jog13', 'jog20', 'jog21', 'jog22', 'jog23'];
-    buttonNames.forEach( function(n, i) { id(n).innerHTML = buttonDistances[i]; } );
+    //buttonNames.forEach( function(n, i) { id(n).innerHTML = buttonDistances[i]; } );
 
-    var selector = id('jog-distance');
-    selector.length = 0;
-    selector.innerText = null;
-    menuDistances.forEach(function(v) {
-        var option = document.createElement("option");
-        option.textContent=v;
-        option.selected = (v == selected);
-        selector.appendChild(option);
-    });
+    // var selector = id('jog-distance');
+    // selector.length = 0;
+    // selector.innerText = null;
+    // menuDistances.forEach(function(v) {
+    //     var option = document.createElement("option");
+    //     option.textContent=v;
+    //     option.selected = (v == selected);
+    //     selector.appendChild(option);
+    // });
 }
 function removeJogDistance(option, oldIndex) {
-    selector = id('jog-distance');
-    selector.removeChild(option);
-    selector.selectedIndex = oldIndex;
+    //selector = id('jog-distance');
+    //selector.removeChild(option);
+    //selector.selectedIndex = oldIndex;
 }
 function addJogDistance(distance) {
-    selector = id('jog-distance');
-    var option = document.createElement("option");
-    option.textContent=distance;
-    option.selected = true;
-    return selector.appendChild(option);
+    //selector = id('jog-distance');
+    //var option = document.createElement("option");
+    //option.textContent=distance;
+    //option.selected = true;
+    //return selector.appendChild(option);
 }
 
 var runTime = 0;
@@ -365,7 +372,7 @@ function setButton(name, isEnabled, color, text) {
 
 var leftButtonHandler;
 function setLeftButton(isEnabled, color, text, click) {
-    setButton('btn-start', isEnabled, color, text);
+    //setButton('btn-start', isEnabled, color, text);
     leftButtonHandler = click;
 }
 function doLeftButton() {
@@ -376,7 +383,7 @@ function doLeftButton() {
 
 var rightButtonHandler;
 function setRightButton(isEnabled, color, text, click) {
-    setButton('btn-pause', isEnabled, color, text);
+    //setButton('btn-pause', isEnabled, color, text);
     rightButtonHandler = click;
 }
 function doRightButton() {
@@ -507,7 +514,7 @@ function tabletGrblState(grbl, response) {
     setText('spindle-speed', spindleSpeed);
 
     var now = new Date();
-    setText('time-of-day', now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0'));
+    //setText('time-of-day', now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0'));
     if (stateName == 'Run') {
 	var elapsed = now.getTime() - startTime;
 	if (elapsed < 0)
@@ -522,13 +529,13 @@ function tabletGrblState(grbl, response) {
         startTime = now.getTime();
     }
 
-    setText('runtime', runTime);
+    //setText('runtime', runTime);
 
-    setText('wpos-label', modal.wcs);
+    //setText('wpos-label', modal.wcs);
     var distanceText = modal.distance == 'G90'
 	             ? modal.distance
 	             : "<div style='color:red'>" + modal.distance + "</div>";
-    setHTML('distance', distanceText);
+    //setHTML('distance', distanceText);
 
     var stateText = "";
     if (stateName == 'Run') {
@@ -569,7 +576,7 @@ function tabletGrblState(grbl, response) {
 
     if (WPOS) {
         WPOS.forEach( function(pos, index) {
-            setTextContent('wpos-'+axisNames[index], Number(pos*factor).toFixed(index > 2 ? 2 : digits));
+            //setTextContent('wpos-'+axisNames[index], Number(pos*factor).toFixed(index > 2 ? 2 : digits));
         });
     }
 
@@ -810,12 +817,12 @@ function menuSpindleOff() { sendCommand('M5'); hideMenu(); }
 function requestModes() { sendCommand('$G'); }
 
 cycleDistance = function(up) {
-    var sel = id('jog-distance');
-    var newIndex = sel.selectedIndex + (up ? 1 : -1);
-    if (newIndex >= 0 && newIndex < sel.length) {
-        tabletClick();
-        sel.selectedIndex = newIndex;
-    }
+    //var sel = id('jog-distance');
+    //var newIndex = sel.selectedIndex + (up ? 1 : -1);
+    //if (newIndex >= 0 && newIndex < sel.length) {
+    //    tabletClick();
+    //    sel.selectedIndex = newIndex;
+    //}
 }
 clickon = function(name) {
     //    $('[data-route="workspace"] .btn').removeClass('active');
@@ -960,9 +967,6 @@ function mdiEnterKey(event) {
     }
 }
 
-id('mditext0').addEventListener('keyup', mdiEnterKey);
-id('mditext1').addEventListener('keyup', mdiEnterKey);
-
 // The listener could be added to the tablettab element by setting tablettab's
 // contentEditable property.  The problem is that it is too easy for tablettab
 // to lose focus, in which case it does not receive keys.  The solution is to
@@ -971,10 +975,11 @@ id('mditext1').addEventListener('keyup', mdiEnterKey);
 window.addEventListener('keydown', handleKeyDown);
 window.addEventListener('keyup', handleKeyUp);
 
-numpad.attach({target: "wpos-x", axis: "X"});
-numpad.attach({target: "wpos-y", axis: "Y"});
-numpad.attach({target: "wpos-z", axis: "Z"});
-numpad.attach({target: "wpos-a", axis: "A"});
+numpad.attach({target: "disM", axis: "D"});
+numpad.attach({target: "disZ", axis: "Z"});
+//numpad.attach({target: "wpos-y", axis: "Y"});
+//numpad.attach({target: "wpos-z", axis: "Z"});
+//numpad.attach({target: "wpos-a", axis: "A"});
 
 function fullscreenIfMobile() {
     if (/Mobi|Android/i.test(navigator.userAgent)) {
@@ -1024,3 +1029,23 @@ function updateGcodeViewerAngle()  {
 }
 
 id('toolpath').addEventListener("mouseup", updateGcodeViewerAngle);
+//document.getElementById("control-pad").classList.add("open");
+
+function fullscreenIfMobile() {
+    if (/Mobi|Android/i.test(navigator.userAgent)) {
+        toggleFullscreen();
+    }
+}
+
+function showZaxisPopup(){
+    console.log("Z-axis popup function ran");
+    document.getElementById("z-axis-popup").style.display = "block";
+}
+
+document.addEventListener('click', function(event) {
+    if (!document.getElementById("z-axis-popup").contains(event.target) && !document.getElementById("zBtn").contains(event.target) && !document.getElementById("numPad").contains(event.target)) {
+        document.getElementById("z-axis-popup").style.display = "none";
+    }
+});
+
+id('tablettablink').addEventListener('DOMActivate', fullscreenIfMobile, false);

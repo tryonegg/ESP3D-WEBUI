@@ -133,8 +133,88 @@
           <div class="mposition" id="mpos-c">
             0.000
           </div>
+<!-- <audio id="click" src="Button.wav" autostart="false"></audio> -->
+<style>
+.maslow-grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+}
+.maslow-grid-item {
+  padding: 10px;
+  font-size: 30px;
+  text-align: center;
+}
+</style>
+<div id="tablettab" class="tabcontent tablettab">
+<div id="tablet-listener">
+  <div class = "maslow" style="height: 500px; color: #7a7a7a;">
+    <div class = "display" style="width: 75%; display: inline-block;">
+      <canvas id="small-toolpath" class="previewer" style="width: 100%; height: 100%"></canvas>
+      <textarea style="border:  none" class="gcode" id="gcode" rows="8" placeholder="GCode File Display" spellcheck="false" readonly>
+      </textarea>
+    </div>
+    <div class = "controls" style="width: 25%; float: right;">
+      <div style="block: grid; grid-template-columns: 25% 25% 25% 25%;" class="maslow-grid-container">
+        <div class="maslow-grid-item" onclick="sendMove('X-Y+')" style = "background-color: #b69fcb;">
+          <canvas id = "tlBtn" style="width: 100%; height: 100%"></canvas>
         </div>
+        <div class="maslow-grid-item" style = "background-color: #9d88c0;" onclick="sendMove('Y+')"><canvas id = "upBtn" style="width: 100%; height: 100%"></canvas></div>
+        <div class="maslow-grid-item" style = "background-color: #b69fcb;" onclick="sendMove('X+Y+')"><canvas id = "trBtn" style="width: 100%; height: 100%"></canvas></div>  
+        <div class="maslow-grid-item" style = "background-color: #f2f0e4; font-size: 1vw;" onclick="files_select_upload()">Load 
+        File</div>
+        <div class="maslow-grid-item" style = "background-color: #9d88c0;" onclick="sendMove('X-')"><canvas id = "lBtn" style="width: 100%; height: 100%"></div>
+        <div class="maslow-grid-item" style = "background-color: #f2f0e4;"><canvas id = "hBtn" style="width: 100%; height: 100%"></div>  
+        <div class="maslow-grid-item" style = "background-color: #9d88c0;" onclick="sendMove('X+')"><canvas id = "rBtn" style="width: 100%; height: 100%"></div>
+        <div class="maslow-grid-item" style = "background-color: #f2f0e4; font-size: 1vw;">Extend
+        Belts</div>
+        <div class="maslow-grid-item" style = "background-color: #b69fcb;" onclick="sendMove('X-Y-')"><canvas id = "blBtn" style="width: 100%; height: 100%"></canvas></div>
+        <div class="maslow-grid-item" style = "background-color: #9d88c0;" onclick="sendMove('Y-')"><canvas id = "dnBtn" style="width: 100%; height: 100%"></div>
+        <div class="maslow-grid-item" style = "background-color: #b69fcb;" onclick="sendMove('X+Y-')"><canvas id = "brBtn" style="width: 100%; height: 100%"></canvas></div>
+        <div class="maslow-grid-item" style = "background-color: #f2f0e4;" onclick="showZaxisPopup();" id = "zBtn">Z</div>
+        <div class="maslow-grid-item" style = "font-size: 1vw;">Dist To Move:</div>
+        <div class="maslow-grid-item" style = "background-color: #f2f0e4;" id = "disM">100</div>
+        <div class="maslow-grid-item" style = "background-color: #f2f0e4;" id="units" title="Toggle Units" onclick="toggleUnits()">mm</div>
+        <div class="maslow-grid-item" style = "background-color: #f2f0e4; font-size: 1vw;" onmousedown="zeroAxis('X');zeroAxis('Y');" onmouseup="refreshGcode();">Define
+        Home</div>
       </div>
+      <div style="display: grid; grid-template-columns: auto auto auto; width: 100%" class="maslow-grid-container">
+        <div class="maslow-grid-item" style = "background-color: #4aa85c;" onclick="runGCode();"><canvas id = "playBtn" style="width: 100%; height: 100%"></canvas></div>
+        <div class="maslow-grid-item" style = "background-color: #efbb33;" onclick="pauseGCode();"><canvas id = "pauseBtn" style="width: 100%; height: 100%"></canvas></div>  
+        <div class="maslow-grid-item" style = "background-color: #cd654c;" onclick="stopAndRecover();"><canvas id = "stopBtn" style="width: 100%; height: 100%"></canvas></div>
+      </div>
+      <select style = "width:  100%;" id="filelist" onchange="loadGCode()">
+        <option>Load GCode File</option>
+      </select>
+      <div style="display: grid; grid-template-columns: auto auto; width: 100%" class="maslow-grid-container">
+        <div class="maslow-grid-item">
+          <table style="width:100%">
+            <tr>
+              <td>X:</td>
+              <td id="mpos-x">
+                0.000
+              </td>
+            </tr>
+            <tr>
+              <td>Y:</td>
+              <td id="mpos-y">
+                0.000
+              </td>
+            </tr>
+            <tr>
+              <td>Z:</td>
+              <td id="mpos-z">
+                0.000
+              </td>
+            </tr>
+
+            <tr>
+              <td id="active-state"></td>
+            </tr>
+          </table>
+        </div>
+        <div class="maslow-grid-item">Right</div>  
+      </div>
+        <textarea style="border:  none" class="messages" id="messages" rows="14" spellcheck="false" readonly>Serial Messages</textarea>
     </div>
   </div>
   <div style="display:block"> </div>
@@ -530,4 +610,14 @@
       </button>
     </div>
   </div>
+</div>
+  <div id = "z-axis-popup" style="position: absolute; top: 40%; left: 40%; margin-top: -50px; margin-left: -50px; width:400px; height: 400px;">
+    <div class="maslow-grid-container"  style = "display: grid; grid-template-columns: 50% 50%;">
+      <div class="maslow-grid-item" style = "background-color: #f2f0e4;" id = "disZ"> 1.00</div>
+      <div class="maslow-grid-item" style = "background-color: #f2f0e4;" onclick="sendMove('Z+')"> Up</div>
+      <div class="maslow-grid-item" style = "background-color: #f2f0e4; font-size: 1vw;" onclick="zeroAxis('Z')"> Define Home</div>
+      <div class="maslow-grid-item" style = "background-color: #f2f0e4;" onclick="sendMove('Z-')"> Down</div>
+    </div>
+  </div>
+</div>
 </div>

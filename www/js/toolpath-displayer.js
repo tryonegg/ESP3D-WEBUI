@@ -2,24 +2,299 @@
 
 var root = window;
 
-var canvas = id("toolpath");
+var canvas = id("small-toolpath");
+canvas.width = 800;
+canvas.height = 400;
 var tp = canvas.getContext("2d", { willReadFrequently: true });
 var tpRect;
 
 tp.lineWidth = 0.1;
 tp.lineCap = 'round';
-tp.strokeStyle = 'blue';
+tp.strokeStyle = 'black';
 
 var cameraAngle = 0;
 
-var xMaxTravel = 1000;
-var yMaxTravel = 1000;
+var xMaxTravel = 2438;
+var yMaxTravel = 2438/2;
 
-var xHomePos = 0;
-var yHomePos = 0;
+var xHomePos = 2438/2;
+var yHomePos = 2438/4;
 
 var xHomeDir = 1;
 var yHomeDir = 1;
+
+var tlX = -8.339;
+var tlY = 2209;
+var trX = 3505; 
+var trY = 2209;
+var blX = 0;
+var blY = 0;
+var brX = 3505;
+var brY = 0;
+
+//Draw buttons
+const tlC = document.getElementById("tlBtn").getContext("2d");
+tlC.fillStyle = "#b69fcb";
+tlC.fillRect(0, 0, 500, 500);
+tlC.beginPath();
+tlC.moveTo(90, 40);
+tlC.lineTo(90, 140);
+tlC.lineTo(230, 40);
+tlC.lineTo(90, 40);
+tlC.closePath();
+tlC.lineWidth = 5;
+tlC.strokeStyle = 'white';
+tlC.fillStyle = 'white';
+tlC.fill();
+tlC.stroke();
+
+const trC = document.getElementById("trBtn").getContext("2d");
+trC.fillStyle = "#b69fcb";
+trC.fillRect(0, 0, 500, 500);
+trC.beginPath();
+trC.moveTo(90, 40);
+trC.lineTo(230, 140);
+trC.lineTo(230, 40);
+trC.lineTo(90, 40);
+trC.closePath();
+trC.lineWidth = 5;
+trC.strokeStyle = 'white';
+trC.fillStyle = 'white';
+trC.fill();
+trC.stroke();
+
+const blC = document.getElementById("blBtn").getContext("2d");
+blC.fillStyle = "#b69fcb";
+blC.fillRect(0, 0, 500, 500);
+blC.beginPath();
+blC.moveTo(90, 40);
+blC.lineTo(230, 140);
+blC.lineTo(90, 140);
+blC.lineTo(90, 40);
+blC.closePath();
+blC.lineWidth = 5;
+blC.strokeStyle = 'white';
+blC.fillStyle = 'white';
+blC.fill();
+blC.stroke();
+
+const brC = document.getElementById("brBtn").getContext("2d");
+brC.fillStyle = "#b69fcb";
+brC.fillRect(0, 0, 500, 500);
+brC.beginPath();
+brC.moveTo(90, 140);
+brC.lineTo(230, 140);
+brC.lineTo(230, 40);
+brC.lineTo(90, 140);
+brC.closePath();
+brC.lineWidth = 5;
+brC.strokeStyle = 'white';
+brC.fillStyle = 'white';
+brC.fill();
+brC.stroke();
+
+const upC = document.getElementById("upBtn").getContext("2d");
+upC.fillStyle = "#9d88c0";
+upC.fillRect(0, 0, 500, 500);
+// #rect441
+upC.beginPath();
+upC.fillStyle = 'white';
+upC.lineWidth = 1;
+upC.rect(60+49.213840, 99.622299, 93.976021, 74.721062);
+upC.fill();
+    
+// #path608
+upC.beginPath();
+upC.strokeStyle = 'white';
+upC.lineWidth = 1;
+upC.lineCap = 'butt';
+upC.lineJoin = 'miter';
+upC.moveTo(60+5.109692, 104.666810);
+upC.lineTo(60+94.679220, 4.145211);
+upC.lineTo(60+189.305070, 103.959000);
+upC.lineTo(60+5.109692, 104.666810);
+upC.closePath();
+upC.stroke();
+upC.fill();
+
+
+
+const dnC = document.getElementById("dnBtn").getContext("2d");
+dnC.fillStyle = "#9d88c0";
+dnC.fillRect(0, 0, 500, 500);
+// #rect441
+dnC.save();
+dnC.transform(1.000000, 0.000000, 0.000000, -1.000000, 0.000000, 0.000000);
+dnC.fillStyle = 'white';
+dnC.lineWidth = 1;
+dnC.rect(60 + 49.213840, -75.901474, 93.976021, 74.721062);
+dnC.fill();
+dnC.restore();
+    
+// #path608
+dnC.beginPath();
+dnC.strokeStyle = 'white';
+dnC.fillStyle = 'white';
+dnC.lineWidth = 1;
+dnC.lineCap = 'butt';
+dnC.lineJoin = 'miter';
+dnC.moveTo(60 + 5, 70 - 20);
+dnC.lineTo(60 + 94, 171 - 20);
+dnC.lineTo(60 + 189, 71 - 20);
+dnC.lineTo(60 + 5, 70 - 20);
+dnC.closePath();
+dnC.stroke();
+dnC.fill();
+
+const rC = document.getElementById("rBtn").getContext("2d");
+rC.fillStyle = "#9d88c0";
+rC.fillRect(0, 0, 500, 500);
+// #g1100
+rC.save();
+rC.transform(0.000000, 1.000000, -1.000000, 0.000000, 187.481000, 0.273690);
+    
+// #rect441
+rC.fillStyle = 'white';
+rC.lineWidth = 1;
+rC.rect(-20 + 49.213840, 99.622299 - 80, 93.976021, 74.721062);
+rC.fill();
+    
+// #path608
+rC.beginPath();
+rC.strokeStyle = 'white';
+rC.lineWidth = 1;
+rC.lineCap = 'butt';
+rC.lineJoin = 'miter';
+rC.moveTo(-20+5.109692, 104.666810 - 80);
+rC.lineTo(-20+94.679220, 4.145213 - 80);
+rC.lineTo(-20+189.305070, 103.959000 - 80);
+rC.closePath();
+rC.stroke();
+rC.fill();
+rC.restore();
+
+
+const lC = document.getElementById("lBtn").getContext("2d");
+lC.fillStyle = "#9d88c0";
+lC.fillRect(0, 0, 500, 500);
+// #g1100
+lC.save();
+lC.transform(0.000000, 1.000000, 1.000000, 0.000000, 11.957500, 0.273690);
+    
+// #rect441
+lC.fillStyle = 'white';
+lC.lineWidth = 1;
+lC.rect(-20 + 49.213840, 99.622299, 93.976021, 74.721062);
+lC.fill();
+    
+// #path608
+lC.beginPath();
+lC.strokeStyle = 'white';
+lC.lineWidth = 1;
+lC.lineCap = 'butt';
+lC.lineJoin = 'miter';
+lC.moveTo(-20 + 5.109692, 104.666810);
+lC.lineTo(-20 + 94.679220, 4.145213);
+lC.lineTo(-20 + 189.305070, 103.959000);
+lC.closePath();
+lC.stroke();
+lC.fill();
+lC.restore();
+
+const hC = document.getElementById("hBtn").getContext("2d");
+
+const xO = 55;
+const yO = -45;
+
+// #path5094
+hC.beginPath();
+hC.fillStyle = 'rgb(183, 161, 208)';
+hC.strokeStyle = 'rgb(0, 0, 0)';
+hC.lineWidth = 0.472615;
+hC.lineCap = 'butt';
+hC.lineJoin = 'miter';
+hC.moveTo(xO + 55.719343, 197.549650 + yO);
+hC.lineTo(xO + 152.150650, 197.549650 + yO);
+hC.lineTo(xO + 152.609520, 74.078285 + yO);
+hC.lineTo(xO + 132.404810, 73.680279 + yO);
+hC.lineTo(xO + 131.393420, 110.310850 + yO);
+hC.lineTo(xO + 103.475730, 84.035976 + yO);
+hC.lineTo(xO + 54.341657, 131.433070 + yO);
+hC.fill();
+hC.stroke();
+    
+// #rect1898
+hC.beginPath();
+hC.fillStyle = 'rgb(218, 208, 230)';
+hC.lineWidth = 0.472615;
+hC.rect(xO + 74.087212, 146.169600 + yO, 29.847790, 50.981743);
+hC.fill();
+    
+// #path13430
+hC.beginPath();
+hC.fillStyle = 'rgb(151, 132, 181)';
+hC.strokeStyle = 'rgb(0, 0, 0)';
+hC.lineWidth = 0.472615;
+hC.lineCap = 'butt';
+hC.lineJoin = 'miter';
+hC.moveTo(xO + 103.475730, 84.035976 + yO);
+hC.lineTo(xO + 167.304170, 144.974770 + yO);
+hC.lineTo(xO + 181.080090, 132.229340 + yO);
+hC.lineTo(xO + 103.016580, 56.951581 + yO);
+hC.lineTo(xO + 24.953156, 131.432760 + yO);
+hC.lineTo(xO + 40.565818, 144.974770 + yO);
+hC.fill();
+hC.stroke();
+
+//---------------------------
+
+const playC = document.getElementById("playBtn").getContext("2d");
+playC.fillStyle = "#4aa85c";
+playC.fillRect(0, 0, 500, 500);
+
+playC.beginPath();
+playC.strokeStyle = 'white';
+playC.fillStyle = 'white';
+playC.lineWidth = 1;
+playC.lineCap = 'butt';
+playC.lineJoin = 'miter';
+playC.moveTo(60 + 44.053484, 147.608260 - 35);
+playC.lineTo(60 + 44.053484, 68.502834 - 35);
+playC.lineTo(60 + 112.311470, 106.828610 - 35);
+playC.closePath;
+playC.fill();
+playC.stroke();
+
+const pauseC = document.getElementById("pauseBtn").getContext("2d");
+pauseC.fillStyle = "#efbb33";
+pauseC.fillRect(0, 0, 500, 500);
+
+// #rect1967
+pauseC.beginPath();
+pauseC.fillStyle = 'white';
+pauseC.lineWidth = 1;
+pauseC.rect(75 + 44, 66 - 35, 20, 81);
+pauseC.fill();
+    
+// #rect1967-4
+pauseC.beginPath();
+pauseC.fillStyle = 'white';
+pauseC.lineWidth = 1;
+pauseC.rect(75 + 75, 66 - 35, 20, 81);
+pauseC.fill();
+
+const stopC = document.getElementById("stopBtn").getContext("2d");
+stopC.fillStyle = "#cd654c";
+stopC.fillRect(0, 0, 500, 500);
+
+stopC.strokeStyle = 'white';
+stopC.fillStyle = 'white';
+stopC.beginPath();
+stopC.fillStyle = 'white';
+stopC.lineWidth = 1;
+stopC.rect(60 + 44, 65 - 35, 100, 80);
+stopC.fill();
+stopC.stroke();
 
 var tpUnits = 'G21';
 
@@ -167,6 +442,138 @@ var drawMachineBounds = function() {
     tp.strokeStyle = "green";
     tp.stroke();
 
+}
+
+var drawMachineBelts = function() {
+    console.log("Draw belts");
+
+    const tl = projection({x: tlX - trX/2, y: tlY/2, z: 0});
+    const tr = projection({x: trX/2, y: trY/2, z: 0});
+    const bl = projection({x: blX - brX/2, y: blY - tlY/2, z: 0});
+    const br = projection({x: brX/2, y: brY - trY/2, z: 0});
+
+    tpBbox.min.x = Math.min(tpBbox.min.x, bl.x);
+    tpBbox.min.y = Math.min(tpBbox.min.y, bl.y);
+    tpBbox.max.x = Math.max(tpBbox.max.x, tr.x);
+    tpBbox.max.y = Math.max(tpBbox.max.y, tr.y);
+
+    tp.beginPath();
+    tp.strokeStyle = "grey";
+    tp.moveTo(0, 0);
+    tp.lineTo(tl.x, tl.y);
+    tp.moveTo(0, 0);
+    tp.lineTo(tr.x, tr.y);
+    tp.moveTo(0, 0);
+    tp.lineTo(bl.x, bl.y);
+    tp.moveTo(0, 0);
+    tp.lineTo(br.x, br.y);
+    tp.stroke();
+
+    tp.fillStyle = "black";
+    tp.beginPath();
+    tp.arc(tl.x, tl.y, 10, 0, 2 * Math.PI);
+    tp.closePath();
+    tp.fill();
+    tp.beginPath();
+    tp.arc(tr.x, tr.y, 10, 0, 2 * Math.PI);
+    tp.closePath();
+    tp.fill();
+    tp.beginPath();
+    tp.arc(br.x, br.y, 10, 0, 2 * Math.PI);
+    tp.closePath();
+    tp.fill();
+    tp.beginPath();
+    tp.arc(bl.x, bl.y, 10, 0, 2 * Math.PI);
+    tp.closePath();
+    tp.fill();
+    
+
+    const squareSize = projection({x: 50, y: 0, z: 0});
+
+
+    var i = bl.x;
+    var j = bl.y;
+    while(i < tr.x){
+        while(j < tr.y){
+            drawARect(i,j,squareSize.x, computPositonGradient(i, j, tl, tr, bl, br));
+            j = j + squareSize.x;
+        }
+        j = bl.y;
+        i = i + squareSize.x;
+    }
+}
+
+var checkMinBeltLength = function(x1, y1, x2, y2){
+    const dist = Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
+    if(dist < 1200){
+        return 1 - dist/1200;
+    }
+    else{
+        return 0;
+    }
+}
+
+var computPositonGradient = function(x,y, tl, tr, bl, br){
+    var opacity = 0;
+    
+    //Check distance from the mounting points
+    opacity = opacity + checkMinBeltLength(x,y,tl.x, tl.y);
+    opacity = opacity + checkMinBeltLength(x,y,tr.x, tr.y);
+    opacity = opacity + checkMinBeltLength(x,y,bl.x, bl.y);
+    opacity = opacity + checkMinBeltLength(x,y,br.x, br.y);
+
+    opacity = Math.max(opacity, computeTension(x,y, tl, tr, bl, br));
+
+    return opacity;
+}
+
+var computeTension = function(x,y, tl, tr, bl, br){
+    const A = Math.atan((y-tl.y)/(tr.x - x));
+    const B = Math.atan((y-tl.y)/(x-tl.x));
+
+    const T1 = 1 / (Math.cos(A) * Math.sin(B) / Math.cos(B) + Math.sin(A));
+    const T2 = 1 / (Math.cos(B) * Math.sin(A) / Math.cos(A) + Math.sin(B));
+
+    const T1Scaled = T1/-3;
+    const T2Scaled = T2/-3; //This is some arbitrary scaling to make it look right in terms of color
+
+    const max = Math.max(T1Scaled, T2Scaled);
+
+    if(max > .15){
+        return max;
+    }
+    else{
+        return 0;
+    }
+}
+
+// License: MIT - https://opensource.org/licenses/MIT
+// Author: Michele Locati <michele@locati.it>
+// Source: https://gist.github.com/mlocati/7210513
+function perc2color(perc) {
+    console.log(perc);
+    var r, g, b = 0;
+    if(perc < 50) {
+        r = 255;
+        g = Math.round(5.1 * perc);
+    }
+    else {
+        g = 255;
+        r = Math.round(510 - 5.10 * perc);
+    }
+    var h = r * 0x10000 + g * 0x100 + b * 0x1;
+
+    console.log(r + " " + g + " " + b)
+    return "rgba("+r+", "+g+", "+b+", .3)";//'#' + ('000000' + h.toString(16)).slice(-6);
+}
+
+var drawARect = function(x,y,size, opacity){
+
+    const posP = projection({x: x - size/2, y: y - size/2, z: 0});
+    tp.beginPath();
+    tp.fillStyle = perc2color(100 - 100*opacity);//"rgba(255, 0, 0, " + opacity + ")";
+    tp.rect(posP.x, posP.y, size, size);
+    tp.fill();
 }
 
 var xOffset = 0;
@@ -421,7 +828,7 @@ var displayHandlers = {
         if (motion == 'G0') {
             tp.strokeStyle = initialMoves ? 'red' : 'green';
         } else {
-            tp.strokeStyle = 'blue';
+            tp.strokeStyle = 'black';
             // Don't cancel initialMoves on no-motion G1 (e.g. G1 F30)
             // or on Z-only moves
             if (start.x != end.x || start.y != end.y) {
@@ -464,7 +871,7 @@ var displayHandlers = {
         initialMoves = false;
 
         tp.beginPath();
-        tp.strokeStyle = 'blue';
+        tp.strokeStyle = 'black';
         deltaTheta = theta2 - theta1;
         n = 10 * Math.ceil(Math.abs(deltaTheta) / Math.PI);
         dt = (deltaTheta) / n;
@@ -496,7 +903,11 @@ ToolpathDisplayer.prototype.clear = function() {
 }
 
 ToolpathDisplayer.prototype.showToolpath = function(gcode, modal, initialPosition) {
+    cameraAngle = cameraAngle;
+
     var drawBounds = false;
+    var drawBelts  = false;
+
     switch (cameraAngle) {
       case 0:
         obliqueView();
@@ -512,6 +923,11 @@ ToolpathDisplayer.prototype.showToolpath = function(gcode, modal, initialPositio
         topView();
         drawBounds = true;
         break;
+      case 4:
+        topView();
+        drawBounds = true;
+        drawBelts  = true;
+        break;
       default:
         obliqueView();
     }
@@ -521,7 +937,10 @@ ToolpathDisplayer.prototype.showToolpath = function(gcode, modal, initialPositio
     bboxHandlers.modal = modal;
 
     if(drawBounds){
-        drawMachineBounds(); //Adds the machine bounds to the bounding box
+        drawMachineBounds(); //Adds the machine bounds to the bounding box...this does not draw
+    }
+    if(drawBelts){
+        drawMachineBelts(); //Adds the belts to the bounding box...does not draw yet
     }
 
     var gcodeLines = gcode.split('\n');
@@ -536,8 +955,12 @@ ToolpathDisplayer.prototype.showToolpath = function(gcode, modal, initialPositio
     new Toolpath(displayHandlers).loadFromLinesSync(gcodeLines);
 
     drawTool(initialPosition);
+
     if(drawBounds){
-        drawMachineBounds();
+        drawMachineBounds(); //Actually draws the bounding box
+    }
+    if(drawBelts){
+        drawMachineBelts(); //Actually draws the belts
     }
 };
 
@@ -573,7 +996,7 @@ displayer = new ToolpathDisplayer();
 
 ToolpathDisplayer.prototype.cycleCameraAngle = function(gcode, modal, position) {
     cameraAngle = cameraAngle + 1;
-    if(cameraAngle > 3){
+    if(cameraAngle > 4){
         cameraAngle = 0;
     }
 
@@ -581,3 +1004,9 @@ ToolpathDisplayer.prototype.cycleCameraAngle = function(gcode, modal, position) 
 }
 
 canvas.addEventListener("mouseup", updateGcodeViewerAngle); 
+var refreshGcode = function() {
+    const gcode = id('gcode').value;
+    displayer.showToolpath(gcode, WPOS, MPOS, cameraAngle);
+}
+
+id("small-toolpath").addEventListener("mouseup", updateGcodeViewerAngle); 
