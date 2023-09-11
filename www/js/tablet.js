@@ -679,6 +679,26 @@ function arrayToXYZ(a) {
     }
 }
 
+function loadGCode() {
+    tabletClick();
+    var filelist = id('filelist');
+    var filename =  filelist.options[filelist.selectedIndex].textContent;
+    if (filename === '..') {
+        watchPath = watchPath.slice(0, -1).replace(/[^/]*$/,'');
+        filename = '';
+        tabletGetFileList(watchPath);
+    } else if (filename.endsWith('/')) {
+        watchPath = watchPath + filename;
+        filename = '';
+        tabletGetFileList(watchPath);
+    } else {
+        gCodeFilename = watchPath + filename;
+        fetch(encodeURIComponent('SD/' + gCodeFilename))
+            .then(response => response.text() )
+            .then(gcode => showGCode(gcode) );
+    }
+}
+
 function showGCode(gcode) {
     gCodeLoaded = gcode != '';
     if (!gCodeLoaded) {
