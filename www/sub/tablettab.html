@@ -1,623 +1,493 @@
-<div id="tablettab" class="tabcontent tablettab">
-  <div class="nav-panel" id="nav-panel">
-    <div class="col-1 info-button" id="time-of-day">
-    </div>
-    <div class="col-4">
-      <div class="active-state" id="active-state"></div>
-    </div>
-    <div class="col-2">
-      <button type="button" class="btn btn-default btn-start" id="btn-start" onclick="doLeftButton();">
-        Start
-      </button>
-    </div>
-    <div class="col-2">
-      <button type="button" class="btn btn-default btn-start" id="btn-pause" onclick="doRightButton();">
-        Pause
-      </button>
-    </div>
-    <div class="col-1 info-button" id="line">
-    </div>
-    <div class="col-1 info-button" id="runtime">
-    </div>
-    <div class="col-1">
-      <button type="button" class="btn btn-default dropdown-toggle" id="btn-dropdown" onclick="toggleDropdown()">
-        <!--- <i class="fa fa-list"></i> --->
-        Menu
-      </button>
-    </div>
-  </div>
-  <div style="display:block">
-        <div class="btn-group btn-group-justified" style="float:right; width:20%">
-          <li class="dropdown">
-            <ul class="dropdown-menu" id="tablet-dropdown-menu" role="menu">
-              <li>
-                <a role="menuitem" href="javascript:void(0)" onclick="menuFullscreen()"><i class="fa fa-fullscreen"></i>&nbsp;Fullscreen</a>
-              </li>
-              <li>
-                <a role="menuitem" href="javascript:void(0)" onclick="menuHomeAll()"><i class="fa fa-home"></i>&nbsp;Homing</a>
-              </li>
-              <li>
-                <a role="menuitem" href="javascript:void(0)" onclick="menuHomeA()"><i class="fa fa-home"></i>&nbsp;Home A</a>
-              </li>
-              <li>
-                <a role="menuitem" href="javascript:void(0)" onclick="menuSpindleOff()"><i class="fa fa-power-off"></i>&nbsp;Spindle Off</a>
-              </li>
-              <li>
-                <a role="menuitem" href="javascript:void(0)" onclick="menuUnlock()"><i class="fa fa-unlock-alt"></i>&nbsp;Unlock</a>
-              </li>
-              <li>
-                <a role="menuitem" href="javascript:void(0)" onclick="menuReset()"><i class="fa fa-undo"></i>&nbsp;Reset</a>
-              </li>
-            </ul>
-          </li>
-    </div>
-  </div>
-  <div class="axis-position" id="axis-position">
-    <div class="col-1 pos-name" id="wpos-label">
-      WPos
-    </div>
-    <div class="col-11">
-      <div class="col-3">
-        <div class="col-1 axis-label">X</div>
-        <div class="col-6">
-          <button class="btn btn-default position" id="wpos-x">
-            0.000
-          </button>
-        </div>
-        <div class="col-5">
-          <div class="mposition" id="mpos-x">
-            0.000
-          </div>
-        </div>
-      </div>
-      <div class="col-3">
-        <div class="col-1 axis-label">Y</div>
-        <div class="col-6">
-          <button class="btn btn-default position" id="wpos-y">
-            0.000
-          </button>
-        </div>
-        <div class="col-5">
-          <div class="mposition" id="mpos-y">
-            0.000
-          </div>
-        </div>
-      </div>
-      <div class="col-3">
-        <div class="col-1 axis-label">Z</div>
-        <div class="col-6">
-          <button class="btn btn-default position" id="wpos-z">
-            0.000
-          </button>
-        </div>
-        <div class="col-5">
-          <div class="mposition" id="mpos-z">
-            0.000
-          </div>
-        </div>
-      </div>
-      <div class="col-3">
-        <div class="col-1 axis-label">A</div>
-        <div class="col-6">
-          <button class="btn btn-default position" id="wpos-a">
-            0.000
-          </button>
-        </div>
-        <div class="col-5">
-          <div class="mposition" id="mpos-a">
-            0.000
-          </div>
-        </div>
-      </div>
-      <div class="col-0 hidden">
-        <div class="col-1 axis-label">B</div>
-        <div class="col-6">
-          <button class="btn btn-default position" id="wpos-b">
-            0.000
-          </button>
-        </div>
-        <div class="col-5">
-          <div class="mposition" id="mpos-b">
-            0.000
-          </div>
-        </div>
-      </div>
-      <div class="col-0 hidden">
-        <div class="col-1 axis-label">C</div>
-        <div class="col-6">
-          <button class="btn btn-default position" id="wpos-c">
-            0.000
-          </button>
-        </div>
-        <div class="col-5">
-          <div class="mposition" id="mpos-c">
-            0.000
-          </div>
-<!-- <audio id="click" src="Button.wav" autostart="false"></audio> -->
 <style>
-.maslow-grid-container {
-  display: grid;
-  grid-template-columns: auto auto auto auto;
-}
-.maslow-grid-item {
-  padding: 10px;
-  font-size: 30px;
-  text-align: center;
-}
-</style>
+  .maslow-grid-container {
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+  }
+  .maslow-grid-item {
+    padding: 10px;
+    font-size: 30px;
+    text-align: center;
+  }
+  </style>
+
 <div id="tablettab" class="tabcontent tablettab">
-<div id="tablet-listener">
-  <div class = "maslow" style="height: 500px; color: #7a7a7a;">
-    <div class = "display" style="width: 75%; display: inline-block;">
-      <canvas id="small-toolpath" class="previewer" style="width: 100%; height: 100%"></canvas>
-      <textarea style="border:  none" class="gcode" id="gcode" rows="8" placeholder="GCode File Display" spellcheck="false" readonly>
-      </textarea>
-    </div>
-    <div class = "controls" style="width: 25%; float: right;">
-      <div style="block: grid; grid-template-columns: 25% 25% 25% 25%;" class="maslow-grid-container">
-        <div class="maslow-grid-item" onclick="sendMove('X-Y+')" style = "background-color: #b69fcb;">
-          <canvas id = "tlBtn" style="width: 100%; height: 100%"></canvas>
-        </div>
-        <div class="maslow-grid-item" style = "background-color: #9d88c0;" onclick="sendMove('Y+')"><canvas id = "upBtn" style="width: 100%; height: 100%"></canvas></div>
-        <div class="maslow-grid-item" style = "background-color: #b69fcb;" onclick="sendMove('X+Y+')"><canvas id = "trBtn" style="width: 100%; height: 100%"></canvas></div>  
-        <div class="maslow-grid-item" style = "background-color: #f2f0e4; font-size: 1vw;" onclick="files_select_upload()">Load 
-        File</div>
-        <div class="maslow-grid-item" style = "background-color: #9d88c0;" onclick="sendMove('X-')"><canvas id = "lBtn" style="width: 100%; height: 100%"></div>
-        <div class="maslow-grid-item" style = "background-color: #f2f0e4;"><canvas id = "hBtn" style="width: 100%; height: 100%"></div>  
-        <div class="maslow-grid-item" style = "background-color: #9d88c0;" onclick="sendMove('X+')"><canvas id = "rBtn" style="width: 100%; height: 100%"></div>
-        <div class="maslow-grid-item" style = "background-color: #f2f0e4; font-size: 1vw;">Extend
-        Belts</div>
-        <div class="maslow-grid-item" style = "background-color: #b69fcb;" onclick="sendMove('X-Y-')"><canvas id = "blBtn" style="width: 100%; height: 100%"></canvas></div>
-        <div class="maslow-grid-item" style = "background-color: #9d88c0;" onclick="sendMove('Y-')"><canvas id = "dnBtn" style="width: 100%; height: 100%"></div>
-        <div class="maslow-grid-item" style = "background-color: #b69fcb;" onclick="sendMove('X+Y-')"><canvas id = "brBtn" style="width: 100%; height: 100%"></canvas></div>
-        <div class="maslow-grid-item" style = "background-color: #f2f0e4;" onclick="showZaxisPopup();" id = "zBtn">Z</div>
-        <div class="maslow-grid-item" style = "font-size: 1vw;">Dist To Move:</div>
-        <div class="maslow-grid-item" style = "background-color: #f2f0e4;" id = "disM">100</div>
-        <div class="maslow-grid-item" style = "background-color: #f2f0e4;" id="units" title="Toggle Units" onclick="toggleUnits()">mm</div>
-        <div class="maslow-grid-item" style = "background-color: #f2f0e4; font-size: 1vw;" onmousedown="zeroAxis('X');zeroAxis('Y');" onmouseup="refreshGcode();">Define
-        Home</div>
+  this test text here
+  <div id="tablet-listener">
+    <div class = "maslow" style="height: 500px; color: #7a7a7a;">
+      <div class = "display" style="width: 75%; display: inline-block;">
+        <canvas id="small-toolpath" class="previewer" style="width: 100%; height: 100%"></canvas>
+        <textarea style="border:  none" class="gcode" id="gcode" rows="8" placeholder="GCode File Display" spellcheck="false" readonly>
+        </textarea>
       </div>
-      <div style="display: grid; grid-template-columns: auto auto auto; width: 100%" class="maslow-grid-container">
-        <div class="maslow-grid-item" style = "background-color: #4aa85c;" onclick="runGCode();"><canvas id = "playBtn" style="width: 100%; height: 100%"></canvas></div>
-        <div class="maslow-grid-item" style = "background-color: #efbb33;" onclick="pauseGCode();"><canvas id = "pauseBtn" style="width: 100%; height: 100%"></canvas></div>  
-        <div class="maslow-grid-item" style = "background-color: #cd654c;" onclick="stopAndRecover();"><canvas id = "stopBtn" style="width: 100%; height: 100%"></canvas></div>
-      </div>
-      <select style = "width:  100%;" id="filelist" onchange="loadGCode()">
-        <option>Load GCode File</option>
-      </select>
-      <div style="display: grid; grid-template-columns: auto auto; width: 100%" class="maslow-grid-container">
-        <div class="maslow-grid-item">
-          <table style="width:100%">
-            <tr>
-              <td>X:</td>
-              <td id="mpos-x">
-                0.000
-              </td>
-            </tr>
-            <tr>
-              <td>Y:</td>
-              <td id="mpos-y">
-                0.000
-              </td>
-            </tr>
-            <tr>
-              <td>Z:</td>
-              <td id="mpos-z">
-                0.000
-              </td>
-            </tr>
-
-            <tr>
-              <td id="active-state"></td>
-            </tr>
-          </table>
+      <div class = "controls" style="width: 25%; float: right;">
+        <div style="block: grid; grid-template-columns: 25% 25% 25% 25%;" class="maslow-grid-container">
+          <div class="maslow-grid-item" onclick="sendMove('X-Y+')" style = "background-color: #b69fcb;">
+            <canvas id = "tlBtn" style="width: 100%; height: 100%"></canvas>
+          </div>
+          <div class="maslow-grid-item" style = "background-color: #9d88c0;" onclick="sendMove('Y+')"><canvas id = "upBtn" style="width: 100%; height: 100%"></canvas></div>
+          <div class="maslow-grid-item" style = "background-color: #b69fcb;" onclick="sendMove('X+Y+')"><canvas id = "trBtn" style="width: 100%; height: 100%"></canvas></div>  
+          <div class="maslow-grid-item" style = "background-color: #f2f0e4; font-size: 1vw;" onclick="files_select_upload()">Load 
+          File</div>
+          <div class="maslow-grid-item" style = "background-color: #9d88c0;" onclick="sendMove('X-')"><canvas id = "lBtn" style="width: 100%; height: 100%"></div>
+          <div class="maslow-grid-item" style = "background-color: #f2f0e4;"><canvas id = "hBtn" style="width: 100%; height: 100%"></div>  
+          <div class="maslow-grid-item" style = "background-color: #9d88c0;" onclick="sendMove('X+')"><canvas id = "rBtn" style="width: 100%; height: 100%"></div>
+          <div class="maslow-grid-item" style = "background-color: #f2f0e4; font-size: 1vw;">Extend
+          Belts</div>
+          <div class="maslow-grid-item" style = "background-color: #b69fcb;" onclick="sendMove('X-Y-')"><canvas id = "blBtn" style="width: 100%; height: 100%"></canvas></div>
+          <div class="maslow-grid-item" style = "background-color: #9d88c0;" onclick="sendMove('Y-')"><canvas id = "dnBtn" style="width: 100%; height: 100%"></div>
+          <div class="maslow-grid-item" style = "background-color: #b69fcb;" onclick="sendMove('X+Y-')"><canvas id = "brBtn" style="width: 100%; height: 100%"></canvas></div>
+          <div class="maslow-grid-item" style = "background-color: #f2f0e4;" onclick="showZaxisPopup();" id = "zBtn">Z</div>
+          <div class="maslow-grid-item" style = "font-size: 1vw;">Dist To Move:</div>
+          <div class="maslow-grid-item" style = "background-color: #f2f0e4;" id = "disM">100</div>
+          <div class="maslow-grid-item" style = "background-color: #f2f0e4;" id="units" title="Toggle Units" onclick="toggleUnits()">mm</div>
+          <div class="maslow-grid-item" style = "background-color: #f2f0e4; font-size: 1vw;" onmousedown="zeroAxis('X');zeroAxis('Y');" onmouseup="refreshGcode();">Define
+          Home</div>
         </div>
-        <div class="maslow-grid-item">Right</div>  
-      </div>
-        <textarea style="border:  none" class="messages" id="messages" rows="14" spellcheck="false" readonly>Serial Messages</textarea>
-    </div>
-  </div>
-  <div style="display:block"> </div>
-  <div id="setAxis" class="axis-position">
-    <div class="col-1">
-      <button type="button" class="btn btn-default btn-units" id="units" title="Toggle Units" onclick="toggleUnits()">
-        mm
-      </button>
-    </div>
-    
-    <div class="col-11">
-      <div class="col-3">
-        <div class="col-2"> </div>
-        <div class="col-4">
-          <button type="button" class="btn btn-default btn-zero" title="Set X to 0" onclick="zeroAxis('X')">
-            X=0
-          </button>
+        <div style="display: grid; grid-template-columns: auto auto auto; width: 100%" class="maslow-grid-container">
+          <div class="maslow-grid-item" style = "background-color: #4aa85c;" onclick="runGCode();"><canvas id = "playBtn" style="width: 100%; height: 100%"></canvas></div>
+          <div class="maslow-grid-item" style = "background-color: #efbb33;" onclick="pauseGCode();"><canvas id = "pauseBtn" style="width: 100%; height: 100%"></canvas></div>  
+          <div class="maslow-grid-item" style = "background-color: #cd654c;" onclick="stopAndRecover();"><canvas id = "stopBtn" style="width: 100%; height: 100%"></canvas></div>
         </div>
-        <div class="col-1"> </div>
-        <div class="col-4">
-          <button type="button" class="btn btn-default btn-goto" title="Goto 0 in X" onclick="goAxisByValue('X', 0)">
-            &#8594;X0
-          </button>
+        <select style = "width:  100%;" id="filelist" onchange="loadGCode()">
+          <option>Load GCode File</option>
+        </select>
+        <div style="display: grid; grid-template-columns: auto auto; width: 100%" class="maslow-grid-container">
+          <div class="maslow-grid-item">
+            <table style="width:100%">
+              <tr>
+                <td>X:</td>
+                <td id="mpos-x">
+                  0.000
+                </td>
+              </tr>
+              <tr>
+                <td>Y:</td>
+                <td id="mpos-y">
+                  0.000
+                </td>
+              </tr>
+              <tr>
+                <td>Z:</td>
+                <td id="mpos-z">
+                  0.000
+                </td>
+              </tr>
+  
+              <tr>
+                <td id="active-state"></td>
+              </tr>
+            </table>
+          </div>
+          <div class="maslow-grid-item">Right</div>  
         </div>
-        <div class="col-1"> </div>
-      </div>
-      <div class="col-3">
-        <div class="col-2"> </div>
-        <div class="col-4">
-          <button type="button" class="btn btn-default btn-zero" title="Set Y to 0" onclick="zeroAxis('Y')">
-            Y=0
-          </button>
-        </div>
-        <div class="col-1"> </div>
-        <div class="col-4">
-          <button type="button" class="btn btn-default btn-goto" title="Goto 0 in Y" onclick="goAxisByValue('Y', 0)">
-            &#8594;Y0
-          </button>
-        </div>
-        <div class="col-1"> </div>
-      </div>
-      <div class="col-3">
-        <div class="col-2"> </div>
-        <div class="col-4">
-          <button type="button" class="btn btn-default btn-zero" title="Set Z to 0" onclick="zeroAxis('Z')">
-            Z=0
-          </button>
-        </div>
-        <div class="col-1"> </div>
-        <div class="col-4">
-          <button type="button" class="btn btn-default btn-goto" title="Goto 0 in Z" onclick="goAxisByValue('Z', 0)">
-            &#8594;Z0
-          </button>
-        </div>
-        <div class="col-1"> </div>
-      </div>
-      <div class="col-3">
-        <div class="col-2"> </div>
-        <div class="col-4">
-          <button type="button" class="btn btn-default btn-zero" title="Set A to 0" onclick="zeroAxis('A')">
-            A=0
-          </button>
-        </div>
-        <div class="col-1"> </div>
-        <div class="col-4">
-          <button type="button" class="btn btn-default btn-goto" title="Goto 0 in A" onclick="goAxisByValue('A', 0)">
-            &#8594;A0
-          </button>
-        </div>
-        <div class="col-1"> </div>
-      </div>
-    </div>
-  </div>
-  <div style="display:block"> </div>
-  <div class="control-pad" id="control-pad">
-    <div class="middle-block jog-controls" id="jog-controls">
-      <div class="jog-row">
-        <div class="col-2 info-button" id="distance">
-        </div>
-        <div class="col-2">
-          <button
-            type="button"
-            class="btn btn-default jog" id="jog-y-plus"
-            title="Move Y+"
-            value="Y+"
-            >
-            Y+
-          </button>
-        </div>
-        <div class="col-2">
-          &nbsp;
-        </div>
-        <div class="col-2">
-          <button
-            type="button"
-            class="btn btn-default jog" id="jog-z-plus"
-            title="Move Z+"
-            value="Z+"
-            >
-            Z+
-          </button>
-        </div>
-        
-        <div class="col-1">
-          <button
-            type="button"
-            class="btn btn-default set-distance"
-            title="Jog by 0.001"
-            onclick="btnSetDistance()"
-            id="jog00"
-            >
-            0.001
-          </button>
-	</div>
-        <div class="col-1">
-          <button
-            type="button"
-            class="btn btn-default set-distance"
-            title="Jog by 0.01"
-            onclick="btnSetDistance()"
-            id="jog01"
-            >
-            0.01
-          </button>
-	</div>
-        <div class="col-1">
-          <button
-            type="button"
-            class="btn btn-default set-distance"
-            title="Jog by 0.1"
-            onclick="btnSetDistance()"
-            id="jog02"
-            >
-            0.1
-          </button>
-	</div>
-        <div class="col-1">
-          <button
-            type="button"
-            class="btn btn-default set-distance"
-            title="Jog by 1"
-            onclick="btnSetDistance()"
-            id="jog03"
-            >
-            1
-          </button>
-	</div>
-      </div>
-      
-      <div class="jog-row">
-        <div class="col-2">
-          <button
-            type="button"
-            class="btn btn-default jog" id="jog-x-minus"
-            title="Move X-"
-            value="X-"
-            >
-            X-
-          </button>
-        </div>
-        <div class="col-2">
-          <div class="col-8 info-button spindle" id="spindle-speed"></div>
-          <div class="col-4 info-button spindle" id="spindle-direction"></div>
-        </div>
-        
-        <div class="col-2">
-          <button
-            type="button"
-            class="btn btn-default jog" id="jog-x-plus"
-            title="Move X+"
-            value="X+"
-            >
-            X+
-          </button>
-        </div>
-        <div class="col-2">
-          <select class="form-control jog-selector" id="jog-distance">
-            <option>0.00025</option>
-            <option>0.0005</option>
-            <option>0.001</option>
-            <option>0.003</option>
-            <option>0.005</option>
-            <option>0.01</option>
-            <option>0.03</option>
-            <option>0.05</option>
-            <option>0.1</option>
-            <option>0.3</option>
-            <option>0.5</option>
-            <option>1</option>
-            <option>3</option>
-            <option>5</option>
-            <option>10</option>
-            <option>30</option>
-          </select>
-        </div>
-
-        <div class="col-1">
-          <button
-            type="button"
-            class="btn btn-default set-distance"
-            title="Jog by 0.003"
-            onclick="btnSetDistance()"
-            id="jog10"
-            >
-            0.003
-          </button>
-	</div>
-        <div class="col-1">
-          <button
-            type="button"
-            class="btn btn-default set-distance"
-            title="Jog by 0.03"
-            onclick="btnSetDistance()"
-            id="jog11"
-            >
-            0.03
-          </button>
-	</div>
-        <div class="col-1">
-          <button
-            type="button"
-            class="btn btn-default set-distance"
-            title="Jog by 0.3"
-            onclick="btnSetDistance()"
-            id="jog12"
-            >
-            0.3
-          </button>
-	</div>
-        <div class="col-1">
-          <button
-            type="button"
-            class="btn btn-default set-distance"
-            title="Jog by 3"
-            onclick="btnSetDistance()"
-            id="jog13"
-            >
-            3
-          </button>
-	</div>
-      </div>
-      
-      <div class="jog-row">
-        <div class="col-2 info-button" id="emptyLLHC">
-        </div>
-        <div class="col-2">
-          <button
-            type="button"
-            class="btn btn-default jog" id="jog-y-minus"
-            title="Move Y-"
-            value="Y-"
-            >
-            Y-
-          </button>
-        </div>
-        <div class="col-2 info-button" id="emptyLRHC">
-        </div>
-        <div class="col-2">
-          <button
-            type="button"
-            class="btn btn-default jog" id="jog-z-minus"
-            title="Move Z-"
-            value="Z-"
-            >
-            Z-
-          </button>
-        </div>
-
-        <div class="col-1">
-          <button
-            type="button"
-            class="btn btn-default set-distance"
-            title="Jog by 0.005"
-            onclick="btnSetDistance()"
-            id="jog20"
-            >
-            0.005
-          </button>
-	</div>
-        <div class="col-1">
-          <button
-            type="button"
-            class="btn btn-default set-distance"
-            title="Jog by 0.05"
-            onclick="btnSetDistance()"
-            id="jog21"
-            >
-            0.05
-          </button>
-	</div>
-        <div class="col-1">
-          <button
-            type="button"
-            class="btn btn-default set-distance"
-            title="Jog by 0.5"
-            onclick="btnSetDistance()"
-            id="jog22"
-            >
-            0.5
-          </button>
-	</div>
-        <div class="col-1">
-          <button
-            type="button"
-            class="btn btn-default set-distance"
-            title="Jog by 5"
-            onclick="btnSetDistance()"
-            id="jog23"
-            >
-            5
-          </button>
-	</div>
+          <textarea style="border:  none" class="messages" id="messages" rows="14" spellcheck="false" readonly>Serial Messages</textarea>
       </div>
     </div>
     <div style="display:block"> </div>
+    <div id="setAxis" class="axis-position">
+      <div class="col-1">
+        <button type="button" class="btn btn-default btn-units" id="units" title="Toggle Units" onclick="toggleUnits()">
+          mm
+        </button>
+      </div>
+      
+      <div class="col-11">
+        <div class="col-3">
+          <div class="col-2"> </div>
+          <div class="col-4">
+            <button type="button" class="btn btn-default btn-zero" title="Set X to 0" onclick="zeroAxis('X')">
+              X=0
+            </button>
+          </div>
+          <div class="col-1"> </div>
+          <div class="col-4">
+            <button type="button" class="btn btn-default btn-goto" title="Goto 0 in X" onclick="goAxisByValue('X', 0)">
+              &#8594;X0
+            </button>
+          </div>
+          <div class="col-1"> </div>
+        </div>
+        <div class="col-3">
+          <div class="col-2"> </div>
+          <div class="col-4">
+            <button type="button" class="btn btn-default btn-zero" title="Set Y to 0" onclick="zeroAxis('Y')">
+              Y=0
+            </button>
+          </div>
+          <div class="col-1"> </div>
+          <div class="col-4">
+            <button type="button" class="btn btn-default btn-goto" title="Goto 0 in Y" onclick="goAxisByValue('Y', 0)">
+              &#8594;Y0
+            </button>
+          </div>
+          <div class="col-1"> </div>
+        </div>
+        <div class="col-3">
+          <div class="col-2"> </div>
+          <div class="col-4">
+            <button type="button" class="btn btn-default btn-zero" title="Set Z to 0" onclick="zeroAxis('Z')">
+              Z=0
+            </button>
+          </div>
+          <div class="col-1"> </div>
+          <div class="col-4">
+            <button type="button" class="btn btn-default btn-goto" title="Goto 0 in Z" onclick="goAxisByValue('Z', 0)">
+              &#8594;Z0
+            </button>
+          </div>
+          <div class="col-1"> </div>
+        </div>
+        <div class="col-3">
+          <div class="col-2"> </div>
+          <div class="col-4">
+            <button type="button" class="btn btn-default btn-zero" title="Set A to 0" onclick="zeroAxis('A')">
+              A=0
+            </button>
+          </div>
+          <div class="col-1"> </div>
+          <div class="col-4">
+            <button type="button" class="btn btn-default btn-goto" title="Goto 0 in A" onclick="goAxisByValue('A', 0)">
+              &#8594;A0
+            </button>
+          </div>
+          <div class="col-1"> </div>
+        </div>
+      </div>
+    </div>
+    <div style="display:block"> </div>
+    <div class="control-pad" id="control-pad">
+      <div class="middle-block jog-controls" id="jog-controls">
+        <div class="jog-row">
+          <div class="col-2 info-button" id="distance">
+          </div>
+          <div class="col-2">
+            <button
+              type="button"
+              class="btn btn-default jog" id="jog-y-plus"
+              title="Move Y+"
+              value="Y+"
+              >
+              Y+
+            </button>
+          </div>
+          <div class="col-2">
+            &nbsp;
+          </div>
+          <div class="col-2">
+            <button
+              type="button"
+              class="btn btn-default jog" id="jog-z-plus"
+              title="Move Z+"
+              value="Z+"
+              >
+              Z+
+            </button>
+          </div>
+          
+          <div class="col-1">
+            <button
+              type="button"
+              class="btn btn-default set-distance"
+              title="Jog by 0.001"
+              onclick="btnSetDistance()"
+              id="jog00"
+              >
+              0.001
+            </button>
+    </div>
+          <div class="col-1">
+            <button
+              type="button"
+              class="btn btn-default set-distance"
+              title="Jog by 0.01"
+              onclick="btnSetDistance()"
+              id="jog01"
+              >
+              0.01
+            </button>
+    </div>
+          <div class="col-1">
+            <button
+              type="button"
+              class="btn btn-default set-distance"
+              title="Jog by 0.1"
+              onclick="btnSetDistance()"
+              id="jog02"
+              >
+              0.1
+            </button>
+    </div>
+          <div class="col-1">
+            <button
+              type="button"
+              class="btn btn-default set-distance"
+              title="Jog by 1"
+              onclick="btnSetDistance()"
+              id="jog03"
+              >
+              1
+            </button>
+    </div>
+        </div>
+        
+        <div class="jog-row">
+          <div class="col-2">
+            <button
+              type="button"
+              class="btn btn-default jog" id="jog-x-minus"
+              title="Move X-"
+              value="X-"
+              >
+              X-
+            </button>
+          </div>
+          <div class="col-2">
+            <div class="col-8 info-button spindle" id="spindle-speed"></div>
+            <div class="col-4 info-button spindle" id="spindle-direction"></div>
+          </div>
+          
+          <div class="col-2">
+            <button
+              type="button"
+              class="btn btn-default jog" id="jog-x-plus"
+              title="Move X+"
+              value="X+"
+              >
+              X+
+            </button>
+          </div>
+          <div class="col-2">
+            <select class="form-control jog-selector" id="jog-distance">
+              <option>0.00025</option>
+              <option>0.0005</option>
+              <option>0.001</option>
+              <option>0.003</option>
+              <option>0.005</option>
+              <option>0.01</option>
+              <option>0.03</option>
+              <option>0.05</option>
+              <option>0.1</option>
+              <option>0.3</option>
+              <option>0.5</option>
+              <option>1</option>
+              <option>3</option>
+              <option>5</option>
+              <option>10</option>
+              <option>30</option>
+            </select>
+          </div>
+  
+          <div class="col-1">
+            <button
+              type="button"
+              class="btn btn-default set-distance"
+              title="Jog by 0.003"
+              onclick="btnSetDistance()"
+              id="jog10"
+              >
+              0.003
+            </button>
+    </div>
+          <div class="col-1">
+            <button
+              type="button"
+              class="btn btn-default set-distance"
+              title="Jog by 0.03"
+              onclick="btnSetDistance()"
+              id="jog11"
+              >
+              0.03
+            </button>
+    </div>
+          <div class="col-1">
+            <button
+              type="button"
+              class="btn btn-default set-distance"
+              title="Jog by 0.3"
+              onclick="btnSetDistance()"
+              id="jog12"
+              >
+              0.3
+            </button>
+    </div>
+          <div class="col-1">
+            <button
+              type="button"
+              class="btn btn-default set-distance"
+              title="Jog by 3"
+              onclick="btnSetDistance()"
+              id="jog13"
+              >
+              3
+            </button>
+    </div>
+        </div>
+        
+        <div class="jog-row">
+          <div class="col-2 info-button" id="emptyLLHC">
+          </div>
+          <div class="col-2">
+            <button
+              type="button"
+              class="btn btn-default jog" id="jog-y-minus"
+              title="Move Y-"
+              value="Y-"
+              >
+              Y-
+            </button>
+          </div>
+          <div class="col-2 info-button" id="emptyLRHC">
+          </div>
+          <div class="col-2">
+            <button
+              type="button"
+              class="btn btn-default jog" id="jog-z-minus"
+              title="Move Z-"
+              value="Z-"
+              >
+              Z-
+            </button>
+          </div>
+  
+          <div class="col-1">
+            <button
+              type="button"
+              class="btn btn-default set-distance"
+              title="Jog by 0.005"
+              onclick="btnSetDistance()"
+              id="jog20"
+              >
+              0.005
+            </button>
+    </div>
+          <div class="col-1">
+            <button
+              type="button"
+              class="btn btn-default set-distance"
+              title="Jog by 0.05"
+              onclick="btnSetDistance()"
+              id="jog21"
+              >
+              0.05
+            </button>
+    </div>
+          <div class="col-1">
+            <button
+              type="button"
+              class="btn btn-default set-distance"
+              title="Jog by 0.5"
+              onclick="btnSetDistance()"
+              id="jog22"
+              >
+              0.5
+            </button>
+    </div>
+          <div class="col-1">
+            <button
+              type="button"
+              class="btn btn-default set-distance"
+              title="Jog by 5"
+              onclick="btnSetDistance()"
+              id="jog23"
+              >
+              5
+            </button>
+    </div>
+        </div>
+      </div>
+      <div style="display:block"> </div>
+  
+      <div class="mdifiles" id="mdifiles">
+        <div class="col-2" id="mdifiles">
+          <input type="text" class="form-control" id="mditext0" placeholder="GCode Command" onFocus="inputFocused()" onBlur="inputBlurred()">
+        </div>
+        <div class="col-1">
+          <button
+            type="button"
+            class="btn btn-default mdi-go"
+            title="Submit GCode Command"
+            onclick="MDI('mditext0')"
+            >
+            MDI
+          </button>
+        </div>
+        <div class="col-2">
+          <input type="text" class="form-control" id="mditext1" placeholder="GCode Command" onFocus="inputFocused()" onBlur="inputBlurred()">
+        </div>
+        <div class="col-1">
+          <button
+            type="button"
+            class="btn btn-default mdi-go"
+            title="Submit GCode Command"
+            onclick="MDI('mditext1')"
+            >
+            MDI
+          </button>
+        </div>
+        <div class="col-4">
+          <select class="form-control" id="filelist" onchange="selectFile()">
+      <option>Load GCode File</option>
+          </select>
+        </div>
+        <div class="col-1">
+          <button
+            type="button"
+            class="btn btn-default refresh"
+            title="Upload New File"
+            onclick="files_select_upload()"
+            >
+            Upld
+          </button>
+        </div>
+        <div class="col-1">
+          <button
+            type="button"
+            class="btn btn-default load"
+            title="Reload File"
+            onclick="selectFile()"
+            >
+            Load
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="status" id="status">
+      <div class="col-5 text-column">
+        <div class="messages" id="gcode-states"></div>
+        <!-- <textarea class="messages" id="messages" rows="2" spellcheck="false" readonly>Serial Messages</textarea> -->
+        <div class="messages" id="messages">Serial Messages</div>
+  
+        <textarea class="gcode" id="gcode" placeholder="GCode File Display" spellcheck="false"" readonly>
+        </textarea>
+      </div>
+      <!-- position:relative is necessary as a container for position:absolute in the expand button -->
+      <div class="col-7" style="position:relative; height:100%">
+        <canvas id="toolpath" class="previewer" style="z-index: 0">
+        </canvas>
+        <span id="filename"></span>
+        <button
+          id="expand-button"
+          type="button"
+          class="btn btn-default"
+          title="Expand Visualizer"
+          onclick="toggleVisualizer()"
+          >
+          []
+        </button>
+      </div>
+    </div>
+  </div>
+    <div id = "z-axis-popup" style="position: absolute; top: 40%; left: 40%; margin-top: -50px; margin-left: -50px; width:400px; height: 400px;">
+      <div class="maslow-grid-container"  style = "display: grid; grid-template-columns: 50% 50%;">
+        <div class="maslow-grid-item" style = "background-color: #f2f0e4;" id = "disZ"> 1.00</div>
+        <div class="maslow-grid-item" style = "background-color: #f2f0e4;" onclick="sendMove('Z+')"> Up</div>
+        <div class="maslow-grid-item" style = "background-color: #f2f0e4; font-size: 1vw;" onclick="zeroAxis('Z')"> Define Home</div>
+        <div class="maslow-grid-item" style = "background-color: #f2f0e4;" onclick="sendMove('Z-')"> Down</div>
+      </div>
+    </div>
+  </div>
+<!-- <audio id="click" src="Button.wav" autostart="false"></audio> -->
 
-    <div class="mdifiles" id="mdifiles">
-      <div class="col-2" id="mdifiles">
-        <input type="text" class="form-control" id="mditext0" placeholder="GCode Command" onFocus="inputFocused()" onBlur="inputBlurred()">
-      </div>
-      <div class="col-1">
-        <button
-          type="button"
-          class="btn btn-default mdi-go"
-          title="Submit GCode Command"
-          onclick="MDI('mditext0')"
-          >
-          MDI
-        </button>
-      </div>
-      <div class="col-2">
-        <input type="text" class="form-control" id="mditext1" placeholder="GCode Command" onFocus="inputFocused()" onBlur="inputBlurred()">
-      </div>
-      <div class="col-1">
-        <button
-          type="button"
-          class="btn btn-default mdi-go"
-          title="Submit GCode Command"
-          onclick="MDI('mditext1')"
-          >
-          MDI
-        </button>
-      </div>
-      <div class="col-4">
-        <select class="form-control" id="filelist" onchange="selectFile()">
-	  <option>Load GCode File</option>
-        </select>
-      </div>
-      <div class="col-1">
-        <button
-          type="button"
-          class="btn btn-default refresh"
-          title="Upload New File"
-          onclick="files_select_upload()"
-          >
-          Upld
-        </button>
-      </div>
-      <div class="col-1">
-        <button
-          type="button"
-          class="btn btn-default load"
-          title="Reload File"
-          onclick="selectFile()"
-          >
-          Load
-        </button>
-      </div>
-    </div>
-  </div>
-  <div class="status" id="status">
-    <div class="col-5 text-column">
-      <div class="messages" id="gcode-states"></div>
-      <!-- <textarea class="messages" id="messages" rows="2" spellcheck="false" readonly>Serial Messages</textarea> -->
-      <div class="messages" id="messages">Serial Messages</div>
 
-      <textarea class="gcode" id="gcode" placeholder="GCode File Display" spellcheck="false"" readonly>
-      </textarea>
-    </div>
-    <!-- position:relative is necessary as a container for position:absolute in the expand button -->
-    <div class="col-7" style="position:relative; height:100%">
-      <canvas id="toolpath" class="previewer" style="z-index: 0">
-      </canvas>
-      <span id="filename"></span>
-      <button
-        id="expand-button"
-        type="button"
-        class="btn btn-default"
-        title="Expand Visualizer"
-        onclick="toggleVisualizer()"
-        >
-        []
-      </button>
-    </div>
-  </div>
-</div>
-  <div id = "z-axis-popup" style="position: absolute; top: 40%; left: 40%; margin-top: -50px; margin-left: -50px; width:400px; height: 400px;">
-    <div class="maslow-grid-container"  style = "display: grid; grid-template-columns: 50% 50%;">
-      <div class="maslow-grid-item" style = "background-color: #f2f0e4;" id = "disZ"> 1.00</div>
-      <div class="maslow-grid-item" style = "background-color: #f2f0e4;" onclick="sendMove('Z+')"> Up</div>
-      <div class="maslow-grid-item" style = "background-color: #f2f0e4; font-size: 1vw;" onclick="zeroAxis('Z')"> Define Home</div>
-      <div class="maslow-grid-item" style = "background-color: #f2f0e4;" onclick="sendMove('Z-')"> Down</div>
-    </div>
-  </div>
-</div>
-</div>
+
+
