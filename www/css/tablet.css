@@ -377,14 +377,6 @@ select:disabled {
   pointer-events: none;
   opacity: .6;
 }
-.control-pad .form-control[disabled=disabled] {
-  pointer-events: none;
-  opacity: .4;
-}
-.control-pad {
-  padding-top: 12px;
-  padding-bottom: 6px;
-}
 
 #filename {
   position:absolute;
@@ -444,17 +436,7 @@ select:disabled {
     border-color: rgb(118, 118, 118);
 }
 
-.middle-block {
-  top: 100%;
-  left: 0;
-  z-index: 100;
-}
-.jog-controls {
-    background-color: lightyellow;
-    display: block;
-    overflow: hidden;
-    padding-bottom: 12px;
-}
+
 #jog-distance {
    text-align-last: right;
 }
@@ -571,9 +553,6 @@ textarea {
 }
 .rotate--90deg:before {
   transform: rotate(-90deg);
-}
-.control-pad .tablettab .btn {
-  width: 100%;
 }
 .axis-position .inset {
   padding-left: 15px;
