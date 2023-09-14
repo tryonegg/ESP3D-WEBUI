@@ -59,8 +59,6 @@ enterFullscreen = function() {
             return;
         }
     }
-    messages.rows = 4;
-    messages.scrollTop = messages.scrollHeight;
 }
 exitFullscreen = function() {
     try {
@@ -72,21 +70,9 @@ exitFullscreen = function() {
             return;
         }
     }
-    messages.rows = 2;
-    messages.scrollTop = messages.scrollHeight;
 }
 
 toggleFullscreen = function() {
-    // var messages = id('messages');
-
-    // if (document.fullscreenElement) {
-    //     document.exitFullscreen();
-    //     messages.rows = 2;
-    // } else {
-    //     document.documentElement.requestFullscreen();
-    //     messages.rows = 4;
-    // }
-    // messages.scrollTop = messages.scrollHeight;
 }
 
 inputFocused = function() {
@@ -172,38 +158,6 @@ function long_jog(target) {
     sendCommand(cmd);
 }
 
-var joggers = id('jog-controls');
-joggers.addEventListener('pointerdown', function(event) {
-    var target = event.target;
-    if (target.classList.contains('jog')) {
-        timeout_id = setTimeout(long_jog, hold_time, target);
-    }
-});
-joggers.addEventListener('pointerup', function(event) {
-    clearTimeout(timeout_id);
-    var target = event.target;
-    if (target.classList.contains('jog')) {
-        if (longone) {
-            longone = false;
-            console.log("Jog cancel");
-            SendRealtimeCmd(0x85);
-        } else {
-            sendMove(target.value);
-        }
-    }
-});
-joggers.addEventListener('pointerout', function(event) {
-    clearTimeout(timeout_id);
-    var target = event.target;
-    if (target.classList.contains('jog')) {
-        if (longone) {
-            longone = false;
-            console.log("Jog cancel");
-            SendRealtimeCmd(0x85);
-        }
-    }
-});
-
 sendMove = function(cmd) {
     tabletClick();
     var jog = function(params) {
@@ -288,10 +242,6 @@ function tabletShowMessage(msg, collecting) {
     if (msg.startsWith('error:')) {
         msg = '<span style="color:red;">' + msg + '</span>';
     }
-    var messages = id('messages');
-//    messages.value += "\n" + msg;
-    messages.innerHTML += "<br>" + msg;
-    messages.scrollTop = messages.scrollHeight;
 
     if(msg.startsWith('$/axes/x/max_travel_mm=')){
         displayer.setXTravel(parseFloat(msg.substring(23,msg.length)));
@@ -316,8 +266,6 @@ function tabletShowMessage(msg, collecting) {
 }
 
 function tabletShowResponse(response) {
-    var messages = id('messages');
-    messages.value = response;
 }
 
 function setJogSelector(units) {
@@ -460,8 +408,6 @@ function tabletGrblState(grbl, response) {
     var cannotClick = stateName == 'Run' || stateName == 'Hold';
     // Recompute the layout only when the state changes
     if (oldCannotClick != cannotClick) {
-        selectDisabled('.control-pad .form-control', cannotClick);
-        selectDisabled('.control-pad .btn', cannotClick);
         selectDisabled('.dropdown-toggle', cannotClick);
         selectDisabled('.axis-position .position', cannotClick);
         selectDisabled('.axis-position .form-control', cannotClick);
@@ -560,7 +506,6 @@ function tabletGrblState(grbl, response) {
                    "F" + modal.feedrate + " " +
                    "S" + modal.spindle + " ";
 
-    setHTML('gcode-states', modal.modes || "GCode State");
 
     if (grbl.lineNumber && (stateName == 'Run' || stateName == 'Hold' || stateName == 'Stop')) {
         setText('line', grbl.lineNumber);
@@ -972,8 +917,6 @@ id('tablettablink').addEventListener('DOMActivate', fullscreenIfMobile, false);
 
 id('tablettab').addEventListener('activate', askMachineBbox, false);
 
-id("control-pad").classList.add("open");
-
 // setMessageHeight(), with these helper functions, adjusts the size of the message
 // window to fill the height of the screen.  It would be nice if we could do that
 // solely with CSS, but I did not find a way to do that.  Everything I tried either
@@ -987,7 +930,7 @@ function heightId(eid) {
 }
 function bodyHeight() { return height(document.body); }
 function controlHeight() {
-    return heightId('nav-panel') + heightId('axis-position') + heightId('setAxis') + heightId('control-pad');
+    return heightId('nav-panel') + heightId('axis-position') + heightId('setAxis');
 }
 function setBottomHeight() {
     if (!tabletIsActive()) {
@@ -1008,9 +951,6 @@ function updateGcodeViewerAngle()  {
     const gcode = id('gcode').value;
     displayer.cycleCameraAngle(gcode, modal, arrayToXYZ(WPOS));
 }
-
-id('toolpath').addEventListener("mouseup", updateGcodeViewerAngle);
-//document.getElementById("control-pad").classList.add("open");
 
 function fullscreenIfMobile() {
     if (/Mobi|Android/i.test(navigator.userAgent)) {
