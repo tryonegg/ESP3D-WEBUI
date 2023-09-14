@@ -378,34 +378,6 @@ select:disabled {
   opacity: .6;
 }
 
-#filename {
-  position:absolute;
-  top:0;
-  left:0;
-  z-index:1;
-  height:4rem;
-  margin: 5px;
-}
-
-
-#messages {
-    background-color: lightyellow;
-    # padding-left: 0.4rem;
-    width: 100%;
-    height: 40%;
-    max-height: 100%;
-    overflow: scroll;
-    font-size: 10px;
-
-    padding: 2px;
-
-    border-style: solid;
-    border-width: 1px;
-    border-radius: 5px;
-    border-color: rgb(118, 118, 118);
-}
-
-
 #jog-distance {
    text-align-last: right;
 }
@@ -607,7 +579,7 @@ textarea {
     font-size: 1.7rem;
   }
 
-  textarea, #messages {
+  textarea, {
     font-size: 10px;
   }
 }
@@ -636,7 +608,7 @@ textarea {
   .tablettab .mposition {
     font-size: 2rem;
   }
-  textarea, #messages {
+  textarea {
     font-size: 12px;
   }
 }
@@ -666,7 +638,7 @@ textarea {
     font-size: 20px;
   }
 
-  textarea, #messages,  {
+  textarea,  {
     font-size: 14px;
   }
 }
@@ -696,7 +668,7 @@ textarea {
     font-size: 24px;
   }
 
-  textarea, #messages,  {
+  textarea,  {
     font-size: 18px;
   }
 }
