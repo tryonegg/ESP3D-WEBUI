@@ -937,8 +937,6 @@ function setBottomHeight() {
     var tStyle = getComputedStyle(id('tablettab'))
     var tPad = parseFloat(tStyle.paddingTop) + parseFloat(tStyle.paddingBottom); 
     tPad += 20;
-    var msgElement = id('status');
-    msgElement.style.height = (residue - tPad) + 'px';
 }
 window.onresize = setBottomHeight;
 
