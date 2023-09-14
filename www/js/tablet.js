@@ -573,7 +573,6 @@ function populateTabletFileSelector(files, path) {
     if (!gCodeFileFound) {
         gCodeFilename = '';
         gCodeDisplayable = false;
-        setHTML('filename', '');
         showGCode('');
     }
 
@@ -689,13 +688,11 @@ function tabletSelectGCodeFile(filename) {
 function tabletLoadGCodeFile(path, size) {
     gCodeFilename = path;
     if ((isNaN(size) && (size.endsWith("MB") || size.endsWith("GB"))) || size > 1000000) {
-        setHTML('filename', gCodeFilename + " (too large to show)");
         showGCode("GCode file too large to display (> 1MB)");
         gCodeDisplayable = false;
         displayer.clear();
     } else {
         gCodeDisplayable = true;
-        setHTML('filename', gCodeFilename);
         fetch(encodeURIComponent('SD' + gCodeFilename))
             .then(response => response.text() )
             .then(gcode => showGCode(gcode) );

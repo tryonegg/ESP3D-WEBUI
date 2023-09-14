@@ -387,37 +387,6 @@ select:disabled {
   margin: 5px;
 }
 
-#expand-button {
-  position:absolute;
-  top:0;
-  right:0;
-  z-index:1;
-  width:3rem;
-  height:4rem;
-  margin: 5px;
-}
-
-.gcode {
-    background-color: lavenderblush;
-}
-
-#gcode-states {
-    background-color: azure;
-    # padding-left: 0.4rem;
-    width: 100%;
-    height: fit-content;
-
-    overflow-x: scroll;
-    overflow-y: hidden;
-    font-size: 10px;
-
-    padding: 2px;
-
-    # border-style: solid;
-    # border-width: 1px;
-    # border-radius: 5px;
-    # border-color: rgb(118, 118, 118);
-}
 
 #messages {
     background-color: lightyellow;
@@ -638,7 +607,7 @@ textarea {
     font-size: 1.7rem;
   }
 
-  textarea, #messages, #gcode-states {
+  textarea, #messages {
     font-size: 10px;
   }
 }
@@ -667,7 +636,7 @@ textarea {
   .tablettab .mposition {
     font-size: 2rem;
   }
-  textarea, #messages, #gcode-states {
+  textarea, #messages {
     font-size: 12px;
   }
 }
@@ -697,7 +666,7 @@ textarea {
     font-size: 20px;
   }
 
-  textarea, #messages, #gcode-states  {
+  textarea, #messages,  {
     font-size: 14px;
   }
 }
@@ -727,7 +696,7 @@ textarea {
     font-size: 24px;
   }
 
-  textarea, #messages, #gcode-states  {
+  textarea, #messages,  {
     font-size: 18px;
   }
 }
