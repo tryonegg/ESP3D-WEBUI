@@ -594,28 +594,6 @@ function addOption(selector, name, value, isDisabled, isSelected) {
     selector.appendChild(opt);
 }
 
-function toggleVisualizer() {
-    if (id('mdifiles').hidden) {
-        contractVisualizer();
-    } else {
-        expandVisualizer();
-    }
-}
-
-function contractVisualizer() {
-    id('mdifiles').hidden = false;
-    id('setAxis').hidden = false;
-    displayBlock('jog-controls');
-    setBottomHeight();
-}
-
-function expandVisualizer() {
-    id('mdifiles').hidden = true;
-    id('setAxis').hidden = true;
-    displayNone('jog-controls');
-    setBottomHeight();
-}
-
 var gCodeFilename = '';
 
 function populateTabletFileSelector(files, path) {
