@@ -588,8 +588,8 @@ var clearCanvas = function() {
 
 //    if (tpRect == undefined) {
         var tpRect = canvas.parentNode.getBoundingClientRect();
-        canvas.width = tpRect.width ? tpRect.width : 400;
-        canvas.height = tpRect.height ? tpRect.height : 400;
+        // canvas.width = tpRect.width ? tpRect.width : 400;
+        // canvas.height = tpRect.height ? tpRect.height : 400;
 //    }
 
     tp.fillStyle = "white";
@@ -1009,4 +1009,4 @@ var refreshGcode = function() {
     displayer.showToolpath(gcode, WPOS, MPOS, cameraAngle);
 }
 
-id("small-toolpath").addEventListener("mouseup", updateGcodeViewerAngle); 
+// id("small-toolpath").addEventListener("mouseup", updateGcodeViewerAngle); 
