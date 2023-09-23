@@ -395,9 +395,10 @@ var drawOrigin = function(radius) {
 }
 
 var drawMachineBounds = function() {
-
-    const wcoX = MPOS[0] - WPOS[0];
-    const wcoY = MPOS[1] - WPOS[1];
+    
+    //Work codinates offset the maxTravel part centers it in the view so 0,0 is the middle of the sheet
+    const wcoX = MPOS[0] - WPOS[0] - xMaxTravel/2;
+    const wcoY = MPOS[1] - WPOS[1] - yMaxTravel/2;
 
     var xMin = 0;
     var YMin = 0;
@@ -416,22 +417,23 @@ var drawMachineBounds = function() {
         yMin = yHomePos;
     }
 
-
     const xMax = xMin + xMaxTravel;
     const yMax = yMin + yMaxTravel;
 
-
+    //Project onto the camera view
     const p0 = projection({x: xMin - wcoX, y: yMin - wcoY, z: 0});
     const p1 = projection({x: xMin - wcoX, y: yMax - wcoY, z: 0});
     const p2 = projection({x: xMax - wcoX, y: yMax - wcoY, z: 0});
     const p3 = projection({x: xMax - wcoX, y: yMin - wcoY, z: 0});
 
+    //This is used to fit everything in the camera view later
     tpBbox.min.x = Math.min(tpBbox.min.x, p0.x);
     tpBbox.min.y = Math.min(tpBbox.min.y, p0.y);
     tpBbox.max.x = Math.max(tpBbox.max.x, p2.x);
     tpBbox.max.y = Math.max(tpBbox.max.y, p2.y);
     bboxIsSet = true;
 
+    //Draw to the actual display
     tp.beginPath();
     tp.moveTo(p0.x, p0.y);
     tp.lineTo(p0.x, p0.y);
