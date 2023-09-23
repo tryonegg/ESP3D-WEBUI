@@ -413,9 +413,9 @@ function tabletGrblState(grbl, response) {
         selectDisabled('.axis-position .form-control', cannotClick);
         selectDisabled('.axis-position .btn', cannotClick);
         selectDisabled('.axis-position .position', cannotClick);
-        if (!cannotClick) {
-            contractVisualizer();
-        }
+        // if (!cannotClick) {
+        //     contractVisualizer();
+        // }
     }
     oldCannotClick = cannotClick;
 
@@ -454,10 +454,11 @@ function tabletGrblState(grbl, response) {
             default: spindleDirection = '';  break;
         }
     }
-    setText('spindle-direction', spindleDirection);
+    
+    //setText('spindle-direction', spindleDirection);
 
     spindleSpeed = grbl.spindleSpeed ? Number(grbl.spindleSpeed) : '';
-    setText('spindle-speed', spindleSpeed);
+    //setText('spindle-speed', spindleSpeed);
 
     var now = new Date();
     //setText('time-of-day', now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0'));
@@ -497,7 +498,7 @@ function tabletGrblState(grbl, response) {
         // var stateText = errorText == 'Error' ? "Error: " + errorMessage : stateName;
         stateText = stateName;
     }
-    setText('active-state', stateText);
+    //setText('active-state', stateText);
 
     var modeText = modal.distance + " " +
                    modal.wcs + " " +
@@ -508,7 +509,7 @@ function tabletGrblState(grbl, response) {
 
 
     if (grbl.lineNumber && (stateName == 'Run' || stateName == 'Hold' || stateName == 'Stop')) {
-        setText('line', grbl.lineNumber);
+        //setText('line', grbl.lineNumber);
         if (gCodeDisplayable) {
             scrollToLine(grbl.lineNumber);
         }
