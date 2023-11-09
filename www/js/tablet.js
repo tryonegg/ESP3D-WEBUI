@@ -955,13 +955,19 @@ function fullscreenIfMobile() {
 }
 
 function showZaxisPopup(){
-    console.log("Z-axis popup function ran");
     document.getElementById("z-axis-popup").style.display = "block";
+}
+
+function showCalibrationPopup(){
+    document.getElementById("calibration-popup").style.display = "block";
 }
 
 document.addEventListener('click', function(event) {
     if (!document.getElementById("z-axis-popup").contains(event.target) && !document.getElementById("zBtn").contains(event.target) && !document.getElementById("numPad").contains(event.target)) {
         document.getElementById("z-axis-popup").style.display = "none";
+    }
+    if (!document.getElementById("calibration-popup").contains(event.target) && !document.getElementById("calibrationBTN").contains(event.target) && !document.getElementById("numPad").contains(event.target)) {
+        document.getElementById("calibration-popup").style.display = "none";
     }
 });
 
