@@ -239,6 +239,12 @@ function tabletShowMessage(msg, collecting) {
     if (collecting || msg ==  '' || msg.startsWith('<') || msg.startsWith('ok') || msg.startsWith('\n') || msg.startsWith('\r')) {
         return;
     }
+
+    let msgWindow = document.getElementById("messages");
+    let text = msgWindow.textContent;
+    text = text + "\n" + msg;
+    msgWindow.textContent = text;
+
     if (msg.startsWith('error:')) {
         msg = '<span style="color:red;">' + msg + '</span>';
     }
