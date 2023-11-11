@@ -244,6 +244,7 @@ function tabletShowMessage(msg, collecting) {
     let text = msgWindow.textContent;
     text = text + "\n" + msg;
     msgWindow.textContent = text;
+    msgWindow.scrollTop = msgWindow.scrollHeight;
 
     if (msg.startsWith('error:')) {
         msg = '<span style="color:red;">' + msg + '</span>';
