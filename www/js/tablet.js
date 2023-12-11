@@ -535,12 +535,12 @@ function tabletGrblState(grbl, response) {
 
     if (WPOS) {
         WPOS.forEach( function(pos, index) {
-            //setTextContent('wpos-'+axisNames[index], Number(pos*factor).toFixed(index > 2 ? 2 : digits));
+            setTextContent('mpos-'+axisNames[index], Number(pos*factor).toFixed(index > 2 ? 2 : digits));
         });
     }
 
     MPOS.forEach( function(pos, index) {
-        setTextContent('mpos-'+axisNames[index], Number(pos*factor).toFixed(index > 2 ? 2 : digits));
+        //setTextContent('mpos-'+axisNames[index], Number(pos*factor).toFixed(index > 2 ? 2 : digits));
     });
 }
 
