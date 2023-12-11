@@ -386,7 +386,7 @@ function initUI() {
     //update FW version
     if (typeof id('FW_VERSION') != "undefined") id('FW_VERSION').innerHTML = fw_version;
     // Get the element with id="defaultOpen" and click on it
-    id("maintablink").click();
+    id("tablettablink").click();
 
     if (typeof id("grblcontroltablink") !== 'undefined') {
         id("grblcontroltablink").click();
