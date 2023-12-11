@@ -413,6 +413,7 @@ function show_grbl_status(stateName, message, hasSD) {
     if (stateName) {
         var clickable = clickableFromStateName(stateName, hasSD);
         setHTML('grbl_status', stateName);
+        setHTML('systemStatus', stateName);
         setClickability('sd_resume_btn', clickable.resume);
         setClickability('sd_pause_btn', clickable.pause);
         setClickability('sd_reset_btn', clickable.reset);

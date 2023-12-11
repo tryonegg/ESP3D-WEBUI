@@ -275,6 +275,12 @@ function tabletShowMessage(msg, collecting) {
 function tabletShowResponse(response) {
 }
 
+function clearAlarm(){
+    if(id("systemStatus").innerText == "Alarm"){
+        SendPrinterCommand('$X', true, null,null, 114, 1);
+    }
+}
+
 function setJogSelector(units) {
     var buttonDistances = [];
     var menuDistances = [];
