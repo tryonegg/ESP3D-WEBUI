@@ -387,6 +387,7 @@ function initUI() {
     if (typeof id('FW_VERSION') != "undefined") id('FW_VERSION').innerHTML = fw_version;
     // Get the element with id="defaultOpen" and click on it
     id("tablettablink").click();
+    onReportType({value: "auto"});
 
     if (typeof id("grblcontroltablink") !== 'undefined') {
         id("grblcontroltablink").click();
