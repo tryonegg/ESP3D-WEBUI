@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Courier New', monospace;
+    }
+
+    /* Modal container */
+    .modal-container {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Modal content */
+    .modal-content {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+
+    /* Buttons container */
+    .button-container {
+      margin-top: 20px;
+    }
+
+    /* Individual buttons */
+    .modal-button {
+      margin: 5px;
+      padding: 15px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      width: 150px; /* Set a fixed width for all buttons */
+      height: 75px; /* Set a fixed height for all buttons */
+      text-transform: uppercase; /* Convert text to uppercase */
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* Hover effect */
+    .modal-button:hover {
+      background-color: #286090;; /* Light gray on hover */
+      transform: scale(1.1);
+    }
+
+    /* Click effect */
+    .modal-button:active {
+      transform: scale(1.1);
+    }
+
+    /* Close button */
+    .close-button {
+      background-color: #cc0000; /* Dark red */
+      color: #fff;
+      width: 100%;
+      padding: 15px;
+      font-size: 18px;
+      height: 75px; /* Set a fixed height for the close button */
+      text-transform: uppercase; /* Convert text to uppercase */
+      transition: background-color 0.3s ease;
+    }
+
+    /* Hover effect for close button */
+    .close-button:hover {
+      background-color: #ff0000; /* Bright red on hover */
+    }
+
+    /* Grouped buttons */
+    .row-container {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* Position buttons */
+    .position-button {
+      background-color: #337ab7; /* Green */
+      color: #fff;
+    }
+
+  </style>
+</head>
+<body>
+
+<!-- Button to trigger the modal -->
+<button onclick="openModal()">Open Modal</button>
+
+<!-- Modal container -->
+<div id="myModal" class="modal-container" onclick="closeModal()">
+  <!-- Modal content -->
+  <div class="modal-content" onclick="event.stopPropagation();">
+    <div class="button-container">
+      <!-- Grouped buttons -->
+      <div class="row-container">
+        <button class="modal-button position-button" onclick="retract('top', 'left')">Retract Top Left</button>
+        <button class="modal-button position-button" onclick="retract('top', 'right')">Retract Top Right</button>
+      </div>
+      <div class="row-container">
+        <button class="modal-button position-button" onclick="retract('bottom', 'left')">Retract Bottom Left</button>
+        <button class="modal-button position-button" onclick="retract('bottom', 'right')">Retract Bottom Right</button>
+      </div>
+      <div class="row-container">
+        <button class="modal-button position-button">Calibrate</button>
+        <button class="modal-button position-button">Comply</button>
+      </div>
+      <div class="row-container">
+        <button class="modal-button position-button">Retract All</button>
+        <button class="modal-button position-button">Extend All</button>
+      </div>
+      <div class="row-container">
+        <button class="modal-button close-button" onclick="closeModal()">Stop</button>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<script>
+  // Get the modal
+  var modal = document.getElementById('myModal');
+
+  // Function to open the modal
+  function openModal() {
+    modal.style.display = 'flex';
+  }
+
+  // Function to close the modal
+  function closeModal() {
+    modal.style.display = 'none';
+  }
+
+  // Function to retract the modal to specified position
+  function retract(vertical, horizontal) {
+    modal.style.top = vertical === 'top' ? '0' : 'auto';
+    modal.style.bottom = vertical === 'bottom' ? '0' : 'auto';
+    modal.style.left = horizontal === 'left' ? '0' : 'auto';
+    modal.style.right = horizontal === 'right' ? '0' : 'auto';
+  }
+</script>
+
+</body>
+</html>

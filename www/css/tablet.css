@@ -672,3 +672,78 @@ textarea {
     font-size: 18px;
   }
 }
+
+
+/* Calibration modal */
+.modal-container {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.button-container {
+  margin-top: 20px;
+}
+
+.modal-button {
+  margin: 5px;
+  padding: 15px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  width: 150px; 
+  height: 75px; 
+  text-transform: uppercase;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.modal-button:hover {
+  background-color: #286090;;
+  transform: scale(1.1);
+}
+
+.modal-button:active {
+  transform: scale(1.1);
+}
+
+.stop-button {
+  background-color: #cc0000;
+  color: #fff;
+  width: 100%;
+  padding: 15px;
+  font-size: 18px;
+  height: 75px; 
+  text-transform: uppercase; 
+  transition: background-color 0.3s ease;
+}
+
+.stop-button:hover {
+  background-color: #ff0000; 
+}
+
+.row-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.position-button {
+  background-color: #337ab7;
+  color: #fff;
+}
+
+/* Calibration modal END */

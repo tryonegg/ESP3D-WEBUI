@@ -30,7 +30,7 @@
           <div class="maslow-grid-item" style = "background-color: #9d88c0;" onclick="sendMove('X-')"><canvas id = "lBtn" style="width: 100%; height: 100%"></div>
           <div class="maslow-grid-item" style = "background-color: #f2f0e4;"><canvas id = "hBtn" style="width: 100%; height: 100%"></div>  
           <div class="maslow-grid-item" style = "background-color: #9d88c0;" onclick="sendMove('X+')"><canvas id = "rBtn" style="width: 100%; height: 100%"></div>
-          <div class="maslow-grid-item" style = "background-color: #f2f0e4; font-size: 1vw;" onclick="showCalibrationPopup();" id = "calibrationBTN" font-size: 1vw;>Calibration</div>
+          <div class="maslow-grid-item" style = "background-color: #f2f0e4; font-size: 1vw;" onclick="openModal('calibration-popup');" id = "calibrationBTN" font-size: 1vw;>Calibration</div>
           <div class="maslow-grid-item" style = "background-color: #b69fcb;" onclick="sendMove('X-Y-')"><canvas id = "blBtn" style="width: 100%; height: 100%"></canvas></div>
           <div class="maslow-grid-item" style = "background-color: #9d88c0;" onclick="sendMove('Y-')"><canvas id = "dnBtn" style="width: 100%; height: 100%"></div>
           <div class="maslow-grid-item" style = "background-color: #b69fcb;" onclick="sendMove('X+Y-')"><canvas id = "brBtn" style="width: 100%; height: 100%"></canvas></div>
@@ -91,7 +91,43 @@
         <div class="maslow-grid-item" style = "background-color: #f2f0e4;" onclick="sendMove('Z-')"> Down</div>
       </div>
     </div>
-    <div id = "calibration-popup" style="position: absolute; top: 40%; left: 40%; margin-top: -50px; margin-left: -50px; width:400px; height: 400px;">
+
+
+
+    <div id="calibration-popup" class="modal-container" onclick="closeModal('calibration-popup')">
+      <!-- Modal content -->
+      <div class="modal-content" onclick="event.stopPropagation();">
+        <div class="button-container">
+          <!-- Grouped buttons -->
+          <div class="row-container">
+            <button class="modal-button position-button" onclick="sendCommand('$TL');">Retract Top Left</button>
+            <button class="modal-button position-button" onclick="sendCommand('$TR');">Retract Top Right</button>
+          </div>
+          <div class="row-container">
+            <button class="modal-button position-button" onclick="sendCommand('$BL');">Retract Bottom Left</button>
+            <button class="modal-button position-button" onclick="sendCommand('$BR');">Retract Bottom Right</button>
+          </div>
+          <div class="row-container">
+            <button class="modal-button position-button" onclick="sendCommand('$CAL');">Calibrate</button>
+            <button class="modal-button position-button" onclick="sendCommand('$CMP');">Comply</button>
+          </div>
+          <div class="row-container">
+            <button class="modal-button position-button" onclick="sendCommand('$ALL');">Retract All</button>
+            <button class="modal-button position-button" onclick="sendCommand('$EXT');">Extend All</button>
+          </div>
+          <div class="row-container">
+            <button class="modal-button stop-button" onclick="sendCommand('$STOP');">Stop</button>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+    <!-- <div id = "calibration-popup" style="position: absolute; top: 40%; left: 40%; margin-top: -50px; margin-left: -50px; width:400px; height: 400px;">
       <div class="maslow-grid-container"  style = "display: grid; grid-template-columns: 50% 50%;">
         <div class="maslow-grid-item" style = "background-color: #f2f0e4;" onclick="sendCommand('$ALL');"> Retract All</div>
         <div class="maslow-grid-item" style = "background-color: #f2f0e4;" onclick="sendCommand('$EXT');"> Extend All</div>
@@ -104,7 +140,7 @@
         <div class="maslow-grid-item" style = "background-color: #f2f0e4;" onclick="sendCommand('$CMP');"> Comply</div>
       </div>
     </div>
-  </div>
+  </div> -->
 <!-- <audio id="click" src="Button.wav" autostart="false"></audio> -->
 
 
