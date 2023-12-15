@@ -13,7 +13,7 @@ html {
 #toolpath {
     width: 100%;
     height: 100%;
-    # border: 1px solid #ccc;
+     /* border: 1px solid #ccc; */
     border-width: 1px;
     border-style: solid;
     border-radius: 5px;
@@ -385,12 +385,6 @@ select:disabled {
 .run-controls {
     display: none;
 }
-> * {
-  margin-bottom: 5px;
-}
-> *:last-child {
-  margin-bottom: 0;
-}
 .tablettab .dropdown-menu {
   position: absolute;
   right: 0;
@@ -407,9 +401,9 @@ select:disabled {
   overflow: hidden;
 }
 .active-state {
-#  border: 1px solid #ccc;
+/* #  border: 1px solid #ccc;
 #  border-radius: 4px;
-#  background-color: #f6f686;
+#  background-color: #f6f686; */
   padding: 5px 10px;
   text-align: center;
 }
@@ -424,7 +418,7 @@ select:disabled {
   text-align: center;
 }
 .position {
-  # width: 90%;
+  /* width: 90%; */
   float: right;
   text-align: center;
   background-color: honeydew;
@@ -557,7 +551,6 @@ textarea {
 }
 
 @media (min-width: 736px) {
-  font-size: 14px;
   .tablettab .dropdown-menu {
     min-width: 180px;
   }
@@ -579,7 +572,7 @@ textarea {
     font-size: 1.7rem;
   }
 
-  textarea, {
+  textarea {
     font-size: 10px;
   }
 }
@@ -638,7 +631,7 @@ textarea {
     font-size: 20px;
   }
 
-  textarea,  {
+  textarea {
     font-size: 14px;
   }
 }
@@ -668,14 +661,14 @@ textarea {
     font-size: 24px;
   }
 
-  textarea,  {
+  textarea {
     font-size: 18px;
   }
 }
 
 
 /* Calibration modal */
-.modal-container {
+.calibration-modal-container {
   display: none;
   position: fixed;
   top: 0;
@@ -687,19 +680,20 @@ textarea {
   align-items: center;
 }
 
-.modal-content {
+.calibration-modal-content {
   background: #fff;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   text-align: center;
+  line-height: 1.1;
 }
 
-.button-container {
+.calibration-modal-button-container {
   margin-top: 20px;
 }
 
-.modal-button {
+.calibration-modal-button {
   margin: 5px;
   padding: 15px;
   font-size: 16px;
@@ -712,16 +706,16 @@ textarea {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.modal-button:hover {
+.calibration-modal-button:hover {
   background-color: #286090;;
   transform: scale(1.1);
 }
 
-.modal-button:active {
+.calibration-modal-button:active {
   transform: scale(1.1);
 }
 
-.stop-button {
+.calibration-modal-stop-button {
   background-color: #cc0000;
   color: #fff;
   width: 100%;
@@ -732,16 +726,16 @@ textarea {
   transition: background-color 0.3s ease;
 }
 
-.stop-button:hover {
+.calibratio--modal-stop-button:hover {
   background-color: #ff0000; 
 }
 
-.row-container {
+.calibration-modal-row-container {
   display: flex;
   justify-content: space-between;
 }
 
-.position-button {
+.calibration-modal-position-button {
   background-color: #337ab7;
   color: #fff;
 }

@@ -1054,15 +1054,15 @@ function openModal(modalId) {
   let modal = document.getElementById(modalId)
 
   if (modal) {
-    e.target.style.display = 'flex'
+    modal.style.display = 'flex'
   }
 }
 
-function closeModal(modalId) {
+function hideModal(modalId) {
   let modal = document.getElementById(modalId)
 
   if (modal) {
-    e.target.style.display = 'none'
+    modal.style.display = 'none'
   }
 }
 
