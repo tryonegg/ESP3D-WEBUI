@@ -975,6 +975,29 @@ function showCalibrationPopup(){
     document.getElementById("calibration-popup").style.display = "block";
 }
 
+function homeZ(){
+    console.log("Homing Z latest");
+
+    var move = function(params) {
+        params = params || {};
+        var s = '';
+        for (key in params) {
+            s += key + params[key];
+        }
+        moveTo(s);
+    };
+    
+    move({ Z: 85 });
+    sendCommand('G91 G0 Z-28');
+    //This is a total hack to make set the z to zero after the moves complete and should be done better
+    setTimeout(function() { 
+        sendCommand('$HZ');
+    }, 25000);
+    setTimeout(function() { 
+        zeroAxis('Z');
+    }, 26000);
+}
+
 document.addEventListener('click', function(event) {
     if (!document.getElementById("z-axis-popup").contains(event.target) && !document.getElementById("zBtn").contains(event.target) && !document.getElementById("numPad").contains(event.target)) {
         document.getElementById("z-axis-popup").style.display = "none";
