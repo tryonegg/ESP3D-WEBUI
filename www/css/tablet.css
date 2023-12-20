@@ -1,5 +1,7 @@
 body {
-    height: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 html {
     height: 100vh;
@@ -8,6 +10,7 @@ html {
     height: 100%;
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
 }
 
 #toolpath {
@@ -66,6 +69,90 @@ html {
 .tablettab .form-control {
   font-size: inherit;
 }
+
+.maslow {
+  height: 100%;
+  color: #7a7a7a;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 75% 25%;
+}
+
+.maslow-grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+}
+.maslow-grid-item {
+  justify-content: center;
+    align-items: center;
+    display: flex;
+  padding: 10px;
+  font-size: 12px;
+  text-align: center;
+}
+
+#filelist {
+  width: 100%;
+  
+}
+
+#small-toolpath {
+  border: 1px solid black;
+    border-radius: 5px;
+}
+#gcode {
+  margin: 10px 0px;
+}
+
+
+.tablettab-canvas-wrapper {
+  display: grid;
+  grid-template-columns: 100%;
+}
+
+
+@media only screen and (max-width: 980) {
+  .maslow-grid-item {
+    font-size: 10px;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .maslow {
+      grid-template-columns: 100%;
+  }
+  .maslow-grid-item, #filelist, #messages {
+    font-size: 24px;
+  }
+
+  .tablettab-controls-wrapper {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 100%;
+  }
+
+  .tablettab-controls-item:nth-child(1) {
+      order: 2;
+  }
+
+  .tablettab-controls-item:nth-child(2) {
+      order: 1;
+  }
+
+  .tablettab-controls-item:nth-child(3) {
+      order: 2;
+  }
+
+  .tablettab-controls-item:nth-child(4) {
+      order: 2;
+  }
+
+  .tablettab-controls-item:nth-child(5) {
+      order: 2;
+  }
+}
+
+
 
 .btn-default.btn-select,
 .btn-default.btn-select:focus,
@@ -224,6 +311,7 @@ html {
 }
 
 .tablettab {
+  min-height:  100wh;
   padding: 5px;
   font-size: 14px;
   text-align: left;
@@ -236,6 +324,7 @@ html {
   border-radius: 4px;
   -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
           box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+          
 }
 .dropdown-menu.pull-right {
   right: 0;
