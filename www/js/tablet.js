@@ -720,6 +720,9 @@ function scrollToLine(lineNumber) {
 
 function runGCode() {
   gCodeFilename && sendCommand('$sd/run=' + gCodeFilename)
+  setTimeout(() => {
+    SendRealtimeCmd(0x7e)
+  }, 1500)
   expandVisualizer()
 }
 
