@@ -731,7 +731,7 @@ function tabletSelectGCodeFile(filename) {
 }
 function tabletLoadGCodeFile(path, size) {
   gCodeFilename = path
-  if ((isNaN(size) && (size.endsWith('MB') || size.endsWith('GB'))) || size > 1000000) {
+  if ((isNaN(size) && (size.endsWith('GB'))) || size > 10000000) {
     showGCode('GCode file too large to display (> 1MB)')
     gCodeDisplayable = false
     displayer.clear()
