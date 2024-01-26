@@ -720,6 +720,9 @@ function scrollToLine(lineNumber) {
 
 function runGCode() {
   gCodeFilename && sendCommand('$sd/run=' + gCodeFilename)
+  setTimeout(() => {
+    SendRealtimeCmd(0x7e)
+  }, 1500)
   expandVisualizer()
 }
 
@@ -731,7 +734,7 @@ function tabletSelectGCodeFile(filename) {
 }
 function tabletLoadGCodeFile(path, size) {
   gCodeFilename = path
-  if ((isNaN(size) && (size.endsWith('MB') || size.endsWith('GB'))) || size > 1000000) {
+  if ((isNaN(size) && (size.endsWith('GB'))) || size > 10000000) {
     showGCode('GCode file too large to display (> 1MB)')
     gCodeDisplayable = false
     displayer.clear()
