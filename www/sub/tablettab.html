@@ -85,6 +85,9 @@
     <div id="calibration-popup" class="calibration-modal-container" onclick="hideModal('calibration-popup')">
       <div class="calibration-modal-content" onclick="event.stopPropagation();">
         <div class="calibration-modal-button-container">
+          <div class="calibration-modal-row-container" id="calibration-status-msg">
+            Calibration...
+          </div>
           <div class="calibration-modal-row-container">
             <button class="calibration-modal-button calibration-modal-position-button" onclick="sendCommand('$TL');">Retract Top Left</button>
             <button class="calibration-modal-button calibration-modal-position-button" onclick="sendCommand('$TR');">Retract Top Right</button>
@@ -94,7 +97,7 @@
             <button class="calibration-modal-button calibration-modal-position-button" onclick="sendCommand('$BR');">Retract Bottom Right</button>
           </div>
           <div class="calibration-modal-row-container">
-            <button class="calibration-modal-button calibration-modal-position-button" onclick="sendCommand('$CAL');">Calibrate</button>
+            <button class="calibration-modal-button calibration-modal-position-button" id="calibrate-button">Calibrate</button>
             <button class="calibration-modal-button calibration-modal-position-button" onclick="sendCommand('$CMP');">Comply</button>
           </div>
           <div class="calibration-modal-row-container">

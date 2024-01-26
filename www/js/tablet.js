@@ -1089,4 +1089,12 @@ function hideModal(modalId) {
   }
 }
 
+const computeEndButton = document.getElementById('calibrate-button')
+computeEndButton.addEventListener('click', async () => {
+  sendCommand('$CAL')
+  document.querySelector('#calibration-status-msg').innerHTML = 'Calibrating'
+  document.querySelector('#calibration-status-msg').style.display = 'flex'
+  await sleep(500)
+})
+
 /* Calibration modal END */

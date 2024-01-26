@@ -1,83 +1,83 @@
 function id(name) {
-    return document.getElementById(name);
+  return document.getElementById(name)
 }
 // The return value from class(name) can be use with forEach()
 function classes(name) {
-    return Array.from(document.getElementsByClassName(name));
+  return Array.from(document.getElementsByClassName(name))
 }
 function setValue(name, val) {
-    id(name).value = val;
+  id(name).value = val
 }
 function getValue(name, val) {
-    return id(name).value;
+  return id(name).value
 }
 function intValue(name) {
-    return parseInt(getValue(name));
+  return parseInt(getValue(name))
 }
 function getTextContent(name, val) {
-    return id(name).textContent;
+  return id(name).textContent
 }
 function setTextContent(name, val) {
-    id(name).textContent = val;
+  id(name).textContent = val
 }
 function setHTML(name, val) {
-    id(name).innerHTML = val;
+  id(name).innerHTML = val
 }
 function setText(name, val) {
-    id(name).innerText = val;
+  id(name).innerText = val
 }
 function getText(name) {
-    return id(name).innerText;
+  return id(name).innerText
 }
 function setDisplay(name, val) {
-    id(name).style.display = val;
+  id(name).style.display = val
 }
 function displayNone(name) {
-    setDisplay(name, 'none');
+  setDisplay(name, 'none')
 }
 function displayBlock(name) {
-    setDisplay(name, 'block');
+  setDisplay(name, 'block')
 }
 function displayFlex(name) {
-    setDisplay(name, 'flex');
+  setDisplay(name, 'flex')
 }
 function displayTable(name) {
-    setDisplay(name, 'table-row');
+  setDisplay(name, 'table-row')
 }
 function displayInline(name) {
-    setDisplay(name, 'inline');
+  setDisplay(name, 'inline')
 }
 function displayInitial(name) {
-    setDisplay(name, 'initial');
+  setDisplay(name, 'initial')
 }
 function displayUndoNone(name) {
-    setDisplay(name, '');
+  setDisplay(name, '')
 }
 function setVisible(name) {
-    id('SPIFFS_loader').style.visibility = 'visible';
+  id('SPIFFS_loader').style.visibility = 'visible'
 }
 function setHidden(name) {
-    id('SPIFFS_loader').style.visibility = 'hidden';
+  id('SPIFFS_loader').style.visibility = 'hidden'
 }
 function setDisabled(name, value) {
-    id(name).disabled = value;
+  id(name).disabled = value
 }
 function selectDisabled(selector, value) {
-    document.querySelectorAll(selector).forEach(
-        function (element) {
-            element.disabled = value;
-        }
-    )
+  document.querySelectorAll(selector).forEach(function (element) {
+    element.disabled = value
+  })
 }
 function click(name) {
-    id(name).click();
+  id(name).click()
 }
 function files(name) {
-    return id(name).files;
+  return id(name).files
 }
 function setChecked(name, val) {
-    id(name).checked = val;
+  id(name).checked = val
 }
 function getChecked(name) {
-    return id(name).checked;
+  return id(name).checked
 }
+
+const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
