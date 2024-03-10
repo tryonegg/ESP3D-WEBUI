@@ -437,6 +437,11 @@ function show_grbl_status(stateName, message, hasSD) {
     var clickable = clickableFromStateName(stateName, hasSD)
     setHTML('grbl_status', stateName)
     setHTML('systemStatus', stateName)
+    if (stateName === 'Alarm') {
+      id('systemStatus').classList.add('system-status-alarm')
+    } else {
+      id('systemStatus').classList.remove('system-status-alarm')
+    }
     setClickability('sd_resume_btn', clickable.resume)
     setClickability('sd_pause_btn', clickable.pause)
     setClickability('sd_reset_btn', clickable.reset)
@@ -608,8 +613,7 @@ var collectHandler = undefined
 var collectedSettings = null
 
 async function handleCalibrationData(measurements) {
-  document.querySelector('#calibration-status-msg').style.display = 'flex'
-  document.querySelector('#calibration-status-msg').innerHTML = '<p>Computing... </p><p>This may take a few minutes</p>'
+  document.querySelector('#messages').value += '\nComputing... This may take a few minutes'
   await sleep(500)
   try {
     calibrationResults = await findMaxFitness(measurements)
@@ -624,18 +628,17 @@ async function handleCalibrationData(measurements) {
       }
     }
     console.log('Calibration results:', calibrationResults)
-    let resultsInHtml = '<p>Calibration results:</p>'
+    document.querySelector('#messages').value += '\nCalibration results:'
     for (const firstLevelItem in calibrationResults) {
       if (firstLevelItem === 'fitness') {
-        resultsInHtml += `<p>fitness: ${calibrationResults[firstLevelItem]}</p>`
+        document.querySelector('#messages').value += '\n' + `Fitness: ${calibrationResults[firstLevelItem]}`
       } else {
         for (const secondLevelItem in calibrationResults[firstLevelItem]) {
-          resultsInHtml += `<p>${firstLevelItem}/${secondLevelItem}: ${calibrationResults[firstLevelItem][secondLevelItem]}</p>`
+          document.querySelector('#messages').value +=
+            '\n' + `${firstLevelItem}/${secondLevelItem}: ${calibrationResults[firstLevelItem][secondLevelItem]}`
         }
       }
     }
-
-    document.querySelector('#calibration-status-msg').innerHTML = resultsInHtml
   } catch (error) {
     console.error('An error occurred:', error)
   }

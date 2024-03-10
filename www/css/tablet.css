@@ -755,6 +755,15 @@ textarea {
   }
 }
 
+.system-status {
+  background-color: #4aa85c;
+  color: white;
+  font-size: 16px;
+}
+.system-status-alarm {
+  background-color: #cd654c;
+  cursor: pointer;
+}
 
 /* Calibration modal */
 .calibration-modal-container {
@@ -778,80 +787,82 @@ textarea {
   line-height: 1.1;
 }
 
-.calibration-modal-button-container {
-  margin-top: 20px;
-}
-
 .calibration-modal-button {
-  margin: 5px;
   padding: 15px;
+  background-color: #b69fcb;
   font-size: 16px;
   cursor: pointer;
   border: none;
-  border-radius: 8px;
   min-width: 150px;
-  width: 50%;
   height: 75px; 
+  color: #fff;
   text-transform: uppercase;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.calibration-modal-button:hover {
-  background-color: #286090;;
-  transform: scale(1.1);
+
+
+
+.calibration-modal-button:hover, .maslow-grid-item-btn:hover {
+  filter: brightness(80%);
+  cursor: pointer;
+}
+.calibration-modal-button:active, .maslow-grid-item-btn:active {
+  transform: translateY(2px);
 }
 
-.calibration-modal-button:active {
-  transform: scale(1.1);
+.stop-button {
+  background-color: #cd654c!important;
 }
 
-.calibration-modal-stop-button {
-  background-color: #cc0000;
-  color: #fff;
-  width: 100%;
-  padding: 15px;
-  font-size: 18px;
-  height: 75px; 
-  text-transform: uppercase; 
-  transition: background-color 0.3s ease;
-}
-
-.calibratio--modal-stop-button:hover {
-  background-color: #ff0000; 
-}
-
-.calibration-modal-row-container {
-  display: flex;
-  justify-content: space-around;
-}
-
-.calibration-modal-position-button {
-  background-color: #337ab7;
-  color: #fff;
-}
-
-#calibration-status-msg {
-  justify-content: center;
-  min-height: 75px;
-    text-transform: uppercase;
-    background-color: #4CAF50;
-    color: #fff;
-    padding: 15px;
-    margin: 5px;
-    border-radius: 5px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    display: none; 
+.buttons-row {
+    display:  flex;
     align-items: center;
-    flex-wrap: wrap;
-    max-width: 600px;
-    gap: 5px;
-    font-size: 16px;
+    margin-bottom: 10px;
+    justify-content: space-evenly;
+}
+.buttons-row:first-child {
+    padding: 10px 0px;
+    margin-bottom: 10px;
+    border-bottom: 1px dashed black;
+}
+.buttons-row-col-el {
+    display: flex;
+    flex-direction: column;
+}
+.buttons-row-col-el .calibration-modal-button:first-child {
+    margin-bottom: 10px;
 }
 
 
-#calibration-status-msg p {
-  font-size: 16px;
-  margin: 0px;
+.buttons-row .arrow {
+    font-size: 60px;
+    margin: 0px 10px;
 }
-
 /* Calibration modal END */
+
+/* z-axis-popup */
+.calibration-modal-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  background-color: #f2f0e4;;
+  font-size: 16px;
+  border: none;
+  min-width: 150px;
+  height: 75px; 
+  color: #000;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#z-axis-popup .calibration-modal-info, #z-axis-popup .calibration-modal-button {
+  margin: 2px;
+}
+
+#z-axis-popup .buttons-row {
+  border: none;
+  margin: 0px;
+  padding: 0px;
+}

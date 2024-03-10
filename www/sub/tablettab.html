@@ -8,31 +8,31 @@
       </div>
       <div class = "tablettab-controls-wrapper">
         <div style="grid-template-columns: 25% 25% 25% 25%;" class="maslow-grid-container tablettab-controls-item">
-          <div class="maslow-grid-item" onclick="sendMove('X-Y+')" style = "background-color: #b69fcb;">
+          <div class="maslow-grid-item maslow-grid-item-btn" onclick="sendMove('X-Y+')" style = "background-color: #b69fcb;">
             <canvas id = "tlBtn" style="width: 100%; height: 100%"></canvas>
           </div>
-          <div class="maslow-grid-item" style = "background-color: #9d88c0;" onclick="sendMove('Y+')"><canvas id = "upBtn" style="width: 100%; height: 100%"></canvas></div>
-          <div class="maslow-grid-item" style = "background-color: #b69fcb;" onclick="sendMove('X+Y+')"><canvas id = "trBtn" style="width: 100%; height: 100%"></canvas></div>  
-          <div class="maslow-grid-item" style = "background-color: #f2f0e4;" onclick="files_select_upload()">Load 
+          <div class="maslow-grid-item maslow-grid-item-btn" style = "background-color: #9d88c0;" onclick="sendMove('Y+')"><canvas id = "upBtn" style="width: 100%; height: 100%"></canvas></div>
+          <div class="maslow-grid-item maslow-grid-item-btn" style = "background-color: #b69fcb;" onclick="sendMove('X+Y+')"><canvas id = "trBtn" style="width: 100%; height: 100%"></canvas></div>  
+          <div class="maslow-grid-item maslow-grid-item-btn" style = "background-color: #f2f0e4;" onclick="files_select_upload()">Load 
           File</div>
-          <div class="maslow-grid-item" style = "background-color: #9d88c0;" onclick="sendMove('X-')"><canvas id = "lBtn" style="width: 100%; height: 100%"></div>
-          <div class="maslow-grid-item" style = "background-color: #f2f0e4;"><canvas id = "hBtn" style="width: 100%; height: 100%"></div>  
-          <div class="maslow-grid-item" style = "background-color: #9d88c0;" onclick="sendMove('X+')"><canvas id = "rBtn" style="width: 100%; height: 100%"></div>
-          <div class="maslow-grid-item" style = "background-color: #f2f0e4; font-size: 1vw;" onclick="openModal('calibration-popup');" id = "calibrationBTN" font-size: 1vw;>Setup</div>
-          <div class="maslow-grid-item" style = "background-color: #b69fcb;" onclick="sendMove('X-Y-')"><canvas id = "blBtn" style="width: 100%; height: 100%"></canvas></div>
-          <div class="maslow-grid-item" style = "background-color: #9d88c0;" onclick="sendMove('Y-')"><canvas id = "dnBtn" style="width: 100%; height: 100%"></div>
-          <div class="maslow-grid-item" style = "background-color: #b69fcb;" onclick="sendMove('X+Y-')"><canvas id = "brBtn" style="width: 100%; height: 100%"></canvas></div>
-          <div class="maslow-grid-item" style = "background-color: #f2f0e4;" onclick="showZaxisPopup();" id = "zBtn">Z</div>
-          <div class="maslow-grid-item" >Dist To Move:</div>
-          <div class="maslow-grid-item" style = "background-color: #f2f0e4;" id = "disM">100</div>
-          <div class="maslow-grid-item" style = "background-color: #f2f0e4;" id="units" title="Toggle Units" onclick="toggleUnits()">mm</div>
-          <div class="maslow-grid-item" style = "background-color: #f2f0e4;" onmousedown="zeroAxis('X');zeroAxis('Y');" onmouseup="refreshGcode();">Define
+          <div class="maslow-grid-item maslow-grid-item-btn" style = "background-color: #9d88c0;" onclick="sendMove('X-')"><canvas id = "lBtn" style="width: 100%; height: 100%"></div>
+          <div class="maslow-grid-item maslow-grid-item-btn" style = "background-color: #f2f0e4;"><canvas id = "hBtn" style="width: 100%; height: 100%"></div>  
+          <div class="maslow-grid-item maslow-grid-item-btn" style = "background-color: #9d88c0;" onclick="sendMove('X+')"><canvas id = "rBtn" style="width: 100%; height: 100%"></div>
+          <div class="maslow-grid-item maslow-grid-item-btn" style = "background-color: #f2f0e4; font-size: 1vw;" onclick="openModal('calibration-popup');" id = "calibrationBTN" font-size: 1vw;>Setup</div>
+          <div class="maslow-grid-item maslow-grid-item-btn" style = "background-color: #b69fcb;" onclick="sendMove('X-Y-')"><canvas id = "blBtn" style="width: 100%; height: 100%"></canvas></div>
+          <div class="maslow-grid-item maslow-grid-item-btn" style = "background-color: #9d88c0;" onclick="sendMove('Y-')"><canvas id = "dnBtn" style="width: 100%; height: 100%"></div>
+          <div class="maslow-grid-item maslow-grid-item-btn" style = "background-color: #b69fcb;" onclick="sendMove('X+Y-')"><canvas id = "brBtn" style="width: 100%; height: 100%"></canvas></div>
+          <div class="maslow-grid-item maslow-grid-item-btn" style = "background-color: #f2f0e4;" onclick="openModal('z-axis-popup');" id = "zBtn">Z</div>
+          <div class="maslow-grid-item maslow-grid-item-btn" >Dist To Move:</div>
+          <div class="maslow-grid-item maslow-grid-item-btn" style = "background-color: #f2f0e4;" id = "disM">100</div>
+          <div class="maslow-grid-item maslow-grid-item-btn" style = "background-color: #f2f0e4;" id="units" title="Toggle Units" onclick="toggleUnits()">mm</div>
+          <div class="maslow-grid-item maslow-grid-item-btn" style = "background-color: #f2f0e4;" onmousedown="zeroAxis('X');zeroAxis('Y');" onmouseup="refreshGcode();">Define
           Home</div>
         </div>
         <div class="maslow-grid-container tablettab-controls-item">
-          <div class="maslow-grid-item" style = "background-color: #4aa85c;" onclick="runGCode();"><canvas id = "playBtn" style="width: 100%; height: 100%"></canvas></div>
-          <div class="maslow-grid-item" style = "background-color: #efbb33;" onclick="pauseGCode();"><canvas id = "pauseBtn" style="width: 100%; height: 100%"></canvas></div>  
-          <div class="maslow-grid-item" style = "background-color: #cd654c;" onclick="stopAndRecover();"><canvas id = "stopBtn" style="width: 100%; height: 100%"></canvas></div>
+          <div class="maslow-grid-item maslow-grid-item-btn" style = "background-color: #4aa85c;" onclick="runGCode();"><canvas id = "playBtn" style="width: 100%; height: 100%"></canvas></div>
+          <div class="maslow-grid-item maslow-grid-item-btn" style = "background-color: #efbb33;" onclick="pauseGCode();"><canvas id = "pauseBtn" style="width: 100%; height: 100%"></canvas></div>  
+          <div class="maslow-grid-item maslow-grid-item-btn" style = "background-color: #cd654c;" onclick="stopAndRecover();"><canvas id = "stopBtn" style="width: 100%; height: 100%"></canvas></div>
         </div>
         <select class="tablettab-controls-item" id="filelist" onchange="selectFile()">
           <option>Load GCode File</option>
@@ -64,54 +64,54 @@
               </tr>
             </table>
           </div>
-          <div onclick="clearAlarm()"  id = "systemStatus" class="maslow-grid-item">Idle</div>  
+          <div onclick="clearAlarm()"  id = "systemStatus" class="maslow-grid-item system-status">Idle</div>  
         </div>
         <textarea style="border:  none" class="messages tablettab-controls-item" id="messages" rows="14" spellcheck="false" readonly>Serial Messages</textarea>
       </div>
     </div>
 
   </div>
-    <div id = "z-axis-popup" style="position: absolute; top: 40%; left: 40%; margin-top: -50px; margin-left: -50px; width:400px; height: 400px;">
-      <div class="maslow-grid-container"  style = "display: grid; grid-template-columns: 50% 50%;">
-        <div class="maslow-grid-item" style = "background-color: #f2f0e4;" id = "disZ"> 1.00</div>
-        <div class="maslow-grid-item" style = "background-color: #f2f0e4;" onclick="sendMove('Z+')"> Up</div>
-        <div class="maslow-grid-item" style = "background-color: #f2f0e4;" onclick="zeroAxis('Z')"> Define Home</div>
-        <div class="maslow-grid-item" style = "background-color: #f2f0e4;" onclick="sendMove('Z-')"> Down</div>
+
+    <div id="z-axis-popup" class="calibration-modal-container" onclick="hideModal('z-axis-popup')">
+      <div class="calibration-modal-content" onclick="event.stopPropagation();">
+          <div class="calibration-modal-button-container">
+              <div class="buttons-row">   
+                <div class="calibration-modal-info" id = "disZ"> 1.00</div>
+                <button class="calibration-modal-button" onclick="sendMove('Z+')"> Up</button>                     
+              </div>
+              <div class="buttons-row">
+                <button class="calibration-modal-button" onclick="zeroAxis('Z')"> Define Home</button>
+                <button class="calibration-modal-button" onclick="sendMove('Z-')"> Dow</button>
+              </div>
+              
+            </div>
       </div>
     </div>
 
-
-
     <div id="calibration-popup" class="calibration-modal-container" onclick="hideModal('calibration-popup')">
       <div class="calibration-modal-content" onclick="event.stopPropagation();">
-        <div class="calibration-modal-button-container">
-          <div class="calibration-modal-row-container" id="calibration-status-msg">
-            Calibration...
-          </div>
-          <div class="calibration-modal-row-container">
-            <button class="calibration-modal-button calibration-modal-position-button" onclick="sendCommand('$TL');">Retract Top Left</button>
-            <button class="calibration-modal-button calibration-modal-position-button" onclick="sendCommand('$TR');">Retract Top Right</button>
-          </div>
-          <div class="calibration-modal-row-container">
-            <button class="calibration-modal-button calibration-modal-position-button" onclick="sendCommand('$BL');">Retract Bottom Left</button>
-            <button class="calibration-modal-button calibration-modal-position-button" onclick="sendCommand('$BR');">Retract Bottom Right</button>
-          </div>
-          <div class="calibration-modal-row-container">
-            <button class="calibration-modal-button calibration-modal-position-button" id="calibrate-button">Calibrate</button>
-            <button class="calibration-modal-button calibration-modal-position-button" onclick="sendCommand('$CMP');">Comply</button>
-          </div>
-          <div class="calibration-modal-row-container">
-            <button class="calibration-modal-button calibration-modal-position-button" onclick="sendCommand('$ALL');">Retract All</button>
-            <button class="calibration-modal-button calibration-modal-position-button" onclick="sendCommand('$EXT');">Extend All</button>
-          </div>
-          <div class="calibration-modal-row-container">
-            <button class="calibration-modal-button calibration-modal-position-button" onclick="sendCommand('$TKSLK');">Take Slack</button>
-          </div>
-          <div class="calibration-modal-row-container">
-            <button class="calibration-modal-button calibration-modal-stop-button" onclick="sendCommand('$STOP');">Stop</button>
-          </div>
-          
-        </div>
+          <div class="calibration-modal-button-container">
+              <div class="buttons-row">
+                <button class="calibration-modal-button" onclick="onCalibrationButtonsClick('$ALL','Retract All');">Retract All</button>
+                <span class="arrow">&#8594;</span>
+                <button class="calibration-modal-button" onclick="onCalibrationButtonsClick('$EXT','Extend All');">Extend All</button>
+                <div class="buttons-row-col-el">
+                  <span class="arrow">&#8599;</span>
+                  <span class="arrow">&#8600;</span>
+                </div>
+                <div class="buttons-row-col-el">
+                  <button class="calibration-modal-button" onclick="onCalibrationButtonsClick('$CAL','Calibrate');">Calibrate</button>
+                  <button class="calibration-modal-button" onclick="onCalibrationButtonsClick('$TKSLK','Take Slack');">Take Slack</button>
+                </div>
+                
+                
+              </div>
+              <div class="buttons-row">
+                  <button class="calibration-modal-button" onclick="onCalibrationButtonsClick('$TKSLK','Home Z');">Home Z</button>
+                <button class="calibration-modal-button stop-button" onclick="onCalibrationButtonsClick('$STOP','Stop');">Stop</button>
+              </div>
+              
+            </div>
       </div>
     </div>
 

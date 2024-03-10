@@ -284,6 +284,7 @@ function tabletShowResponse(response) {}
 
 function clearAlarm() {
   if (id('systemStatus').innerText == 'Alarm') {
+    id('systemStatus').classList.remove('system-status-alarm')
     SendPrinterCommand('$X', true, null, null, 114, 1)
   }
 }
@@ -734,7 +735,7 @@ function tabletSelectGCodeFile(filename) {
 }
 function tabletLoadGCodeFile(path, size) {
   gCodeFilename = path
-  if ((isNaN(size) && (size.endsWith('GB'))) || size > 10000000) {
+  if ((isNaN(size) && size.endsWith('GB')) || size > 10000000) {
     showGCode('GCode file too large to display (> 1MB)')
     gCodeDisplayable = false
     displayer.clear()
@@ -1092,12 +1093,11 @@ function hideModal(modalId) {
   }
 }
 
-const computeEndButton = document.getElementById('calibrate-button')
-computeEndButton.addEventListener('click', async () => {
-  sendCommand('$CAL')
-  document.querySelector('#calibration-status-msg').innerHTML = 'Calibrating'
-  document.querySelector('#calibration-status-msg').style.display = 'flex'
+const onCalibrationButtonsClick = async (command, msg) => {
+  sendCommand(command)
+  document.querySelector('#messages').value += '\n' + msg
   await sleep(500)
-})
+  sendCommand(command)
+}
 
 /* Calibration modal END */
