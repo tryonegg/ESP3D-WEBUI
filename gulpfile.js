@@ -142,8 +142,6 @@ function clearlang() {
 
     return arg
   })(process.argv)
-  console.log('qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq')
-  console.log('arg', arg)
   if (arg.lang == 'fluidnc') {
     fl_lang = true
     en_lang = false
