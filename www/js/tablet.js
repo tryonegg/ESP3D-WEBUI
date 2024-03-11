@@ -1094,9 +1094,7 @@ function hideModal(modalId) {
 }
 
 const onCalibrationButtonsClick = async (command, msg) => {
-  sendCommand(command)
   document.querySelector('#messages').value += '\n' + msg
-  await sleep(500)
   sendCommand(command)
 }
 
