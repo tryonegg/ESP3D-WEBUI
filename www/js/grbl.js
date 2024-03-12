@@ -639,6 +639,8 @@ async function handleCalibrationData(measurements) {
         }
       }
     }
+    // Scroll down so that the results are visible
+    messages.scrollTop = messages.scrollHeight;
   } catch (error) {
     console.error('An error occurred:', error)
   }
