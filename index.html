@@ -635,17 +635,21 @@ function findMaxFitness(initialGuess, measurements) {
     var maxFitness = -1;
     var newFitness = 0;
     var stagnantCounter = 0;
+    var currentCycles = 0;
+    const maxCycles = 300000;
 
-    while (stagnantCounter < 14) {
+    while (stagnantCounter < 14 && currentCycles < maxCycles) {
         maxFitness = newFitness;
 
         var maxFitnessThisRun = 0;
         //Run 1,000 steps
         for (let i = 0; i < 100; i++) {
-            clearCanvas();
             initialGuess = computeLinesFitness(measurements, initialGuess);
             maxFitnessThisRun = Math.max(1 / initialGuess.fitness, maxFitnessThisRun);
         }
+
+        currentCycles += 1000;
+        console.log("Cycles: " + currentCycles);
 
         newFitness = maxFitnessThisRun;
         console.log("Fitness: " + newFitness);
@@ -677,47 +681,6 @@ canvas.width  = 1000;
 canvas.height = 600;
 canvas.style.border   = "1px solid";
 document.getElementById("views").appendChild(canvas);
-
-//Deletes everything from the canvas
-function clearCanvas() {
-    const canvas = document.getElementById('CursorLayer');
-    const context = canvas.getContext('2d');
-    context.clearRect(0, 0, canvas.width, canvas.height);
-}
-
-// Attach an event listener to the button
-const computeButton = document.getElementById('compute-button');
-computeButton.addEventListener('click', () => {
-    clearCanvas();
-    initialGuess = computeLinesFitness(measurements, initialGuess);
-    printResults(initialGuess);
-});
-
-
-//Create the buttons that the user can click
-const compute1kButton = document.getElementById('compute-1k-button');
-compute1kButton.addEventListener('click', () => {
-    for(let i = 0; i < 1000; i++){
-        clearCanvas();
-        initialGuess = computeLinesFitness(measurements, initialGuess);
-        console.log("Fitness: " + 1/initialGuess.fitness);
-    }
-    printResults(initialGuess);
-});
-
-const compute10kButton = document.getElementById('compute-10k-button');
-compute10kButton.addEventListener('click', () => {
-    for(let i = 0; i < 10000; i++){
-        clearCanvas();
-        initialGuess = computeLinesFitness(measurements, initialGuess);
-        console.log("Fitness: " + 1/initialGuess.fitness);
-    }
-    printResults(initialGuess);
-});
-
-
-
-
 
 
 //This is where the program really begins. The above is all function definitions

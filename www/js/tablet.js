@@ -1093,7 +1093,6 @@ function hideModal(modalId) {
 }
 
 const onCalibrationButtonsClick = async (command, msg) => {
-  document.querySelector('#messages').value += '\n' + msg
   sendCommand(command)
 }
 
