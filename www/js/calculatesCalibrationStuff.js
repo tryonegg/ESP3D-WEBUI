@@ -550,41 +550,61 @@ function scaleMeasurementsBasedOnTension(measurements, guess) {
 }
 
 function findMaxFitness(measurements) {
-  return new Promise(function (resolve) {
-    var maxFitness = -1
-    var newFitness = 0
-    var stagnantCounter = 0
 
-    while (stagnantCounter < 14) {
-      maxFitness = newFitness
+  var maxFitness = -1;
+  var newFitness = 0;
+  var stagnantCounter = 0;
+  const maxCycles = 300000;
+  var currentCycles = 0;
 
-      var maxFitnessThisRun = 0
-      //Run 1,000 steps
-      for (let i = 0; i < 100; i++) {
-        initialGuess = computeLinesFitness(measurements, initialGuess)
-        maxFitnessThisRun = Math.max(1 / initialGuess.fitness, maxFitnessThisRun)
-      }
+  function runCycle() {
+      if (stagnantCounter < 14 && currentCycles < maxCycles) {
+          maxFitness = newFitness;
 
-      newFitness = maxFitnessThisRun
-      // console.log('Fitness: ' + newFitness)
+          var maxFitnessThisRun = 0;
+          //Run 100 steps
+          for (let i = 0; i < 100; i++) {
+              initialGuess = computeLinesFitness(measurements, initialGuess);
+              maxFitnessThisRun = Math.max(1 / initialGuess.fitness, maxFitnessThisRun);
+          }
 
-      if (stagnantCounter > 1) {
-        // console.log('Stagnant Counter: ' + stagnantCounter)
-      }
+          currentCycles += 100;
 
-      if (newFitness <= maxFitness) {
-        stagnantCounter++
+          newFitness = maxFitnessThisRun;
+          var messagesBox = document.querySelector('#messages');
+          messagesBox.value += '\nFitness: ' + newFitness + ' in ' + currentCycles + ' cycles';
+          messagesBox.scrollTop = messagesBox.scrollHeight;
+
+          if (stagnantCounter > 1) {
+              console.log("Stagnant Counter: " + stagnantCounter);
+          }
+
+          if (newFitness <= maxFitness) {
+              stagnantCounter++;
+          } else {
+              stagnantCounter = 0;
+          }
+
+          setTimeout(runCycle, 0); // schedule the next cycle
       } else {
-        stagnantCounter = 0
+        var messagesBox = document.querySelector('#messages');
+        messagesBox.value += '\nCalibration complete \nCalibration values:';
+        messagesBox.value += '\nMaslow_tlX: ' + initialGuess.tl.x;
+        messagesBox.value += '\nMaslow_tlY: ' + initialGuess.tl.y;
+        messagesBox.value += '\nMaslow_trX: ' + initialGuess.tr.x;
+        messagesBox.value += '\nMaslow_trY: ' + initialGuess.tr.y;
+        messagesBox.value += '\nMaslow_blX: ' + initialGuess.bl.x;
+        messagesBox.value += '\nMaslow_blY: ' + initialGuess.bl.y;
+        messagesBox.value += '\nMaslow_brX: ' + initialGuess.br.x;
+        messagesBox.value += '\nMaslow_brY: ' + initialGuess.br.y;
+        messagesBox.scrollTop
+        messagesBox.scrollTop = messagesBox.scrollHeight;
       }
-    }
+  }
 
-    // console.log('Maxfitness: ' + maxFitness)
-    // console.log('NewFitness: ' + newFitness)
-    resolve(initialGuess)
-  })
+  runCycle(); // start the first cycle
 
-  return initialGuess
+  return initialGuess;
 }
 
 //This is where the program really begins. The above is all function definitions

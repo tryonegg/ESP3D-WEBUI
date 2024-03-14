@@ -613,7 +613,7 @@ var collectHandler = undefined
 var collectedSettings = null
 
 async function handleCalibrationData(measurements) {
-  document.querySelector('#messages').value += '\nComputing... This may take a few minutes'
+  document.querySelector('#messages').value += '\nComputing... This may take several minutes'
   await sleep(500)
   try {
     calibrationResults = await findMaxFitness(measurements)
@@ -627,19 +627,6 @@ async function handleCalibrationData(measurements) {
         }
       }
     }
-    console.log('Calibration results:', calibrationResults)
-    document.querySelector('#messages').value += '\nCalibration results:'
-    for (const firstLevelItem in calibrationResults) {
-      if (firstLevelItem === 'fitness') {
-        document.querySelector('#messages').value += '\n' + `Fitness: ${calibrationResults[firstLevelItem]}`
-      } else {
-        for (const secondLevelItem in calibrationResults[firstLevelItem]) {
-          document.querySelector('#messages').value +=
-            '\n' + `${firstLevelItem}/${secondLevelItem}: ${calibrationResults[firstLevelItem][secondLevelItem]}`
-        }
-      }
-    }
-    // Scroll down so that the results are visible
     messages.scrollTop = messages.scrollHeight;
   } catch (error) {
     console.error('An error occurred:', error)
