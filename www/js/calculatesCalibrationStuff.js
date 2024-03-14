@@ -549,18 +549,13 @@ function scaleMeasurementsBasedOnTension(measurements, guess) {
   return newMeasurements
 }
 
-function findMaxFitness(initialGuess, measurements) {
+function findMaxFitness(measurements) {
 
   var maxFitness = -1;
   var newFitness = 0;
   var stagnantCounter = 0;
   const maxCycles = 300000;
   var currentCycles = 0;
-
-  document.querySelector('#messages').value += '\nIn findMaxFitness'
-  console.log("In findMaxFitness")
-  console.log(initialGuess)
-  console.log(measurements)
 
   function runCycle() {
       if (stagnantCounter < 14 && currentCycles < maxCycles) {
@@ -576,7 +571,9 @@ function findMaxFitness(initialGuess, measurements) {
           currentCycles += 100;
 
           newFitness = maxFitnessThisRun;
-          console.log("Fitness: " + newFitness);
+          var messagesBox = document.querySelector('#messages');
+          messagesBox.value += '\nFitness: ' + newFitness + ' in ' + currentCycles + ' cycles';
+          messagesBox.scrollTop = messagesBox.scrollHeight;
 
           if (stagnantCounter > 1) {
               console.log("Stagnant Counter: " + stagnantCounter);
@@ -590,8 +587,18 @@ function findMaxFitness(initialGuess, measurements) {
 
           setTimeout(runCycle, 0); // schedule the next cycle
       } else {
-          console.log("Maxfitness: " + maxFitness);
-          console.log("NewFitness: " + newFitness);
+        var messagesBox = document.querySelector('#messages');
+        messagesBox.value += '\nCalibration complete \nCalibration values:';
+        messagesBox.value += '\nMaslow_tlX: ' + initialGuess.tl.x;
+        messagesBox.value += '\nMaslow_tlY: ' + initialGuess.tl.y;
+        messagesBox.value += '\nMaslow_trX: ' + initialGuess.tr.x;
+        messagesBox.value += '\nMaslow_trY: ' + initialGuess.tr.y;
+        messagesBox.value += '\nMaslow_blX: ' + initialGuess.bl.x;
+        messagesBox.value += '\nMaslow_blY: ' + initialGuess.bl.y;
+        messagesBox.value += '\nMaslow_brX: ' + initialGuess.br.x;
+        messagesBox.value += '\nMaslow_brY: ' + initialGuess.br.y;
+        messagesBox.scrollTop
+        messagesBox.scrollTop = messagesBox.scrollHeight;
       }
   }
 
