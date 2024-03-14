@@ -627,18 +627,7 @@ async function handleCalibrationData(measurements) {
         }
       }
     }
-    console.log('Calibration results:', calibrationResults)
-    document.querySelector('#messages').value += '\nCalibration results:'
-    for (const firstLevelItem in calibrationResults) {
-      if (firstLevelItem === 'fitness') {
-        document.querySelector('#messages').value += '\n' + `Fitness: ${calibrationResults[firstLevelItem]}`
-      } else {
-        for (const secondLevelItem in calibrationResults[firstLevelItem]) {
-          document.querySelector('#messages').value +=
-            '\n' + `${firstLevelItem}/${secondLevelItem}: ${calibrationResults[firstLevelItem][secondLevelItem]}`
-        }
-      }
-    }
+
     // Scroll to the bottom to make the added text visible
     messages.scrollTop = messages.scrollHeight;
   } catch (error) {
