@@ -613,7 +613,7 @@ var collectHandler = undefined
 var collectedSettings = null
 
 async function handleCalibrationData(measurements) {
-  document.querySelector('#messages').value += '\nComputing... This may several minutes'
+  document.querySelector('#messages').value += '\nComputing... This may take several minutes'
   await sleep(500)
   try {
     calibrationResults = await findMaxFitness(measurements)
