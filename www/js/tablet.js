@@ -412,7 +412,6 @@ function tabletUpdateModal() {
     setText('units', newUnits)
     setJogSelector(modal.units)
   }
-  // setDisabled('units', false);
 }
 
 function tabletGrblState(grbl, response) {

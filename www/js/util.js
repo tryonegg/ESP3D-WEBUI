@@ -11,12 +11,6 @@ function setValue(name, val) {
 function getValue(name, val) {
   return id(name).value
 }
-function intValue(name) {
-  return parseInt(getValue(name))
-}
-function getTextContent(name, val) {
-  return id(name).textContent
-}
 function setTextContent(name, val) {
   id(name).textContent = val
 }
@@ -52,15 +46,6 @@ function displayInitial(name) {
 }
 function displayUndoNone(name) {
   setDisplay(name, '')
-}
-function setVisible(name) {
-  id('SPIFFS_loader').style.visibility = 'visible'
-}
-function setHidden(name) {
-  id('SPIFFS_loader').style.visibility = 'hidden'
-}
-function setDisabled(name, value) {
-  id(name).disabled = value
 }
 function selectDisabled(selector, value) {
   document.querySelectorAll(selector).forEach(function (element) {

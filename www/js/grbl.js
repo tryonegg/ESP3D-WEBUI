@@ -627,8 +627,6 @@ async function handleCalibrationData(measurements) {
         }
       }
     }
-
-    // Scroll to the bottom to make the added text visible
     messages.scrollTop = messages.scrollHeight;
   } catch (error) {
     console.error('An error occurred:', error)
