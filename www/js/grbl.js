@@ -614,6 +614,7 @@ var collectedSettings = null
 
 async function handleCalibrationData(measurements) {
   document.querySelector('#messages').value += '\nComputing... This may take several minutes'
+  sendCommand("$ACKCAL");
   await sleep(500)
   try {
     calibrationResults = await findMaxFitness(measurements)
