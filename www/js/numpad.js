@@ -52,7 +52,8 @@ var numpad = {
     for (var i=7; i<=9; i++) { buttonator(i, "num", numpad.digit); }
     buttonator("&#10502;", "del", numpad.delete);
     spacer();
-    buttonator("Goto", "goto", numpad.gotoCoordinate);
+    //buttonator("Goto", "goto", numpad.gotoCoordinate); //This is a nice feature, but it uses gcode instead of jog which is triggering errors
+    buttonator("", "num", numpad.doNothing);
 
     // 4 5 6 C _ _
     for (var i=4; i<=6; i++) { buttonator(i, "num", numpad.digit); }
@@ -62,13 +63,14 @@ var numpad = {
 
     // 1 2 3 +- Set
     for (var i=1; i<=3; i++) { buttonator(i, "num", numpad.digit); }
-    buttonator("+-", "num", numpad.toggleSign);
+    buttonator("", "num", (numpad.doNothing));
+    //buttonator("+-", "num", numpad.toggleSign);
     buttonator("Set", "set", numpad.setCoordinate);
 
     // 0 . Get Cancel
     buttonator(0, "zero", numpad.digit);
     buttonator(".", "dot", numpad.dot);
-    buttonator("Get", "get", numpad.recall);
+    buttonator("", "get", numpad.doNothing);
     buttonator("Cancel", "cxwide", numpad.hide);
 
 
@@ -149,6 +151,9 @@ var numpad = {
         numpad.hdisplay.value = -numpad.hdisplay.value;
     },
 
+    // Do nothing function
+    doNothing: function(){},
+
 
     // ADD DECIMAL POINT
     dot: function(){
@@ -178,7 +183,7 @@ var numpad = {
 
   setCoordinate: function(){
     numpad.nowTarget.textContent = numpad.hdisplay.value;
-    setAxisByValue(numpad.nowTarget.dataset.axis, numpad.hdisplay.value);
+    //setAxisByValue(numpad.nowTarget.dataset.axis, numpad.hdisplay.value);
     numpad.hide();
   },
 
