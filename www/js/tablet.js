@@ -26,7 +26,7 @@ function tabletClick() {
   if (window.navigator && window.navigator.vibrate) {
     window.navigator.vibrate(200)
   }
-  beep(3, 400, 10)
+  // beep(3, 400, 10)
 }
 
 sendCommand = function (cmd) {
