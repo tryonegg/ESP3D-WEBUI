@@ -4,6 +4,8 @@ var gCodeDisplayable = false
 var snd = null
 var sndok = true
 
+var versionNumber = 0.65
+
 function beep(vol, freq, duration) {
   if (snd == null) {
     if (sndok) {
@@ -1094,6 +1096,15 @@ function hideModal(modalId) {
 
 const onCalibrationButtonsClick = async (command, msg) => {
   sendCommand(command)
+
+  //Prints out the index.html version number when test is pressed
+  if(command == '$TEST'){
+    let msgWindow = document.getElementById('messages')
+    let text = msgWindow.textContent
+    text = text + '\n' + "Index.html Version: " + versionNumber
+    msgWindow.textContent = text
+    msgWindow.scrollTop = msgWindow.scrollHeight
+  }
 }
 
 /* Calibration modal END */
