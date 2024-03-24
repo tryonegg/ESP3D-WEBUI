@@ -4,6 +4,8 @@ var gCodeDisplayable = false
 var snd = null
 var sndok = true
 
+var lastHeartBeatTime = new Date().getTime();
+
 var versionNumber = 0.65
 
 function beep(vol, freq, duration) {
@@ -238,6 +240,18 @@ sendMove = function (cmd) {
 
   fn && fn()
 }
+setInterval(checkOnHeartbeat, 500);
+function checkOnHeartbeat() {
+  if (new Date().getTime() - lastHeartBeatTime > 10000) {
+    let msgWindow = document.getElementById('messages')
+    let text = msgWindow.textContent
+    text = text + '\n' + "No heartbeat from machine in 10 seconds. Please check connection."
+    msgWindow.textContent = text
+    msgWindow.scrollTop = msgWindow.scrollHeight
+    lastHeartBeatTime = new Date().getTime();
+  }
+}
+
 function tabletShowMessage(msg, collecting) {
   if (
     collecting ||
@@ -247,6 +261,12 @@ function tabletShowMessage(msg, collecting) {
     msg.startsWith('\n') ||
     msg.startsWith('\r')
   ) {
+    return
+  }
+
+  //This keeps track of when we saw the last heartbeat from the machine
+  if(msg.startsWith('[MSG:INFO: Heartbeat')){
+    lastHeartBeatTime = new Date().getTime();
     return
   }
 
