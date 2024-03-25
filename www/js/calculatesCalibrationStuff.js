@@ -588,15 +588,18 @@ function findMaxFitness(measurements) {
           setTimeout(runCycle, 0); // schedule the next cycle
       } else {
         var messagesBox = document.querySelector('#messages');
+        if(maxFitness < 0.5){
+          messagesBox.value += '\nFITNESS TOO LOW. DO NOT USE THESE CALIBRATION VALUES!';
+        }
         messagesBox.value += '\nCalibration complete \nCalibration values:';
-        messagesBox.value += '\nMaslow_tlX: ' + initialGuess.tl.x;
-        messagesBox.value += '\nMaslow_tlY: ' + initialGuess.tl.y;
-        messagesBox.value += '\nMaslow_trX: ' + initialGuess.tr.x;
-        messagesBox.value += '\nMaslow_trY: ' + initialGuess.tr.y;
-        messagesBox.value += '\nMaslow_blX: ' + initialGuess.bl.x;
-        messagesBox.value += '\nMaslow_blY: ' + initialGuess.bl.y;
-        messagesBox.value += '\nMaslow_brX: ' + initialGuess.br.x;
-        messagesBox.value += '\nMaslow_brY: ' + initialGuess.br.y;
+        messagesBox.value += '\nMaslow_tlX: ' + initialGuess.tl.x.toFixed(1);
+        messagesBox.value += '\nMaslow_tlY: ' + initialGuess.tl.y.toFixed(1);
+        messagesBox.value += '\nMaslow_trX: ' + initialGuess.tr.x.toFixed(1);
+        messagesBox.value += '\nMaslow_trY: ' + initialGuess.tr.y.toFixed(1);
+        messagesBox.value += '\nMaslow_blX: ' + initialGuess.bl.x.toFixed(1);
+        messagesBox.value += '\nMaslow_blY: ' + initialGuess.bl.y.toFixed(1);
+        messagesBox.value += '\nMaslow_brX: ' + initialGuess.br.x.toFixed(1);
+        messagesBox.value += '\nMaslow_brY: ' + initialGuess.br.y.toFixed(1);
         messagesBox.scrollTop
         messagesBox.scrollTop = messagesBox.scrollHeight;
       }
