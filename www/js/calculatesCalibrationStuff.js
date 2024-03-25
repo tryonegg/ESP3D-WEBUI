@@ -589,7 +589,7 @@ function findMaxFitness(measurements) {
       } else {
         var messagesBox = document.querySelector('#messages');
         if(maxFitness < 0.5){
-          messagesBox.value += '\nFITNESS TOO LOW. DO NOT USE THESE CALIBRATION VALUES!';
+          messagesBox.value += '\nWARNING FITNESS TOO LOW. DO NOT USE THESE CALIBRATION VALUES!';
         }
         messagesBox.value += '\nCalibration complete \nCalibration values:';
         messagesBox.value += '\nMaslow_tlX: ' + initialGuess.tl.x.toFixed(1);
