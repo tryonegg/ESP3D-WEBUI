@@ -618,17 +618,6 @@ async function handleCalibrationData(measurements) {
   await sleep(500)
   try {
     calibrationResults = await findMaxFitness(measurements)
-    for (const firstLevelItem in calibrationResults) {
-      if (firstLevelItem === 'fitness') {
-        calibrationResults[firstLevelItem] = Math.round((1 / calibrationResults[firstLevelItem]) * 100) / 100
-      } else {
-        for (const secondLevelItem in calibrationResults[firstLevelItem]) {
-          calibrationResults[firstLevelItem][secondLevelItem] =
-            Math.round(calibrationResults[firstLevelItem][secondLevelItem] * 10) / 10
-        }
-      }
-    }
-    messages.scrollTop = messages.scrollHeight;
   } catch (error) {
     console.error('An error occurred:', error)
   }
