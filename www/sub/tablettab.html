@@ -16,7 +16,7 @@
           <div class="maslow-grid-item maslow-grid-item-btn" style = "background-color: #f2f0e4;" onclick="files_select_upload()">Load 
           File</div>
           <div class="maslow-grid-item maslow-grid-item-btn" style = "background-color: #9d88c0;" onclick="sendMove('X-')"><canvas id = "lBtn" style="width: 100%; height: 100%"></div>
-          <div class="maslow-grid-item maslow-grid-item-btn" style = "background-color: #f2f0e4;"><canvas id = "hBtn" style="width: 100%; height: 100%"></div>  
+          <div class="maslow-grid-item maslow-grid-item-btn" style = "background-color: #f2f0e4;" onclick="moveHome()"><canvas id = "hBtn" style="width: 100%; height: 100%"></div>  
           <div class="maslow-grid-item maslow-grid-item-btn" style = "background-color: #9d88c0;" onclick="sendMove('X+')"><canvas id = "rBtn" style="width: 100%; height: 100%"></div>
           <div class="maslow-grid-item maslow-grid-item-btn" style = "background-color: #f2f0e4; font-size: 1vw;" onclick="openModal('calibration-popup');" id = "calibrationBTN" font-size: 1vw;>Setup</div>
           <div class="maslow-grid-item maslow-grid-item-btn" style = "background-color: #b69fcb;" onclick="sendMove('X-Y-')"><canvas id = "blBtn" style="width: 100%; height: 100%"></canvas></div>
@@ -32,7 +32,7 @@
         <div class="maslow-grid-container tablettab-controls-item">
           <div class="maslow-grid-item maslow-grid-item-btn" style = "background-color: #4aa85c;" onclick="runGCode();"><canvas id = "playBtn" style="width: 100%; height: 100%"></canvas></div>
           <div class="maslow-grid-item maslow-grid-item-btn" style = "background-color: #efbb33;" onclick="pauseGCode();"><canvas id = "pauseBtn" style="width: 100%; height: 100%"></canvas></div>  
-          <div class="maslow-grid-item maslow-grid-item-btn" style = "background-color: #cd654c;" onclick="onCalibrationButtonsClick('$ESTOP','E Stop');"><canvas id = "stopBtn" style="width: 100%; height: 100%"></canvas></div>
+          <div class="maslow-grid-item maslow-grid-item-btn" style = "background-color: #cd654c;" onclick="onCalibrationButtonsClick('$ESTOP','Home Z');"><canvas id = "stopBtn" style="width: 100%; height: 100%"></canvas></div>
         </div>
         <select class="tablettab-controls-item" id="filelist" onchange="selectFile()">
           <option>Load GCode File</option>
