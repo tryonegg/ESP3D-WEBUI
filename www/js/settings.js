@@ -219,7 +219,7 @@ function build_HTML_setting_list(filter) {
   var content = '<tr><td colspan="2">Click "Set" after changing a value to set it</td></tr>'
   if (filter === 'tree') {
     content += `<tr>
-    <td>Click "Save" after changing all values to<br/>save the whole configuration to maslow.yaml and restart</td>
+    <td>Click "Save" after changing all values to save the <br/>whole configuration to maslow.yaml and restart</td>
     <td><button type="button" class="btn btn-success" onclick="saveMaslowYaml();">Save</button></td></tr>`
   }
   current_setting_filter = filter
