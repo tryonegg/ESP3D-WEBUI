@@ -208,10 +208,20 @@ function build_control_from_pos(pos, extra) {
   return build_control_from_index(get_index_from_eeprom_pos(pos), extra)
 }
 
+function saveMaslowYaml() {
+  SendGetHttp('/command?plain=' + encodeURIComponent("$CD=/maslow.yaml"));
+  restart_esp();
+}
+
 function build_HTML_setting_list(filter) {
   //this to prevent concurent process to update after we clean content
   if (do_not_build_settings) return
-  var content = ''
+  var content = '<tr><td colspan="2">Click "Set" after changing a value to set it</td></tr>'
+  if (filter === 'tree') {
+    content += `<tr>
+    <td>Click "Save" after changing all values to<br/>save the whole configuration to maslow.yaml</td>
+    <td><button type="button" class="btn btn-success" onclick="saveMaslowYaml();">Save</button></td></tr>`
+  }
   current_setting_filter = filter
   id(current_setting_filter + '_setting_filter').checked = true
 
