@@ -6,7 +6,7 @@ var sndok = true
 
 var lastHeartBeatTime = new Date().getTime();
 
-var versionNumber = 0.65
+var versionNumber = 0.66
 
 function beep(vol, freq, duration) {
   if (snd == null) {
@@ -240,6 +240,26 @@ sendMove = function (cmd) {
 
   fn && fn()
 }
+
+moveHome = function () {
+   
+  //We want to move to the opposite of the machine's current X,Y cordinates
+  var x = parseFloat(id('mpos-x').innerText)
+  var y = parseFloat(id('mpos-y').innerText)
+
+  var jog = function (params) {
+    params = params || {}
+    var s = ''
+    for (key in params) {
+      s += key + params[key]
+    }
+    jogTo(s)
+  }
+
+  jog({ X: -1*x, Y: -1*y })
+}
+
+
 setInterval(checkOnHeartbeat, 500);
 function checkOnHeartbeat() {
   if (new Date().getTime() - lastHeartBeatTime > 10000) {
