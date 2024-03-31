@@ -5,6 +5,29 @@ var setting_lastj = -1
 var current_setting_filter = 'nvs'
 var setup_is_done = false
 var do_not_build_settings = false
+const CONFIG_TOOLTIPS = {
+  Maslow_vertical: "If the maslow is oriented horizontally, set this to false",
+  Maslow_calibration_offset_X: "mm offset from the edge of the frame, Y",
+  Maslow_calibration_offset_Y: "mm offset from the edge of the frame, Y",
+  Maslow_calibration_size_X: "Number of X points to use in calibration",
+  Maslow_calibration_size_Y: "Number of Y points to use in calibration",
+  Maslow_brX: "Bottom right anchor x (normally width in mm)",
+  Maslow_brY: "Bottom right anchor y (normally 0)",
+  Maslow_brZ: "Bottom right z (normally 117)",
+  Maslow_tlX: "Top left anchor x (normally 0)",
+  Maslow_tlY: "Top left anchor y (normally height in mm)",
+  Maslow_tlZ: "Top left z (normally 144)",
+  Maslow_trX: "Top right anchor x (normally width in mm)",
+  Maslow_trY: "Top right anchor y (normally height in mm)",
+  Maslow_trZ: "Top right z (normally 97)",
+  Maslow_blX: "Bottom left anchor x (normally 0)",
+  Maslow_blY: "Bottom left anchor y (normally 0)",
+  Maslow_blZ: "Bottom left z (normally 75)",
+  Maslow_Retract_Current_Threshold: "Sets how hard should Maslow pull on the belts to retract before considering them to be all the way in",
+  Maslow_Calibration_Current_Threshold: "Sets how hard should Maslow pull on the belts during the calibration process.",
+  Maslow_calibration_extend_top_y: "starting Y for top belts on extend all (-1000 to 1000) default 0",
+  Maslow_calibration_extend_bottom_y: "starting Y for bottom belts on extend all (-1000 to 1000) default ",
+}
 
 function refreshSettings(hide_setting_list) {
   if (http_communication_locked) {
@@ -229,8 +252,16 @@ function build_HTML_setting_list(filter) {
     fname = scl[i].F.trim().toLowerCase()
     if (fname == 'network' || fname == filter || filter == 'all') {
       content += '<tr>'
+      const tooltip = CONFIG_TOOLTIPS[scl[i].label.substring(1)]
       content += "<td style='vertical-align:middle'>"
       content += translate_text_item(scl[i].label, true)
+      if (tooltip) {
+        content += `<div class='tooltip' style="padding-left: 20px; margin-top: 10px;">
+        <svg width="16" height="16" fill="#3276c3" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 416.979 416.979" xml:space="preserve" stroke="#3276c3"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path d="M356.004,61.156c-81.37-81.47-213.377-81.551-294.848-0.182c-81.47,81.371-81.552,213.379-0.181,294.85 c81.369,81.47,213.378,81.551,294.849,0.181C437.293,274.636,437.375,142.626,356.004,61.156z M237.6,340.786 c0,3.217-2.607,5.822-5.822,5.822h-46.576c-3.215,0-5.822-2.605-5.822-5.822V167.885c0-3.217,2.607-5.822,5.822-5.822h46.576 c3.215,0,5.822,2.604,5.822,5.822V340.786z M208.49,137.901c-18.618,0-33.766-15.146-33.766-33.765 c0-18.617,15.147-33.766,33.766-33.766c18.619,0,33.766,15.148,33.766,33.766C242.256,122.755,227.107,137.901,208.49,137.901z"></path> </g> </g></svg>
+        <span class="tooltip-text">${tooltip}</span>
+        </div>
+        `
+      }
       content += '</td>'
       content += "<td style='vertical-align:middle'>"
       content += '<table><tr><td>' + build_control_from_index(i) + '</td></tr></table>'
