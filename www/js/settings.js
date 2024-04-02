@@ -7,7 +7,7 @@ var setup_is_done = false
 var do_not_build_settings = false
 const CONFIG_TOOLTIPS = {
   Maslow_vertical: "If the maslow is oriented horizontally, set this to false",
-  Maslow_calibration_offset_X: "mm offset from the edge of the frame, Y",
+  Maslow_calibration_offset_X: "mm offset from the edge of the frame, X",
   Maslow_calibration_offset_Y: "mm offset from the edge of the frame, Y",
   Maslow_calibration_size_X: "Number of X points to use in calibration",
   Maslow_calibration_size_Y: "Number of Y points to use in calibration",
