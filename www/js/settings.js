@@ -233,7 +233,6 @@ function build_control_from_pos(pos, extra) {
 
 function saveMaslowYaml() {
   SendGetHttp('/command?plain=' + encodeURIComponent("$CD=/maslow.yaml"));
-  restart_esp();
 }
 
 function build_HTML_setting_list(filter) {
