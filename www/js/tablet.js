@@ -6,7 +6,7 @@ var sndok = true
 
 var lastHeartBeatTime = new Date().getTime();
 
-var versionNumber = 0.66
+var versionNumber = 0.67
 
 function beep(vol, freq, duration) {
   if (snd == null) {
