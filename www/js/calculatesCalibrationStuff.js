@@ -2,16 +2,6 @@
 const initialWidth = 3048 + 12
 const initialHeight = 2200 - 14
 
-//These are the true corners of the machine that we want to solve for (only used for simulated measurments)
-const trueTLX = -0.6948090610228441
-const trueTLY = 2131.275233532367
-const trueTRX = 3034.4072793128926
-const trueTRY = 2127.1780972406527
-const trueBLX = 0
-const trueBLY = 0
-const trueBRX = 3034.960970894897
-const trueBRY = 0
-
 //Establish initial guesses for the corners
 var initialGuess = {
   tl: { x: 0, y: initialHeight },
@@ -401,6 +391,7 @@ function calculateAverage(array) {
 }
 
 
+
 /**
  * Projects the measurements to the plane of the machine. This is needed
  * because the belts are not parallel to the surface of the machine.
@@ -526,32 +517,7 @@ function findMaxFitness(measurements) {
   return bestGuess;
 }
 
-// function findMaxFitness(measurements) {
-//   let currentGuess = JSON.parse(JSON.stringify(initialGuess));
-//   let stagnantCounter = 0;
-//   let totalCounter = 0;
-//   var bestGuess = JSON.parse(JSON.stringify(initialGuess));
 
-//   while (stagnantCounter < 100 && totalCounter < 100000) {
-//       //Clear the canvass
-//       clearCanvas();
-
-//       currentGuess = computeLinesFitness(measurements, currentGuess);
-      
-//       if (1/currentGuess.fitness > 1/bestGuess.fitness) {
-//           bestGuess = JSON.parse(JSON.stringify(currentGuess));
-//           stagnantCounter = 0;
-//       } else {
-//           stagnantCounter++;
-//       }
-//       totalCounter++;
-//       console.log("Total Counter: " + totalCounter);
-//   }
-
-//   console.log("Results: ");
-//   console.log(bestGuess);
-//   return bestGuess;
-// }
 
 //This is where the program really begins. The above is all function definitions
 //The way that the progam works is that we basically guess where the four corners are and then
@@ -562,22 +528,6 @@ function findMaxFitness(measurements) {
 //Once we've figured out how good our guess was we try a different guess. We keep the good guesses and throw away the bad guesses
 //using a genetic algorithm
 
-calculateTensions(centerX, centerY, initialGuess)
-
-//Un-comment this code to use the simulated measurements
-
-// const randomMeasurementError = 6;
-// const constantMeasurementError = 3;
-// var measurements = [];
-// measurements.push(takeSimulatedMeasurement(centerX,centerY,randomMeasurementError, constantMeasurementError));
-// measurements.push(takeSimulatedMeasurement(centerX-800,centerY + 400,randomMeasurementError, constantMeasurementError));
-// measurements.push(takeSimulatedMeasurement(centerX-800,centerY,randomMeasurementError, constantMeasurementError));
-// measurements.push(takeSimulatedMeasurement(centerX-800,centerY - 400,randomMeasurementError, constantMeasurementError));
-// measurements.push(takeSimulatedMeasurement(centerX,centerY + 400,randomMeasurementError, constantMeasurementError));
-// measurements.push(takeSimulatedMeasurement(centerX,centerY - 400,randomMeasurementError, constantMeasurementError));
-// measurements.push(takeSimulatedMeasurement(centerX + 800,centerY + 400,randomMeasurementError, constantMeasurementError));
-// measurements.push(takeSimulatedMeasurement(centerX + 800,centerY,randomMeasurementError, constantMeasurementError));
-// measurements.push(takeSimulatedMeasurement(centerX + 800,centerY - 400,randomMeasurementError, constantMeasurementError));
 
 var measurements = [
   { bl: 1560.141, br: 2734.873, tr: 2433.119, tl: 883.419 },
