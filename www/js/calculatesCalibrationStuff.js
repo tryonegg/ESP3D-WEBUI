@@ -549,66 +549,60 @@ function scaleMeasurementsBasedOnTension(measurements, guess) {
   return newMeasurements
 }
 
+
 function findMaxFitness(measurements) {
+  let currentGuess = JSON.parse(JSON.stringify(initialGuess));
+  let stagnantCounter = 0;
+  let totalCounter = 0;
+  var bestGuess = JSON.parse(JSON.stringify(initialGuess));
 
-  var maxFitness = -1;
-  var newFitness = 0;
-  var stagnantCounter = 0;
-  const maxCycles = 300000;
-  var currentCycles = 0;
+  while (stagnantCounter < 100 && totalCounter < 100000) {
+      //Clear the canvass
+      clearCanvas();
 
-  function runCycle() {
-      if (stagnantCounter < 14 && currentCycles < maxCycles) {
-          maxFitness = newFitness;
-
-          var maxFitnessThisRun = 0;
-          //Run 100 steps
-          for (let i = 0; i < 100; i++) {
-              initialGuess = computeLinesFitness(measurements, initialGuess);
-              maxFitnessThisRun = Math.max(1 / initialGuess.fitness, maxFitnessThisRun);
-          }
-
-          currentCycles += 100;
-
-          newFitness = maxFitnessThisRun;
-          var messagesBox = document.querySelector('#messages');
-          messagesBox.value += '\nFitness: ' + newFitness + ' in ' + currentCycles + ' cycles';
-          messagesBox.scrollTop = messagesBox.scrollHeight;
-
-          if (stagnantCounter > 1) {
-              console.log("Stagnant Counter: " + stagnantCounter);
-          }
-
-          if (newFitness <= maxFitness) {
-              stagnantCounter++;
-          } else {
-              stagnantCounter = 0;
-          }
-
-          setTimeout(runCycle, 0); // schedule the next cycle
+      currentGuess = computeLinesFitness(measurements, currentGuess);
+      
+      if (1/currentGuess.fitness > 1/bestGuess.fitness) {
+          bestGuess = JSON.parse(JSON.stringify(currentGuess));
+          stagnantCounter = 0;
       } else {
-        var messagesBox = document.querySelector('#messages');
-        if(maxFitness < 0.5){
-          messagesBox.value += '\nWARNING FITNESS TOO LOW. DO NOT USE THESE CALIBRATION VALUES!';
-        }
-        messagesBox.value += '\nCalibration complete \nCalibration values:';
-        messagesBox.value += '\nMaslow_tlX: ' + initialGuess.tl.x.toFixed(1);
-        messagesBox.value += '\nMaslow_tlY: ' + initialGuess.tl.y.toFixed(1);
-        messagesBox.value += '\nMaslow_trX: ' + initialGuess.tr.x.toFixed(1);
-        messagesBox.value += '\nMaslow_trY: ' + initialGuess.tr.y.toFixed(1);
-        messagesBox.value += '\nMaslow_blX: ' + initialGuess.bl.x.toFixed(1);
-        messagesBox.value += '\nMaslow_blY: ' + initialGuess.bl.y.toFixed(1);
-        messagesBox.value += '\nMaslow_brX: ' + initialGuess.br.x.toFixed(1);
-        messagesBox.value += '\nMaslow_brY: ' + initialGuess.br.y.toFixed(1);
-        messagesBox.scrollTop
-        messagesBox.scrollTop = messagesBox.scrollHeight;
+          stagnantCounter++;
       }
+      totalCounter++;
   }
 
-  runCycle(); // start the first cycle
-
-  return initialGuess;
+  console.log("Results: ");
+  console.log(bestGuess);
+  console.log("Fitness: " + 1/bestGuess.fitness);
+  return bestGuess;
 }
+
+// function findMaxFitness(measurements) {
+//   let currentGuess = JSON.parse(JSON.stringify(initialGuess));
+//   let stagnantCounter = 0;
+//   let totalCounter = 0;
+//   var bestGuess = JSON.parse(JSON.stringify(initialGuess));
+
+//   while (stagnantCounter < 100 && totalCounter < 100000) {
+//       //Clear the canvass
+//       clearCanvas();
+
+//       currentGuess = computeLinesFitness(measurements, currentGuess);
+      
+//       if (1/currentGuess.fitness > 1/bestGuess.fitness) {
+//           bestGuess = JSON.parse(JSON.stringify(currentGuess));
+//           stagnantCounter = 0;
+//       } else {
+//           stagnantCounter++;
+//       }
+//       totalCounter++;
+//       console.log("Total Counter: " + totalCounter);
+//   }
+
+//   console.log("Results: ");
+//   console.log(bestGuess);
+//   return bestGuess;
+// }
 
 //This is where the program really begins. The above is all function definitions
 //The way that the progam works is that we basically guess where the four corners are and then
