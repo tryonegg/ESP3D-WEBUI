@@ -496,6 +496,8 @@ function findMaxFitness(measurements) {
   let totalCounter = 0;
   var bestGuess = JSON.parse(JSON.stringify(initialGuess));
 
+  var messagesBox = document.querySelector('#messages');
+
   function loop() {
     //Clear the canvass
     clearCanvas();
@@ -511,15 +513,29 @@ function findMaxFitness(measurements) {
     totalCounter++;
 
     if(totalCounter % 100 == 0) {
-      console.log("Fitness: " + 1/bestGuess.fitness);
+      messagesBox.value += '\nFitness: ' + 1/bestGuess.fitness.toFixed(7) + ' in ' + totalCounter;
+      messagesBox.scrollTop
+      messagesBox.scrollTop = messagesBox.scrollHeight;
     }
 
     if (stagnantCounter < 100 && totalCounter < 200000) {
       requestAnimationFrame(loop);
     } else {
-      console.log("Results: ");
-      console.log(bestGuess);
-      console.log("Fitness: " + 1/bestGuess.fitness);
+      
+      if(1/bestGuess.fitness < 0.5){
+        messagesBox.value += '\nWARNING FITNESS TOO LOW. DO NOT USE THESE CALIBRATION VALUES!';
+      }
+      messagesBox.value += '\nCalibration complete \nCalibration values:';
+      messagesBox.value += '\nMaslow_tlX: ' + bestGuess.tl.x.toFixed(1);
+      messagesBox.value += '\nMaslow_tlY: ' + bestGuess.tl.y.toFixed(1);
+      messagesBox.value += '\nMaslow_trX: ' + bestGuess.tr.x.toFixed(1);
+      messagesBox.value += '\nMaslow_trY: ' + bestGuess.tr.y.toFixed(1);
+      messagesBox.value += '\nMaslow_blX: ' + bestGuess.bl.x.toFixed(1);
+      messagesBox.value += '\nMaslow_blY: ' + bestGuess.bl.y.toFixed(1);
+      messagesBox.value += '\nMaslow_brX: ' + bestGuess.br.x.toFixed(1);
+      messagesBox.value += '\nMaslow_brY: ' + bestGuess.br.y.toFixed(1);
+      messagesBox.scrollTop
+      messagesBox.scrollTop = messagesBox.scrollHeight;
     }
   }
 
