@@ -496,24 +496,34 @@ function findMaxFitness(measurements) {
   let totalCounter = 0;
   var bestGuess = JSON.parse(JSON.stringify(initialGuess));
 
-  while (stagnantCounter < 100 && totalCounter < 100000) {
-      //Clear the canvass
-      clearCanvas();
+  function loop() {
+    //Clear the canvass
+    clearCanvas();
 
-      currentGuess = computeLinesFitness(measurements, currentGuess);
-      
-      if (1/currentGuess.fitness > 1/bestGuess.fitness) {
-          bestGuess = JSON.parse(JSON.stringify(currentGuess));
-          stagnantCounter = 0;
-      } else {
-          stagnantCounter++;
-      }
-      totalCounter++;
+    currentGuess = computeLinesFitness(measurements, currentGuess);
+    
+    if (1/currentGuess.fitness > 1/bestGuess.fitness) {
+        bestGuess = JSON.parse(JSON.stringify(currentGuess));
+        stagnantCounter = 0;
+    } else {
+        stagnantCounter++;
+    }
+    totalCounter++;
+
+    if(totalCounter % 100 == 0) {
+      console.log("Fitness: " + 1/bestGuess.fitness);
+    }
+
+    if (stagnantCounter < 100 && totalCounter < 200000) {
+      requestAnimationFrame(loop);
+    } else {
+      console.log("Results: ");
+      console.log(bestGuess);
+      console.log("Fitness: " + 1/bestGuess.fitness);
+    }
   }
 
-  console.log("Results: ");
-  console.log(bestGuess);
-  console.log("Fitness: " + 1/bestGuess.fitness);
+  loop();
   return bestGuess;
 }
 
