@@ -37,25 +37,6 @@ let result
  *------------------------------------------------------------------------------
  */
 
-/**
- * Simulates a measurement at a given location with random and constant errors.
- * @param {number} x - The x-coordinate of the location to measure.
- * @param {number} y - The y-coordinate of the location to measure.
- * @param {number} randomError - The maximum amount of random error to add to the measurement.
- * @param {number} constantError - The constant error to add to the measurement.
- * @returns {Object} - An object containing the simulated measurements at the given location.
- */
-function takeSimulatedMeasurement(x, y, randomError, constantError) {
-  const tl =
-    distanceBetweenPoints(trueTLX, trueTLY, x, y) + (Math.random() * randomError * 2 - randomError) + constantError
-  const tr =
-    distanceBetweenPoints(trueTRX, trueTRY, x, y) + (Math.random() * randomError * 2 - randomError) + constantError
-  const bl =
-    distanceBetweenPoints(trueBLX, trueBLY, x, y) + (Math.random() * randomError * 2 - randomError) + constantError
-  const br =
-    distanceBetweenPoints(trueBRX, trueBRY, x, y) + (Math.random() * randomError * 2 - randomError) + constantError
-  return { tl: tl, tr: tr, bl: bl, br: br }
-}
 
 /**
  * Computes the distance between two points.
@@ -419,38 +400,6 @@ function calculateAverage(array) {
   return total / count
 }
 
-/**
- * Prints the difference between the real values and the computed values for the corners. Only useful when using simulated
- * measurements.
- * @param {Object} guess - An object containing the x and y coordinates of the top left, top right, bottom left, and bottom right corners of a trapazoid.
- * @returns {void}
- */
-function printResults(guess) {
-  // console.log("tlX error: " + (guess.tl.x - trueTLX) + "mm at: " + guess.tl.x);
-  // console.log("tlY error: " + (guess.tl.y - trueTLY) + "mm at: " + guess.tl.y);
-  // console.log("trX error: " + (guess.tr.x - trueTRX) + "mm at: " + guess.tr.x);
-  // console.log("trY error: " + (guess.tr.y - trueTRY) + "mm at: " + guess.tr.y);
-  // console.log("brX error: " + (guess.br.x - trueBRX) + "mm at: " + guess.br.x);
-  // console.log(
-  //   '(' +
-  //     guess.tl.x +
-  //     ', ' +
-  //     guess.tl.y +
-  //     '), (' +
-  //     guess.tr.x +
-  //     ', ' +
-  //     guess.tr.y +
-  //     ')\n (' +
-  //     guess.bl.x +
-  //     ', ' +
-  //     guess.bl.y +
-  //     '), (' +
-  //     guess.br.x +
-  //     ', ' +
-  //     guess.br.y +
-  //     ')'
-  // )
-}
 
 /**
  * Projects the measurements to the plane of the machine. This is needed
