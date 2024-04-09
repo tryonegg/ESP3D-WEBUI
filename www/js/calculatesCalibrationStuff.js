@@ -525,6 +525,7 @@ function findMaxFitness(measurements) {
       if(1/bestGuess.fitness < 0.5){
         messagesBox.value += '\nWARNING FITNESS TOO LOW. DO NOT USE THESE CALIBRATION VALUES!';
       }
+
       messagesBox.value += '\nCalibration complete \nCalibration values:';
       messagesBox.value += '\nMaslow_tlX: ' + bestGuess.tl.x.toFixed(1);
       messagesBox.value += '\nMaslow_tlY: ' + bestGuess.tl.y.toFixed(1);
@@ -536,6 +537,21 @@ function findMaxFitness(measurements) {
       messagesBox.value += '\nMaslow_brY: ' + bestGuess.br.y.toFixed(1);
       messagesBox.scrollTop
       messagesBox.scrollTop = messagesBox.scrollHeight;
+
+      if(1/bestGuess.fitness > 0.5){
+        sendCommand('$/Maslow_tlX=' + bestGuess.tl.x.toFixed(1));
+        sendCommand('$/Maslow_tlY=' + bestGuess.tl.y.toFixed(1));
+        sendCommand('$/Maslow_trX=' + bestGuess.tr.x.toFixed(1));
+        sendCommand('$/Maslow_trY=' + bestGuess.tr.y.toFixed(1));
+        sendCommand('$/Maslow_blX=' + bestGuess.bl.x.toFixed(1));
+        sendCommand('$/Maslow_blY=' + bestGuess.bl.y.toFixed(1));
+        sendCommand('$/Maslow_brX=' + bestGuess.br.x.toFixed(1));
+        sendCommand('$/Maslow_brY=' + bestGuess.br.y.toFixed(1));
+        refreshSettings(current_setting_filter);
+        saveMaslowYaml();
+      }
+
+
     }
   }
 
