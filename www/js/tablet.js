@@ -1218,6 +1218,37 @@ function saveConfigValues(){
   let machineOrientation = document.getElementById('machineOrientation').value
   let machineWidth = document.getElementById('machineWidth').value
   let machineHeight = document.getElementById('machineHeight').value
+
+  if(gridWidth != loadedValues['gridWidth']){
+    sendCommand('$/maslow_calibration_grid_width_mm_X=' + gridWidth)
+  }
+  if(gridHeight != loadedValues['gridHeight']){
+    sendCommand('$/maslow_calibration_grid_height_mm_Y=' + gridHeight)
+  }
+  if(pointsX != loadedValues['pointsX']){
+    sendCommand('$/Maslow_calibration_size_X=' + pointsX)
+  }
+  if(pointsY != loadedValues['pointsY']){
+    sendCommand('$/Maslow_calibration_size_Y=' + pointsY)
+  }
+  if(retractionForce != loadedValues['retractionForce']){
+    sendCommand('$/Maslow_Retract_Current_Threshold=' + retractionForce)
+  }
+  if(machineOrientation != loadedValues['machineOrientation']){
+    if(machineOrientation == 'horizontal'){
+      sendCommand('$/Maslow_vertical=false')
+    } else {
+      sendCommand('$/Maslow_vertical=true')
+    }
+  }
+  if(machineWidth != loadedValues['machineWidth']){
+    sendCommand('$/Maslow_trX=' + machineWidth)
+  }
+  if(machineHeight != loadedValues['machineHeight']){
+    sendCommand('$/Maslow_trY=' + machineHeight)
+  }
+  refreshSettings(current_setting_filter);
+  saveMaslowYaml();
 }
 
 const onCalibrationButtonsClick = async (command, msg) => {
