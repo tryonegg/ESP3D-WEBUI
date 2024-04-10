@@ -320,6 +320,21 @@ function tabletShowMessage(msg, collecting) {
   if (msg.startsWith('$/axes/y/homing/positive_direction=')) {
     displayer.setYDir(msg.substring(35, msg.length))
   }
+  if (msg.startsWith('$/maslow_calibration_grid_width_mm_X=')) {
+    document.getElementById('gridWidth').value = msg.substring(37, msg.length)
+  }
+  if (msg.startsWith('$/maslow_calibration_grid_height_mm_Y=')) {
+    document.getElementById('gridHeight').value = msg.substring(38, msg.length)
+  }
+  if (msg.startsWith('$/Maslow_calibration_size_X=')) {
+    document.getElementById('pointsX').value = msg.substring(28, msg.length)
+  }
+  if (msg.startsWith('$/Maslow_calibration_size_Y=')) {
+    document.getElementById('pointsY').value = msg.substring(28, msg.length)
+  }
+  if (msg.startsWith('$/Maslow_Retract_Current_Threshold=')) {
+    document.getElementById('retractionForce').value = msg.substring(35, msg.length)
+  }
 }
 
 function tabletShowResponse(response) {}
@@ -1132,6 +1147,16 @@ function hideModal(modalId) {
   if (modal) {
     modal.style.display = 'none'
   }
+}
+
+function loadConfigValues(){
+  SendPrinterCommand('$/Maslow_vertical')
+  SendPrinterCommand('$/maslow_calibration_grid_width_mm_X')
+  SendPrinterCommand('$/maslow_calibration_grid_height_mm_Y')
+  SendPrinterCommand('$/Maslow_calibration_size_X');
+  SendPrinterCommand('$/Maslow_calibration_size_Y');
+  SendPrinterCommand('$/Maslow_Retract_Current_Threshold');
+
 }
 
 const onCalibrationButtonsClick = async (command, msg) => {
