@@ -344,6 +344,15 @@ function tabletShowMessage(msg, collecting) {
     document.getElementById('machineOrientation').value = 'vertical'
     return;
   }
+  if (msg.startsWith('$/Maslow_trX=')) {
+    document.getElementById('machineWidth').value = msg.substring(13, msg.length)
+    return;
+  }
+  if (msg.startsWith('$/Maslow_trY=')) {
+    document.getElementById('machineHeight').value = msg.substring(13, msg.length)
+    return;
+  }
+
 
   let msgWindow = document.getElementById('messages')
   let text = msgWindow.textContent
@@ -1170,6 +1179,7 @@ function hideModal(modalId) {
   }
 }
 
+//Used to populate the config popup when it loads
 function loadConfigValues(){
   SendPrinterCommand('$/Maslow_vertical')
   SendPrinterCommand('$/maslow_calibration_grid_width_mm_X')
@@ -1177,7 +1187,8 @@ function loadConfigValues(){
   SendPrinterCommand('$/Maslow_calibration_size_X');
   SendPrinterCommand('$/Maslow_calibration_size_Y');
   SendPrinterCommand('$/Maslow_Retract_Current_Threshold');
-
+  SendPrinterCommand('$/Maslow_trX');
+  SendPrinterCommand('$/Maslow_trY');
 }
 
 const onCalibrationButtonsClick = async (command, msg) => {
