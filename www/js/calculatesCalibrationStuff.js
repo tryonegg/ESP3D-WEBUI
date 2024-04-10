@@ -549,6 +549,16 @@ function findMaxFitness(measurements) {
         sendCommand('$/Maslow_brY=' + bestGuess.br.y.toFixed(1));
         refreshSettings(current_setting_filter);
         saveMaslowYaml();
+
+        messagesBox.value += '\nThese values have been automatically saved for you.';
+        messagesBox.value += "\nYou MUST restart your machine for them to take effect...I know that is annoying, it's getting fixed ASAP. ";
+        messagesBox.scrollTop
+        messagesBox.scrollTop = messagesBox.scrollHeight;
+
+        //This restarts the esp32 to prevent you from trying to move the machine after calibration
+        setTimeout(function() {
+          sendCommand('$System/Control=RESTART');
+        }, 2000);
       }
 
 
