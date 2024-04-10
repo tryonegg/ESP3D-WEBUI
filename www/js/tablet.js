@@ -272,6 +272,8 @@ function checkOnHeartbeat() {
   }
 }
 
+
+var loadedValues = {};
 function tabletShowMessage(msg, collecting) {
   if (
     collecting ||
@@ -290,6 +292,7 @@ function tabletShowMessage(msg, collecting) {
     return
   }
 
+  //These are used for generating the working area in the background
   if (msg.startsWith('$/axes/x/max_travel_mm=')) {
     displayer.setXTravel(parseFloat(msg.substring(23, msg.length)))
     return;
@@ -316,40 +319,51 @@ function tabletShowMessage(msg, collecting) {
     displayer.setYDir(msg.substring(35, msg.length))
     return;
   }
+
+  //These are used for populating the configuraiton popup
   if (msg.startsWith('$/maslow_calibration_grid_width_mm_X=')) {
     document.getElementById('gridWidth').value = msg.substring(37, msg.length)
+    loadedValues['gridWidth'] = msg.substring(37, msg.length)
     return;
   }
   if (msg.startsWith('$/maslow_calibration_grid_height_mm_Y=')) {
     document.getElementById('gridHeight').value = msg.substring(38, msg.length)
+    loadedValues['gridHeight'] = msg.substring(38, msg.length)
     return;
   }
   if (msg.startsWith('$/Maslow_calibration_size_X=')) {
     document.getElementById('pointsX').value = msg.substring(28, msg.length)
+    loadedValues['pointsX'] = msg.substring(28, msg.length)
     return;
   }
   if (msg.startsWith('$/Maslow_calibration_size_Y=')) {
     document.getElementById('pointsY').value = msg.substring(28, msg.length)
+    loadedValues['pointsY'] = msg.substring(28, msg.length)
     return;
   }
   if (msg.startsWith('$/Maslow_Retract_Current_Threshold=')) {
     document.getElementById('retractionForce').value = msg.substring(35, msg.length)
+    loadedValues['retractionForce'] = msg.substring(35, msg.length)
     return;
   }
   if (msg == '$/Maslow_vertical=false') {
     document.getElementById('machineOrientation').value = 'horizontal'
+    loadedValues['machineOrientation'] = 'horizontal'
     return;
   }
   if (msg == '$/Maslow_vertical=true') {
     document.getElementById('machineOrientation').value = 'vertical'
+    loadedValues['machineOrientation'] = 'vertical'
     return;
   }
   if (msg.startsWith('$/Maslow_trX=')) {
     document.getElementById('machineWidth').value = msg.substring(13, msg.length)
+    loadedValues['machineWidth'] = msg.substring(13, msg.length)
     return;
   }
   if (msg.startsWith('$/Maslow_trY=')) {
     document.getElementById('machineHeight').value = msg.substring(13, msg.length)
+    loadedValues['machineHeight'] = msg.substring(13, msg.length)
     return;
   }
 
@@ -1189,6 +1203,21 @@ function loadConfigValues(){
   SendPrinterCommand('$/Maslow_Retract_Current_Threshold');
   SendPrinterCommand('$/Maslow_trX');
   SendPrinterCommand('$/Maslow_trY');
+}
+
+//Save the configuration values
+function saveConfigValues(){
+
+  console.log("Recorded loaded values: ");
+  console.log(loadedValues);
+  let gridWidth = document.getElementById('gridWidth').value
+  let gridHeight = document.getElementById('gridHeight').value
+  let pointsX = document.getElementById('pointsX').value
+  let pointsY = document.getElementById('pointsY').value
+  let retractionForce = document.getElementById('retractionForce').value
+  let machineOrientation = document.getElementById('machineOrientation').value
+  let machineWidth = document.getElementById('machineWidth').value
+  let machineHeight = document.getElementById('machineHeight').value
 }
 
 const onCalibrationButtonsClick = async (command, msg) => {
