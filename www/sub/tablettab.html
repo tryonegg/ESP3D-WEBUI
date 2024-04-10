@@ -108,12 +108,57 @@
               </div>
               <div class="buttons-row">
                 <!-- <button class="calibration-modal-button" onclick="onCalibrationButtonsClick('$TKSLK','Home Z');">Home Z</button> -->
+                <button class="calibration-modal-button" onclick="hideModal('calibration-popup'); openModal('configuration-popup');">Config</button>
                 <button class="calibration-modal-button stop-button" onclick="onCalibrationButtonsClick('$STOP','Stop');">Stop</button>
                 <button class="calibration-modal-button" onclick="onCalibrationButtonsClick('$TEST','Test');">Test</button>
                 <button class="calibration-modal-button" onclick="onCalibrationButtonsClick('$CMP','Release Tension');">Release Tension</button>
               </div>
               
             </div>
+      </div>
+    </div>
+
+    <div id="configuration-popup" class="calibration-modal-container" onclick="hideModal('configuration-popup')">
+      <div class="calibration-modal-content" onclick="event.stopPropagation();">
+        <div class="calibration-modal-button-container">
+          <div class="input-row">
+            <label for="input1">Machine Width(mm)</label>
+            <input id="input1" type="text" class="calibration-modal-input">
+          </div>
+          <div class="input-row">
+            <label for="input2">Machine Height(mm)</label>
+            <input id="input2" type="text" class="calibration-modal-input">
+          </div>
+          <hr style="border-top: 1px dashed;">
+          <div class="input-row">
+            <label for="input3">Width(mm)</label>
+            <input id="input3" type="text" class="calibration-modal-input">
+          </div>
+          <div class="input-row">
+            <label for="input4">Height(mm)</label>
+            <input id="input4" type="text" class="calibration-modal-input">
+            </div>
+            <div class="input-row">
+            <div style="display: flex;">
+              <div>
+              <label for="input5">Points: </label>
+              <input id="input5" type="text" class="calibration-modal-input">
+              </div>
+              <div>
+              <label for="input6">by</label>
+              <input id="input6" type="text" class="calibration-modal-input">
+              </div>
+            </div>
+            </div>
+          <hr style="border-top: 1px dashed;">
+          <div class="input-row">
+            <label for="input7">Retraction Force</label>
+            <input id="input7" type="text" class="calibration-modal-input">
+          </div>
+          <div class="input-row">
+            <button type="button" class="calibration-modal-button">Save</button>
+          </div>
+        </div>
       </div>
     </div>
 
