@@ -1207,9 +1207,6 @@ function loadConfigValues(){
 
 //Save the configuration values
 function saveConfigValues(){
-
-  console.log("Recorded loaded values: ");
-  console.log(loadedValues);
   let gridWidth = document.getElementById('gridWidth').value
   let gridHeight = document.getElementById('gridHeight').value
   let pointsX = document.getElementById('pointsX').value
