@@ -866,3 +866,14 @@ textarea {
   margin: 0px;
   padding: 0px;
 }
+
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 10px;
+}
+
+.input-label {
+  text-align: left;
+  float: left;
+}
