@@ -290,6 +290,61 @@ function tabletShowMessage(msg, collecting) {
     return
   }
 
+  if (msg.startsWith('$/axes/x/max_travel_mm=')) {
+    displayer.setXTravel(parseFloat(msg.substring(23, msg.length)))
+    return;
+  }
+  if (msg.startsWith('$/axes/y/max_travel_mm=')) {
+    displayer.setYTravel(parseFloat(msg.substring(23, msg.length)))
+    return;
+  }
+
+  if (msg.startsWith('$/axes/x/homing/mpos_mm=')) {
+    displayer.setXHome(parseFloat(msg.substring(24, msg.length)))
+    return;
+  }
+  if (msg.startsWith('$/axes/y/homing/mpos_mm=')) {
+    displayer.setYHome(parseFloat(msg.substring(24, msg.length)))
+    return;
+  }
+
+  if (msg.startsWith('$/axes/x/homing/positive_direction=')) {
+    displayer.setXDir(msg.substring(35, msg.length))
+    return;
+  }
+  if (msg.startsWith('$/axes/y/homing/positive_direction=')) {
+    displayer.setYDir(msg.substring(35, msg.length))
+    return;
+  }
+  if (msg.startsWith('$/maslow_calibration_grid_width_mm_X=')) {
+    document.getElementById('gridWidth').value = msg.substring(37, msg.length)
+    return;
+  }
+  if (msg.startsWith('$/maslow_calibration_grid_height_mm_Y=')) {
+    document.getElementById('gridHeight').value = msg.substring(38, msg.length)
+    return;
+  }
+  if (msg.startsWith('$/Maslow_calibration_size_X=')) {
+    document.getElementById('pointsX').value = msg.substring(28, msg.length)
+    return;
+  }
+  if (msg.startsWith('$/Maslow_calibration_size_Y=')) {
+    document.getElementById('pointsY').value = msg.substring(28, msg.length)
+    return;
+  }
+  if (msg.startsWith('$/Maslow_Retract_Current_Threshold=')) {
+    document.getElementById('retractionForce').value = msg.substring(35, msg.length)
+    return;
+  }
+  if (msg == '$/Maslow_vertical=false') {
+    document.getElementById('machineOrientation').value = 'horizontal'
+    return;
+  }
+  if (msg == '$/Maslow_vertical=true') {
+    document.getElementById('machineOrientation').value = 'vertical'
+    return;
+  }
+
   let msgWindow = document.getElementById('messages')
   let text = msgWindow.textContent
   text = text + '\n' + msg
@@ -300,41 +355,7 @@ function tabletShowMessage(msg, collecting) {
     msg = '<span style="color:red;">' + msg + '</span>'
   }
 
-  if (msg.startsWith('$/axes/x/max_travel_mm=')) {
-    displayer.setXTravel(parseFloat(msg.substring(23, msg.length)))
-  }
-  if (msg.startsWith('$/axes/y/max_travel_mm=')) {
-    displayer.setYTravel(parseFloat(msg.substring(23, msg.length)))
-  }
-
-  if (msg.startsWith('$/axes/x/homing/mpos_mm=')) {
-    displayer.setXHome(parseFloat(msg.substring(24, msg.length)))
-  }
-  if (msg.startsWith('$/axes/y/homing/mpos_mm=')) {
-    displayer.setYHome(parseFloat(msg.substring(24, msg.length)))
-  }
-
-  if (msg.startsWith('$/axes/x/homing/positive_direction=')) {
-    displayer.setXDir(msg.substring(35, msg.length))
-  }
-  if (msg.startsWith('$/axes/y/homing/positive_direction=')) {
-    displayer.setYDir(msg.substring(35, msg.length))
-  }
-  if (msg.startsWith('$/maslow_calibration_grid_width_mm_X=')) {
-    document.getElementById('gridWidth').value = msg.substring(37, msg.length)
-  }
-  if (msg.startsWith('$/maslow_calibration_grid_height_mm_Y=')) {
-    document.getElementById('gridHeight').value = msg.substring(38, msg.length)
-  }
-  if (msg.startsWith('$/Maslow_calibration_size_X=')) {
-    document.getElementById('pointsX').value = msg.substring(28, msg.length)
-  }
-  if (msg.startsWith('$/Maslow_calibration_size_Y=')) {
-    document.getElementById('pointsY').value = msg.substring(28, msg.length)
-  }
-  if (msg.startsWith('$/Maslow_Retract_Current_Threshold=')) {
-    document.getElementById('retractionForce').value = msg.substring(35, msg.length)
-  }
+  
 }
 
 function tabletShowResponse(response) {}
