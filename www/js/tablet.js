@@ -1238,12 +1238,14 @@ function saveConfigValues(){
       sendCommand('$/Maslow_vertical=true')
     }
   }
-  if(machineWidth != loadedValues['machineWidth']){
+  if(machineWidth != loadedValues['machineWidth'] || machineHeight != loadedValues['machineHeight']){
+    sendCommand('$/Maslow_tlX=0')
+    sendCommand('$/Maslow_tlY=' + machineHeight)
     sendCommand('$/Maslow_trX=' + machineWidth)
-  }
-  if(machineHeight != loadedValues['machineHeight']){
     sendCommand('$/Maslow_trY=' + machineHeight)
+    sendCommand('$/Maslow_brX=' + machineWidth)  
   }
+
   refreshSettings(current_setting_filter);
   saveMaslowYaml();
 }
