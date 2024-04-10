@@ -527,6 +527,7 @@ function findMaxFitness(measurements) {
       }
 
       messagesBox.value += '\nCalibration complete \nCalibration values:';
+      messagesBox.value += '\nFitness: ' + 1/bestGuess.fitness.toFixed(7);
       messagesBox.value += '\nMaslow_tlX: ' + bestGuess.tl.x.toFixed(1);
       messagesBox.value += '\nMaslow_tlY: ' + bestGuess.tl.y.toFixed(1);
       messagesBox.value += '\nMaslow_trX: ' + bestGuess.tr.x.toFixed(1);
