@@ -1,18 +1,18 @@
-//This is the inital guess for how big the machine is. These numbers are wrong intensionally
-const initialWidth = 3048 + 12
-const initialHeight = 2200 - 14
+
+var tlX = 0;
+var tlY = 2000;
+var trX = 3000;
+var trY = 2000;
+var brX = 3000;
 
 //Establish initial guesses for the corners
 var initialGuess = {
-  tl: { x: tlX, y: tlY },
+  tl: { x: 0, y: tlY },
   tr: { x: trX, y: trY },
   bl: { x: 0, y: 0 },
   br: { x: brX, y: 0 },
   fitness: 100000000,
 }
-
-const centerX = initialWidth / 2
-const centerY = initialHeight / 2
 
 let result
 
@@ -498,7 +498,7 @@ function findMaxFitness(measurements) {
   console.log("Initial Guess: " + JSON.stringify(initialGuess));
 
   function iterate() {
-      if (stagnantCounter < 100 && totalCounter < 200000) {
+      if (stagnantCounter < 300 && totalCounter < 200000) {
           //Clear the canvass
           clearCanvas();
 
@@ -515,6 +515,7 @@ function findMaxFitness(measurements) {
 
           if(totalCounter % 100 == 0){
                 document.getElementById('messages').value += "Fitness: " + (1/bestGuess.fitness).toFixed(7) + " in " + totalCounter + "\n";
+                document.getElementById('messages').value += "Guess: " + JSON.stringify(bestGuess) + "\n";
                 document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
           }
 

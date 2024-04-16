@@ -8,12 +8,6 @@ var lastHeartBeatTime = new Date().getTime();
 
 var versionNumber = 0.68
 
-var tlX = 0;
-var tlY = 2000;
-var trX = 3000;
-var trY = 2000;
-var brX = 3000;
-
 function beep(vol, freq, duration) {
   if (snd == null) {
     if (sndok) {
@@ -366,24 +360,29 @@ function tabletShowMessage(msg, collecting) {
     document.getElementById('machineWidth').value = msg.substring(13, msg.length)
     loadedValues['machineWidth'] = msg.substring(13, msg.length)
     trX = parseFloat(msg.substring(13, msg.length))
+    reloadInitialGuess()
     return;
   }
   if (msg.startsWith('$/Maslow_trY=')) {
     document.getElementById('machineHeight').value = msg.substring(13, msg.length)
     loadedValues['machineHeight'] = msg.substring(13, msg.length)
     trY = parseFloat(msg.substring(13, msg.length))
+    reloadInitialGuess()
     return;
   }
   if (msg.startsWith('$/Maslow_tlX=')) {
     tlX = parseFloat(msg.substring(13, msg.length))
+    reloadInitialGuess()
     return;
   }
   if (msg.startsWith('$/Maslow_tlY=')) {
     tlY = parseFloat(msg.substring(13, msg.length))
+    reloadInitialGuess()
     return;
   }
   if (msg.startsWith('$/Maslow_brX=')) {
     brX = parseFloat(msg.substring(13, msg.length))
+    reloadInitialGuess()
     return;
   }
 
@@ -1234,6 +1233,19 @@ function loadCornerValues(){
   SendPrinterCommand('$/Maslow_brX')
 }
 
+//Repopulate initial guess values
+function reloadInitialGuess(){
+  console.log('Reloading initial guess')
+  initialGuess = {
+    tl: { x: 0, y: tlY },
+    tr: { x: trX, y: trY },
+    bl: { x: 0, y: 0 },
+    br: { x: brX, y: 0 },
+    fitness: 100000000,
+  }
+  console.log(JSON.stringify(initialGuess))
+}
+
 //Save the configuration values
 function saveConfigValues(){
   let gridWidth = document.getElementById('gridWidth').value
@@ -1290,6 +1302,7 @@ const onCalibrationButtonsClick = async (command, msg) => {
     msgWindow.textContent = text
     msgWindow.scrollTop = msgWindow.scrollHeight
     console.log("tlX: " + tlX + " tlY: " + tlY + " trX: " + trX + " trY: " + trY + " brX: " + brX)
+    console.log(JSON.stringify(initialGuess));
   }
 }
 
