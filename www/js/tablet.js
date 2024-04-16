@@ -8,6 +8,12 @@ var lastHeartBeatTime = new Date().getTime();
 
 var versionNumber = 0.68
 
+var tlX = 0;
+var tlY = 2000;
+var trX = 3000;
+var trY = 2000;
+var brX = 3000;
+
 function beep(vol, freq, duration) {
   if (snd == null) {
     if (sndok) {
@@ -359,11 +365,25 @@ function tabletShowMessage(msg, collecting) {
   if (msg.startsWith('$/Maslow_trX=')) {
     document.getElementById('machineWidth').value = msg.substring(13, msg.length)
     loadedValues['machineWidth'] = msg.substring(13, msg.length)
+    trX = parseFloat(msg.substring(13, msg.length))
     return;
   }
   if (msg.startsWith('$/Maslow_trY=')) {
     document.getElementById('machineHeight').value = msg.substring(13, msg.length)
     loadedValues['machineHeight'] = msg.substring(13, msg.length)
+    trY = parseFloat(msg.substring(13, msg.length))
+    return;
+  }
+  if (msg.startsWith('$/Maslow_tlX=')) {
+    tlX = parseFloat(msg.substring(13, msg.length))
+    return;
+  }
+  if (msg.startsWith('$/Maslow_tlY=')) {
+    tlY = parseFloat(msg.substring(13, msg.length))
+    return;
+  }
+  if (msg.startsWith('$/Maslow_brX=')) {
+    brX = parseFloat(msg.substring(13, msg.length))
     return;
   }
 
@@ -1205,6 +1225,15 @@ function loadConfigValues(){
   SendPrinterCommand('$/Maslow_trY');
 }
 
+//Load all of the corner values
+function loadCornerValues(){
+  SendPrinterCommand('$/Maslow_tlX')
+  SendPrinterCommand('$/Maslow_tlY')
+  SendPrinterCommand('$/Maslow_trX')
+  SendPrinterCommand('$/Maslow_trY')
+  SendPrinterCommand('$/Maslow_brX')
+}
+
 //Save the configuration values
 function saveConfigValues(){
   let gridWidth = document.getElementById('gridWidth').value
@@ -1260,6 +1289,7 @@ const onCalibrationButtonsClick = async (command, msg) => {
     text = text + '\n' + "Index.html Version: " + versionNumber
     msgWindow.textContent = text
     msgWindow.scrollTop = msgWindow.scrollHeight
+    console.log("tlX: " + tlX + " tlY: " + tlY + " trX: " + trX + " trY: " + trY + " brX: " + brX)
   }
 }
 

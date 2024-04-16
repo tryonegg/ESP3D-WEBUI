@@ -4,10 +4,10 @@ const initialHeight = 2200 - 14
 
 //Establish initial guesses for the corners
 var initialGuess = {
-  tl: { x: 0, y: initialHeight + Math.floor(Math.random() * 200) - 100 },
-  tr: { x: initialWidth + Math.floor(Math.random() * 200) - 100, y: initialHeight + Math.floor(Math.random() * 200) - 100 },
+  tl: { x: tlX, y: tlY },
+  tr: { x: trX, y: trY },
   bl: { x: 0, y: 0 },
-  br: { x: initialWidth + Math.floor(Math.random() * 200) - 100, y: 0 },
+  br: { x: brX, y: 0 },
   fitness: 100000000,
 }
 
