@@ -508,7 +508,7 @@ function findMaxFitness(measurements) {
           console.log("Total Counter: " + totalCounter);
 
           if(totalCounter % 100 == 0){
-                document.getElementById('messages').value += "Fitness: " + (1/bestGuess.fitness).toFixed(7) + " in " + totalCounter + "\n";
+                document.getElementById('messages').textContent += "Fitness: " + (1/bestGuess.fitness).toFixed(7) + " in " + totalCounter + "\n";
                 document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
           }
 
@@ -516,22 +516,22 @@ function findMaxFitness(measurements) {
           setTimeout(iterate, 0);
       }
       else{
-        var messagesBox = document.querySelector('#messages');
+        var messagesBox = document.getElementById('messages')
 
           if(1/bestGuess.fitness < 0.5){
               messagesBox.value += '\nWARNING FITNESS TOO LOW. DO NOT USE THESE CALIBRATION VALUES!';
           }
 
-          messagesBox.value += '\nCalibration complete \nCalibration values:';
-          messagesBox.value += '\nFitness: ' + 1/bestGuess.fitness.toFixed(7);
-          messagesBox.value += '\nMaslow_tlX: ' + bestGuess.tl.x.toFixed(1);
-          messagesBox.value += '\nMaslow_tlY: ' + bestGuess.tl.y.toFixed(1);
-          messagesBox.value += '\nMaslow_trX: ' + bestGuess.tr.x.toFixed(1);
-          messagesBox.value += '\nMaslow_trY: ' + bestGuess.tr.y.toFixed(1);
-          messagesBox.value += '\nMaslow_blX: ' + bestGuess.bl.x.toFixed(1);
-          messagesBox.value += '\nMaslow_blY: ' + bestGuess.bl.y.toFixed(1);
-          messagesBox.value += '\nMaslow_brX: ' + bestGuess.br.x.toFixed(1);
-          messagesBox.value += '\nMaslow_brY: ' + bestGuess.br.y.toFixed(1);
+          messagesBox.textContent += '\nCalibration complete \nCalibration values:';
+          messagesBox.textContent += '\nFitness: ' + 1/bestGuess.fitness.toFixed(7);
+          messagesBox.textContent += '\nMaslow_tlX: ' + bestGuess.tl.x.toFixed(1);
+          messagesBox.textContent += '\nMaslow_tlY: ' + bestGuess.tl.y.toFixed(1);
+          messagesBox.textContent += '\nMaslow_trX: ' + bestGuess.tr.x.toFixed(1);
+          messagesBox.textContent += '\nMaslow_trY: ' + bestGuess.tr.y.toFixed(1);
+          messagesBox.textContent += '\nMaslow_blX: ' + bestGuess.bl.x.toFixed(1);
+          messagesBox.textContent += '\nMaslow_blY: ' + bestGuess.bl.y.toFixed(1);
+          messagesBox.textContent += '\nMaslow_brX: ' + bestGuess.br.x.toFixed(1);
+          messagesBox.textContent += '\nMaslow_brY: ' + bestGuess.br.y.toFixed(1);
           messagesBox.scrollTop
           messagesBox.scrollTop = messagesBox.scrollHeight;
 
@@ -547,7 +547,7 @@ function findMaxFitness(measurements) {
               refreshSettings(current_setting_filter);
               saveMaslowYaml();
 
-              messagesBox.value += '\nThese values have been automatically saved for you.';
+              messagesBox.textContent += '\nThese values have been automatically saved for you.';
               messagesBox.scrollTop
               messagesBox.scrollTop = messagesBox.scrollHeight;
 
