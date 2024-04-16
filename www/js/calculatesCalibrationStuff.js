@@ -1,16 +1,11 @@
 
-var tlX = 0;
-var tlY = 2000;
-var trX = 3000;
-var trY = 2000;
-var brX = 3000;
 
 //Establish initial guesses for the corners
 var initialGuess = {
-  tl: { x: 0, y: tlY },
-  tr: { x: trX, y: trY },
+  tl: { x: 0, y: 2000 },
+  tr: { x: 3000, y: 2000 },
   bl: { x: 0, y: 0 },
-  br: { x: brX, y: 0 },
+  br: { x: 3000, y: 0 },
   fitness: 100000000,
 }
 
