@@ -490,7 +490,6 @@ function findMaxFitness(measurements) {
   let stagnantCounter = 0;
   let totalCounter = 0;
   var bestGuess = JSON.parse(JSON.stringify(initialGuess));
-  console.log("Initial Guess: " + JSON.stringify(initialGuess));
 
   function iterate() {
       if (stagnantCounter < 300 && totalCounter < 200000) {
@@ -510,7 +509,6 @@ function findMaxFitness(measurements) {
 
           if(totalCounter % 100 == 0){
                 document.getElementById('messages').value += "Fitness: " + (1/bestGuess.fitness).toFixed(7) + " in " + totalCounter + "\n";
-                document.getElementById('messages').value += "Guess: " + JSON.stringify(bestGuess) + "\n";
                 document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
           }
 

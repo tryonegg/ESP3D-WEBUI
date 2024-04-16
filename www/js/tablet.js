@@ -1284,7 +1284,6 @@ const onCalibrationButtonsClick = async (command, msg) => {
     text = text + '\n' + "Index.html Version: " + versionNumber
     msgWindow.textContent = text
     msgWindow.scrollTop = msgWindow.scrollHeight
-    console.log(JSON.stringify(initialGuess));
   }
 }
 
