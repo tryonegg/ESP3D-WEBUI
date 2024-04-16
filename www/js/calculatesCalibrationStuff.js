@@ -552,9 +552,9 @@ function findMaxFitness(measurements) {
               messagesBox.scrollTop
               messagesBox.scrollTop = messagesBox.scrollHeight;
 
-              // This restarts the esp32 to prevent you from trying to move the machine after calibration
+              // This restarts calibration process for the next stage
               setTimeout(function() {
-              sendCommand('$System/Control=RESTART');
+                onCalibrationButtonsClick('$CAL','Calibrate')
               }, 2000);
           }
       }
