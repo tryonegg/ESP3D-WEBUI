@@ -359,11 +359,25 @@ function tabletShowMessage(msg, collecting) {
   if (msg.startsWith('$/Maslow_trX=')) {
     document.getElementById('machineWidth').value = msg.substring(13, msg.length)
     loadedValues['machineWidth'] = msg.substring(13, msg.length)
+    initialGuess.tr.x = parseFloat(msg.substring(13, msg.length))
     return;
   }
   if (msg.startsWith('$/Maslow_trY=')) {
     document.getElementById('machineHeight').value = msg.substring(13, msg.length)
     loadedValues['machineHeight'] = msg.substring(13, msg.length)
+    initialGuess.tr.y = parseFloat(msg.substring(13, msg.length))
+    return;
+  }
+  if (msg.startsWith('$/Maslow_tlX=')) {
+    initialGuess.tl.x = parseFloat(msg.substring(13, msg.length))
+    return;
+  }
+  if (msg.startsWith('$/Maslow_tlY=')) {
+    initialGuess.tl.y = parseFloat(msg.substring(13, msg.length))
+    return;
+  }
+  if (msg.startsWith('$/Maslow_brX=')) {
+    initialGuess.br.x = parseFloat(msg.substring(13, msg.length))
     return;
   }
 
@@ -1205,6 +1219,15 @@ function loadConfigValues(){
   SendPrinterCommand('$/Maslow_trY');
 }
 
+//Load all of the corner values
+function loadCornerValues(){
+  SendPrinterCommand('$/Maslow_tlX')
+  SendPrinterCommand('$/Maslow_tlY')
+  SendPrinterCommand('$/Maslow_trX')
+  SendPrinterCommand('$/Maslow_trY')
+  SendPrinterCommand('$/Maslow_brX')
+}
+
 //Save the configuration values
 function saveConfigValues(){
   let gridWidth = document.getElementById('gridWidth').value
@@ -1248,6 +1271,7 @@ function saveConfigValues(){
 
   refreshSettings(current_setting_filter);
   saveMaslowYaml();
+  loadCornerValues();
 }
 
 const onCalibrationButtonsClick = async (command, msg) => {

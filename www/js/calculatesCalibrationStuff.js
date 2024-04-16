@@ -1,18 +1,13 @@
-//This is the inital guess for how big the machine is. These numbers are wrong intensionally
-const initialWidth = 3048 + 12
-const initialHeight = 2200 - 14
+
 
 //Establish initial guesses for the corners
 var initialGuess = {
-  tl: { x: 0, y: initialHeight },
-  tr: { x: initialWidth, y: initialHeight },
+  tl: { x: 0, y: 2000 },
+  tr: { x: 3000, y: 2000 },
   bl: { x: 0, y: 0 },
-  br: { x: initialWidth, y: 0 },
+  br: { x: 3000, y: 0 },
   fitness: 100000000,
 }
-
-const centerX = initialWidth / 2
-const centerY = initialHeight / 2
 
 let result
 
@@ -496,78 +491,77 @@ function findMaxFitness(measurements) {
   let totalCounter = 0;
   var bestGuess = JSON.parse(JSON.stringify(initialGuess));
 
-  var messagesBox = document.querySelector('#messages');
+  function iterate() {
+      if (stagnantCounter < 300 && totalCounter < 200000) {
+          //Clear the canvass
+          clearCanvas();
 
-  function loop() {
-    //Clear the canvass
-    clearCanvas();
+          currentGuess = computeLinesFitness(measurements, currentGuess);
+          
+          if (1/currentGuess.fitness > 1/bestGuess.fitness) {
+              bestGuess = JSON.parse(JSON.stringify(currentGuess));
+              stagnantCounter = 0;
+          } else {
+              stagnantCounter++;
+          }
+          totalCounter++;
+          console.log("Total Counter: " + totalCounter);
 
-    currentGuess = computeLinesFitness(measurements, currentGuess);
-    
-    if (1/currentGuess.fitness > 1/bestGuess.fitness) {
-        bestGuess = JSON.parse(JSON.stringify(currentGuess));
-        stagnantCounter = 0;
-    } else {
-        stagnantCounter++;
-    }
-    totalCounter++;
+          if(totalCounter % 100 == 0){
+                document.getElementById('messages').value += "Fitness: " + (1/bestGuess.fitness).toFixed(7) + " in " + totalCounter + "\n";
+                document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
+          }
 
-    if(totalCounter % 100 == 0) {
-      messagesBox.value += '\nFitness: ' + 1/bestGuess.fitness.toFixed(7) + ' in ' + totalCounter;
-      messagesBox.scrollTop
-      messagesBox.scrollTop = messagesBox.scrollHeight;
-    }
-
-    if (stagnantCounter < 100 && totalCounter < 200000) {
-      requestAnimationFrame(loop);
-    } else {
-      
-      if(1/bestGuess.fitness < 0.5){
-        messagesBox.value += '\nWARNING FITNESS TOO LOW. DO NOT USE THESE CALIBRATION VALUES!';
+          // Schedule the next iteration
+          setTimeout(iterate, 0);
       }
+      else{
+        var messagesBox = document.querySelector('#messages');
 
-      messagesBox.value += '\nCalibration complete \nCalibration values:';
-      messagesBox.value += '\nFitness: ' + 1/bestGuess.fitness.toFixed(7);
-      messagesBox.value += '\nMaslow_tlX: ' + bestGuess.tl.x.toFixed(1);
-      messagesBox.value += '\nMaslow_tlY: ' + bestGuess.tl.y.toFixed(1);
-      messagesBox.value += '\nMaslow_trX: ' + bestGuess.tr.x.toFixed(1);
-      messagesBox.value += '\nMaslow_trY: ' + bestGuess.tr.y.toFixed(1);
-      messagesBox.value += '\nMaslow_blX: ' + bestGuess.bl.x.toFixed(1);
-      messagesBox.value += '\nMaslow_blY: ' + bestGuess.bl.y.toFixed(1);
-      messagesBox.value += '\nMaslow_brX: ' + bestGuess.br.x.toFixed(1);
-      messagesBox.value += '\nMaslow_brY: ' + bestGuess.br.y.toFixed(1);
-      messagesBox.scrollTop
-      messagesBox.scrollTop = messagesBox.scrollHeight;
+          if(1/bestGuess.fitness < 0.5){
+              messagesBox.value += '\nWARNING FITNESS TOO LOW. DO NOT USE THESE CALIBRATION VALUES!';
+          }
 
-      if(1/bestGuess.fitness > 0.5){
-        sendCommand('$/Maslow_tlX=' + bestGuess.tl.x.toFixed(1));
-        sendCommand('$/Maslow_tlY=' + bestGuess.tl.y.toFixed(1));
-        sendCommand('$/Maslow_trX=' + bestGuess.tr.x.toFixed(1));
-        sendCommand('$/Maslow_trY=' + bestGuess.tr.y.toFixed(1));
-        sendCommand('$/Maslow_blX=' + bestGuess.bl.x.toFixed(1));
-        sendCommand('$/Maslow_blY=' + bestGuess.bl.y.toFixed(1));
-        sendCommand('$/Maslow_brX=' + bestGuess.br.x.toFixed(1));
-        sendCommand('$/Maslow_brY=' + bestGuess.br.y.toFixed(1));
-        refreshSettings(current_setting_filter);
-        saveMaslowYaml();
+          messagesBox.value += '\nCalibration complete \nCalibration values:';
+          messagesBox.value += '\nFitness: ' + 1/bestGuess.fitness.toFixed(7);
+          messagesBox.value += '\nMaslow_tlX: ' + bestGuess.tl.x.toFixed(1);
+          messagesBox.value += '\nMaslow_tlY: ' + bestGuess.tl.y.toFixed(1);
+          messagesBox.value += '\nMaslow_trX: ' + bestGuess.tr.x.toFixed(1);
+          messagesBox.value += '\nMaslow_trY: ' + bestGuess.tr.y.toFixed(1);
+          messagesBox.value += '\nMaslow_blX: ' + bestGuess.bl.x.toFixed(1);
+          messagesBox.value += '\nMaslow_blY: ' + bestGuess.bl.y.toFixed(1);
+          messagesBox.value += '\nMaslow_brX: ' + bestGuess.br.x.toFixed(1);
+          messagesBox.value += '\nMaslow_brY: ' + bestGuess.br.y.toFixed(1);
+          messagesBox.scrollTop
+          messagesBox.scrollTop = messagesBox.scrollHeight;
 
-        messagesBox.value += '\nThese values have been automatically saved for you.';
-        messagesBox.value += "\nYou MUST restart your machine for them to take effect...I know that is annoying, it's getting fixed ASAP. ";
-        messagesBox.scrollTop
-        messagesBox.scrollTop = messagesBox.scrollHeight;
+          if(1/bestGuess.fitness > 0.5){
+              sendCommand('$/Maslow_tlX=' + bestGuess.tl.x.toFixed(1));
+              sendCommand('$/Maslow_tlY=' + bestGuess.tl.y.toFixed(1));
+              sendCommand('$/Maslow_trX=' + bestGuess.tr.x.toFixed(1));
+              sendCommand('$/Maslow_trY=' + bestGuess.tr.y.toFixed(1));
+              sendCommand('$/Maslow_blX=' + bestGuess.bl.x.toFixed(1));
+              sendCommand('$/Maslow_blY=' + bestGuess.bl.y.toFixed(1));
+              sendCommand('$/Maslow_brX=' + bestGuess.br.x.toFixed(1));
+              sendCommand('$/Maslow_brY=' + bestGuess.br.y.toFixed(1));
+              refreshSettings(current_setting_filter);
+              saveMaslowYaml();
 
-        //This restarts the esp32 to prevent you from trying to move the machine after calibration
-        setTimeout(function() {
-          sendCommand('$System/Control=RESTART');
-        }, 2000);
+              messagesBox.value += '\nThese values have been automatically saved for you.';
+              messagesBox.value += "\nYou MUST restart your machine for them to take effect...I know that is annoying, it's getting fixed ASAP. ";
+              messagesBox.scrollTop
+              messagesBox.scrollTop = messagesBox.scrollHeight;
+
+              // This restarts the esp32 to prevent you from trying to move the machine after calibration
+              setTimeout(function() {
+              sendCommand('$System/Control=RESTART');
+              }, 2000);
+          }
       }
-
-
-    }
   }
 
-  loop();
-  return bestGuess;
+  // Start the iteration
+  iterate();
 }
 
 
