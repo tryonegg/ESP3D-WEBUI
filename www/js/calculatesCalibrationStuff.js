@@ -548,7 +548,6 @@ function findMaxFitness(measurements) {
               saveMaslowYaml();
 
               messagesBox.value += '\nThese values have been automatically saved for you.';
-              messagesBox.value += "\nYou MUST restart your machine for them to take effect...I know that is annoying, it's getting fixed ASAP. ";
               messagesBox.scrollTop
               messagesBox.scrollTop = messagesBox.scrollHeight;
 
