@@ -332,13 +332,13 @@ function tabletShowMessage(msg, collecting) {
     return;
   }
   if (msg.startsWith('$/Maslow_calibration_size_X=')) {
-    document.getElementById('pointsX').value = msg.substring(28, msg.length)
-    loadedValues['pointsX'] = msg.substring(28, msg.length)
+    //document.getElementById('pointsX').value = msg.substring(28, msg.length)
+    //loadedValues['pointsX'] = msg.substring(28, msg.length)
     return;
   }
   if (msg.startsWith('$/Maslow_calibration_size_Y=')) {
-    document.getElementById('pointsY').value = msg.substring(28, msg.length)
-    loadedValues['pointsY'] = msg.substring(28, msg.length)
+    //document.getElementById('pointsY').value = msg.substring(28, msg.length)
+    //loadedValues['pointsY'] = msg.substring(28, msg.length)
     return;
   }
   if (msg.startsWith('$/Maslow_Retract_Current_Threshold=')) {
