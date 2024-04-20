@@ -215,6 +215,8 @@ function magneticallyAttractedLinesFitness(measurement, individual) {
   const result ={ fitness: finalFitness, lines: { tlLine: tlLine, trLine: trLine, blLine: blLine, brLine: brLine } }
   sendCalibrationEvent({
     lines: result,
+    individual,
+    measurement
   });
 
   return result;
