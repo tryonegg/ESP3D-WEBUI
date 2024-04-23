@@ -323,7 +323,6 @@ function tabletShowMessage(msg, collecting) {
   //These are used for populating the configuraiton popup
   
   if (msg.startsWith('$/maslow_calibration_grid_size=')) {
-    console.log("Changing grid size to: " + msg.substring(31, msg.length))
     document.getElementById('gridSize').value = msg.substring(31, msg.length)
     loadedValues['gridSize'] = msg.substring(33, msg.length)
     return;
