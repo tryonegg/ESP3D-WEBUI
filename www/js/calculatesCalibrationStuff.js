@@ -551,6 +551,9 @@ function findMaxFitness(measurements) {
               messagesBox.scrollTop
               messagesBox.scrollTop = messagesBox.scrollHeight;
 
+              initialGuess = bestGuess;
+              initialGuess.fitness = 100000000;
+
               // This restarts calibration process for the next stage
               setTimeout(function() {
                 onCalibrationButtonsClick('$CAL','Calibrate')

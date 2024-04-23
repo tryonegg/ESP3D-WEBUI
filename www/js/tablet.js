@@ -1238,7 +1238,7 @@ function saveConfigValues(){
   var gridSpacingHeight = gridHeight / (gridSize - 1)
 
   //If the grid spacing is going to be more than 200 don't save the values
-  if(gridSpacingWidth > 200 || gridSpacingHeight > 200){
+  if(gridSpacingWidth > 260 || gridSpacingHeight > 260){
     alert('Grid spacing is too large. Please reduce the grid size or increase the number of points.')
     return
   }
@@ -1273,6 +1273,8 @@ function saveConfigValues(){
   refreshSettings(current_setting_filter);
   saveMaslowYaml();
   loadCornerValues();
+
+  hideModal('configuration-popup');
 }
 
 const onCalibrationButtonsClick = async (command, msg) => {
