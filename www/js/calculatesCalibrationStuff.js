@@ -492,7 +492,7 @@ function findMaxFitness(measurements) {
   var bestGuess = JSON.parse(JSON.stringify(initialGuess));
 
   function iterate() {
-      if (stagnantCounter < 300 && totalCounter < 200000) {
+      if (stagnantCounter < 1000 && totalCounter < 200000) {
           //Clear the canvass
           clearCanvas();
 

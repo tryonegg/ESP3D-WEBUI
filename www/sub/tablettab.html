@@ -171,19 +171,17 @@
             <div class="input-row">
               <input id="gridHeight" type="text" class="calibration-modal-input">
             </div>
-          </div>
             <div class="input-row">
-            <div style="display: flex;">
-              <div>
-              <label for="pointsX">Points: </label>
-              <input id="pointsX" type="text" class="calibration-modal-input" disabled value="9">
-              </div>
-              <div>
-              <label for="pointsY">by</label>
-              <input id="pointsY" type="text" class="calibration-modal-input" disabled value="9">
-              </div>
+              <label for="points" class="input-label">Points:</label>
             </div>
+            <div class="input-row">
+              <select id="points" class="calibration-modal-input">
+                <option value="3x3">3x3</option>
+                <option value="5x5">5x5</option>
+                <option value="9x9" selected>9x9</option>
+              </select>
             </div>
+          </div>
           <hr style="border-top: 1px dashed;">
           <div class="grid-container">
             <div class="input-row">
