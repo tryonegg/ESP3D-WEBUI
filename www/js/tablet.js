@@ -6,7 +6,7 @@ var sndok = true
 
 var lastHeartBeatTime = new Date().getTime();
 
-var versionNumber = 0.68
+var versionNumber = 0.69
 
 function beep(vol, freq, duration) {
   if (snd == null) {
@@ -242,7 +242,7 @@ sendMove = function (cmd) {
 }
 
 moveHome = function () {
-   
+
   //We want to move to the opposite of the machine's current X,Y cordinates
   var x = parseFloat(id('mpos-x').innerText)
   var y = parseFloat(id('mpos-y').innerText)
@@ -388,7 +388,7 @@ function tabletShowMessage(msg, collecting) {
     msg = '<span style="color:red;">' + msg + '</span>'
   }
 
-  
+
 }
 
 function tabletShowResponse(response) {}
@@ -747,8 +747,13 @@ function tabletGetFileList(path) {
 }
 
 function tabletInit() {
-  tabletGetFileList('/')
-  requestModes()
+  // put in a timeout to allow things to settle. when they were here at startup ui froze from time to time.
+  setTimeout(() => {
+    tabletGetFileList('/');
+    requestModes();
+    loadConfigValues();
+    loadCornerValues();
+  }, 1000);
 }
 
 function arrayToXYZ(a) {
@@ -1100,7 +1105,7 @@ id('tablettab').addEventListener('activate', askMachineBbox, false)
 // a) required setting a fixed message window height, or
 // b) the message window would extend past the screen bottom when messages were added
 function height(element) {
-  return element.getBoundingClientRect().height
+  return element?.getBoundingClientRect()?.height
 }
 function heightId(eid) {
   return height(id(eid))
@@ -1266,7 +1271,7 @@ function saveConfigValues(){
     sendCommand('$/Maslow_tlY=' + machineHeight)
     sendCommand('$/Maslow_trX=' + machineWidth)
     sendCommand('$/Maslow_trY=' + machineHeight)
-    sendCommand('$/Maslow_brX=' + machineWidth)  
+    sendCommand('$/Maslow_brX=' + machineWidth)
   }
 
   refreshSettings(current_setting_filter);

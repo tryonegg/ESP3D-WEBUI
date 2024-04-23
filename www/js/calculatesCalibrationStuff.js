@@ -134,7 +134,13 @@ function walkLines(tlLine, trLine, blLine, brLine, stepSize) {
     brLine = lines[3]
   }
 
-  return { tlLine, trLine, blLine, brLine }
+  const result = { tlLine, trLine, blLine, brLine, changeMade }
+
+  sendCalibrationEvent({
+    walkedlines: result,
+  });
+
+  return result;
 }
 
 /**
@@ -206,7 +212,14 @@ function magneticallyAttractedLinesFitness(measurement, individual) {
   measurement.TLtension = TL
   measurement.TRtension = TR
 
-  return { fitness: finalFitness, lines: { tlLine: tlLine, trLine: trLine, blLine: blLine, brLine: brLine } }
+  const result ={ fitness: finalFitness, lines: { tlLine: tlLine, trLine: trLine, blLine: blLine, brLine: brLine } }
+  sendCalibrationEvent({
+    lines: result,
+    individual,
+    measurement
+  });
+
+  return result;
 }
 
 /**
@@ -486,6 +499,11 @@ function scaleMeasurementsBasedOnTension(measurements, guess) {
 
 
 function findMaxFitness(measurements) {
+
+  sendCalibrationEvent({
+    initialGuess
+  }, true);
+
   let currentGuess = JSON.parse(JSON.stringify(initialGuess));
   let stagnantCounter = 0;
   let totalCounter = 0;
@@ -497,7 +515,7 @@ function findMaxFitness(measurements) {
           clearCanvas();
 
           currentGuess = computeLinesFitness(measurements, currentGuess);
-          
+
           if (1/currentGuess.fitness > 1/bestGuess.fitness) {
               bestGuess = JSON.parse(JSON.stringify(currentGuess));
               stagnantCounter = 0;
@@ -505,7 +523,13 @@ function findMaxFitness(measurements) {
               stagnantCounter++;
           }
           totalCounter++;
-          console.log("Total Counter: " + totalCounter);
+          // console.log("Total Counter: " + totalCounter);
+          sendCalibrationEvent({
+            final: false,
+            guess: currentGuess,
+            bestGuess: bestGuess,
+            totalCounter
+          });
 
           if(totalCounter % 100 == 0){
                 document.getElementById('messages').textContent += "Fitness: " + (1/bestGuess.fitness).toFixed(7) + " in " + totalCounter + "\n";
@@ -544,6 +568,11 @@ function findMaxFitness(measurements) {
               sendCommand('$/Maslow_blY=' + bestGuess.bl.y.toFixed(1));
               sendCommand('$/Maslow_brX=' + bestGuess.br.x.toFixed(1));
               sendCommand('$/Maslow_brY=' + bestGuess.br.y.toFixed(1));
+              sendCalibrationEvent({
+                good: true,
+                final: true,
+                bestGuess: bestGuess
+              }, true);
               refreshSettings(current_setting_filter);
               saveMaslowYaml();
 
@@ -558,6 +587,12 @@ function findMaxFitness(measurements) {
               setTimeout(function() {
                 onCalibrationButtonsClick('$CAL','Calibrate')
               }, 2000);
+          } else {
+              sendCalibrationEvent({
+                good: false,
+                final: true,
+                guess: bestGuess
+              }, true);
           }
       }
   }
@@ -567,7 +602,27 @@ function findMaxFitness(measurements) {
 }
 
 
-
+/**
+ * This function will allow us to hook data into events that we can just copy this file into another project
+ * to have the calibration run in other contexts and still gather events from the calculations to plot things, gather data, etc.
+ */
+function sendCalibrationEvent(dataToSend, log=false) {
+  try{
+    if (log) {
+      console.log(JSON.stringify(dataToSend,null,2));
+    } else if(dataToSend.totalCounter) {
+      console.log("total counter:", dataToSend.totalCounter);
+    }
+    document.body.dispatchEvent(new CustomEvent(CALIBRATION_EVENT_NAME, {
+      bubbles: true,
+      cancelable: true,
+      detail: dataToSend
+    }));
+  } catch (err) {
+    console.error('Unexpected:', err)
+  }
+}
+const CALIBRATION_EVENT_NAME = 'calibration-data';
 //This is where the program really begins. The above is all function definitions
 //The way that the progam works is that we basically guess where the four corners are and then
 //check to see how good that guess was. To see how good a guess was we "draw" circles from the four corner points

@@ -59,12 +59,12 @@ function process_cmd() {
             process_cmd();
         }
 
-    } //else if (http_cmd_list.length > 0)console.log("processing"); 
+    } //else if (http_cmd_list.length > 0)console.log("processing");
 }
 
 function AddCmd(cmd_fn, id) {
     if (http_cmd_list.length > max_cmd) {
-        errorfn(999, translate_text_item("Server not responding"));
+        http_errorfn(999, translate_text_item("Server not responding"));
         return;
     }
     var cmd_id = 0;
@@ -95,17 +95,17 @@ function SendGetHttp(url, result_fn, error_fn, id, max_id) {
         if (typeof max_id != 'undefined') cmd_max_id = max_id;
         //else console.log("No Max ID defined");
         for (p = 0; p < http_cmd_list.length; p++) {
-            //console.log("compare " + (max_id - cmd_max_id));	
+            //console.log("compare " + (max_id - cmd_max_id));
             if (http_cmd_list[p].id == cmd_id) {
                 cmd_max_id--;
-                //console.log("found " + http_cmd_list[p].id + " and " + cmd_id);	
+                //console.log("found " + http_cmd_list[p].id + " and " + cmd_id);
             }
             if (cmd_max_id <= 0) {
                 console.log("Limit reached for " + id);
                 return;
             }
         }
-    } //else console.log("No ID defined");	
+    } //else console.log("No ID defined");
     //console.log("adding " + url);
     var cmd = {
         cmd: url,
