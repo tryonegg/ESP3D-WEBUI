@@ -1234,6 +1234,15 @@ function saveConfigValues(){
   let machineWidth = document.getElementById('machineWidth').value
   let machineHeight = document.getElementById('machineHeight').value
 
+  var gridSpacingWidth = gridWidth / (gridSize - 1)
+  var gridSpacingHeight = gridHeight / (gridSize - 1)
+
+  //If the grid spacing is going to be more than 200 don't save the values
+  if(gridSpacingWidth > 200 || gridSpacingHeight > 200){
+    alert('Grid spacing is too large. Please reduce the grid size or increase the number of points.')
+    return
+  }
+
   if(gridWidth != loadedValues['gridWidth']){
     sendCommand('$/maslow_calibration_grid_width_mm_X=' + gridWidth)
   }
