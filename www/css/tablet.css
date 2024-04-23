@@ -877,3 +877,7 @@ textarea {
   text-align: left;
   float: left;
 }
+
+.calibration-modal-input {
+  width: 100%;
+}

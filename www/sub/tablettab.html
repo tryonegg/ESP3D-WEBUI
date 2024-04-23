@@ -100,8 +100,8 @@
                   <span class="arrow">&#8600;</span>
                 </div>
                 <div class="buttons-row-col-el">
-                  <button class="calibration-modal-button" onclick="onCalibrationButtonsClick('$CAL','Calibrate');">Calibrate</button>
-                  <button class="calibration-modal-button" onclick="onCalibrationButtonsClick('$TKSLK','Apply Tension');">Apply Tension</button>
+                  <button class="calibration-modal-button" onclick="onCalibrationButtonsClick('$CAL','Calibrate'); hideModal('configuration-popup')">Calibrate</button>
+                  <button class="calibration-modal-button" onclick="onCalibrationButtonsClick('$TKSLK','Apply Tension'); hideModal('configuration-popup')">Apply Tension</button>
                 </div>
                 
                 
@@ -171,19 +171,18 @@
             <div class="input-row">
               <input id="gridHeight" type="text" class="calibration-modal-input">
             </div>
-          </div>
             <div class="input-row">
-            <div style="display: flex;">
-              <div>
-              <label for="pointsX">Points: </label>
-              <input id="pointsX" type="text" class="calibration-modal-input">
-              </div>
-              <div>
-              <label for="pointsY">by</label>
-              <input id="pointsY" type="text" class="calibration-modal-input">
-              </div>
+              <label for="gridSize" class="input-label">Grid Size:</label>
             </div>
+            <div class="input-row">
+              <select id="gridSize" class="calibration-modal-input">
+                <option value="3">3x3</option>
+                <option value="5">5x5</option>
+                <option value="7">7x7</option>
+                <option value="9" selected>9x9</option>
+              </select>
             </div>
+          </div>
           <hr style="border-top: 1px dashed;">
           <div class="grid-container">
             <div class="input-row">
@@ -195,7 +194,7 @@
           </div>
           <hr style="border-top: 1px dashed;">
           <div class="input-row">
-            <button type="button" class="calibration-modal-button" onclick="saveConfigValues(); hideModal('configuration-popup')">Save</button>
+            <button type="button" class="calibration-modal-button" onclick="saveConfigValues();">Save</button>
           </div>
         </div>
       </div>

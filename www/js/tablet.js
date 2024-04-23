@@ -321,26 +321,22 @@ function tabletShowMessage(msg, collecting) {
   }
 
   //These are used for populating the configuraiton popup
+  
+  if (msg.startsWith('$/maslow_calibration_grid_size=')) {
+    document.getElementById('gridSize').value = msg.substring(31, msg.length)
+    loadedValues['gridSize'] = msg.substring(33, msg.length)
+    return;
+  }
   if (msg.startsWith('$/maslow_calibration_grid_width_mm_X=')) {
     document.getElementById('gridWidth').value = msg.substring(37, msg.length)
     loadedValues['gridWidth'] = msg.substring(37, msg.length)
-    return;
   }
   if (msg.startsWith('$/maslow_calibration_grid_height_mm_Y=')) {
     document.getElementById('gridHeight').value = msg.substring(38, msg.length)
     loadedValues['gridHeight'] = msg.substring(38, msg.length)
     return;
   }
-  if (msg.startsWith('$/Maslow_calibration_size_X=')) {
-    document.getElementById('pointsX').value = msg.substring(28, msg.length)
-    loadedValues['pointsX'] = msg.substring(28, msg.length)
-    return;
-  }
-  if (msg.startsWith('$/Maslow_calibration_size_Y=')) {
-    document.getElementById('pointsY').value = msg.substring(28, msg.length)
-    loadedValues['pointsY'] = msg.substring(28, msg.length)
-    return;
-  }
+
   if (msg.startsWith('$/Maslow_Retract_Current_Threshold=')) {
     document.getElementById('retractionForce').value = msg.substring(35, msg.length)
     loadedValues['retractionForce'] = msg.substring(35, msg.length)
@@ -1217,8 +1213,7 @@ function loadConfigValues(){
   SendPrinterCommand('$/Maslow_vertical')
   SendPrinterCommand('$/maslow_calibration_grid_width_mm_X')
   SendPrinterCommand('$/maslow_calibration_grid_height_mm_Y')
-  SendPrinterCommand('$/Maslow_calibration_size_X');
-  SendPrinterCommand('$/Maslow_calibration_size_Y');
+  SendPrinterCommand('$/maslow_calibration_grid_size');
   SendPrinterCommand('$/Maslow_Retract_Current_Threshold');
   SendPrinterCommand('$/Maslow_trX');
   SendPrinterCommand('$/Maslow_trY');
@@ -1237,12 +1232,20 @@ function loadCornerValues(){
 function saveConfigValues(){
   let gridWidth = document.getElementById('gridWidth').value
   let gridHeight = document.getElementById('gridHeight').value
-  let pointsX = document.getElementById('pointsX').value
-  let pointsY = document.getElementById('pointsY').value
+  let gridSize = document.getElementById('gridSize').value
   let retractionForce = document.getElementById('retractionForce').value
   let machineOrientation = document.getElementById('machineOrientation').value
   let machineWidth = document.getElementById('machineWidth').value
   let machineHeight = document.getElementById('machineHeight').value
+
+  var gridSpacingWidth = gridWidth / (gridSize - 1)
+  var gridSpacingHeight = gridHeight / (gridSize - 1)
+
+  //If the grid spacing is going to be more than 200 don't save the values
+  if(gridSpacingWidth > 260 || gridSpacingHeight > 260){
+    alert('Grid spacing is too large. Please reduce the grid size or increase the number of points.')
+    return
+  }
 
   if(gridWidth != loadedValues['gridWidth']){
     sendCommand('$/maslow_calibration_grid_width_mm_X=' + gridWidth)
@@ -1250,11 +1253,8 @@ function saveConfigValues(){
   if(gridHeight != loadedValues['gridHeight']){
     sendCommand('$/maslow_calibration_grid_height_mm_Y=' + gridHeight)
   }
-  if(pointsX != loadedValues['pointsX']){
-    sendCommand('$/Maslow_calibration_size_X=' + pointsX)
-  }
-  if(pointsY != loadedValues['pointsY']){
-    sendCommand('$/Maslow_calibration_size_Y=' + pointsY)
+  if(gridSize != loadedValues['gridSize']){
+    sendCommand('$/maslow_calibration_grid_size=' + gridSize)
   }
   if(retractionForce != loadedValues['retractionForce']){
     sendCommand('$/Maslow_Retract_Current_Threshold=' + retractionForce)
@@ -1277,6 +1277,8 @@ function saveConfigValues(){
   refreshSettings(current_setting_filter);
   saveMaslowYaml();
   loadCornerValues();
+
+  hideModal('configuration-popup');
 }
 
 const onCalibrationButtonsClick = async (command, msg) => {
