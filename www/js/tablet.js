@@ -330,6 +330,7 @@ function tabletShowMessage(msg, collecting) {
   if (msg.startsWith('$/maslow_calibration_grid_width_mm_X=')) {
     document.getElementById('gridWidth').value = msg.substring(37, msg.length)
     loadedValues['gridWidth'] = msg.substring(37, msg.length)
+    return;
   }
   if (msg.startsWith('$/maslow_calibration_grid_height_mm_Y=')) {
     document.getElementById('gridHeight').value = msg.substring(38, msg.length)
