@@ -236,6 +236,10 @@ sendMove = function (cmd) {
     'Z+': function () {
       jog({ Z: distance })
     },
+    'Z_TOP': function () {
+      // She's got legs ♫
+      move({ Z: 70 })
+    },
   }[cmd]
 
   fn && fn()
@@ -260,17 +264,17 @@ moveHome = function () {
 }
 
 
-setInterval(checkOnHeartbeat, 500);
-function checkOnHeartbeat() {
-  if (new Date().getTime() - lastHeartBeatTime > 10000) {
-    let msgWindow = document.getElementById('messages')
-    let text = msgWindow.textContent
-    text = text + '\n' + "No heartbeat from machine in 10 seconds. Please check connection."
-    msgWindow.textContent = text
-    msgWindow.scrollTop = msgWindow.scrollHeight
-    lastHeartBeatTime = new Date().getTime();
-  }
-}
+// setInterval(checkOnHeartbeat, 500);
+// function checkOnHeartbeat() {
+//   if (new Date().getTime() - lastHeartBeatTime > 10000) {
+//     let msgWindow = document.getElementById('messages')
+//     let text = msgWindow.textContent
+//     text = text + '\n' + "No heartbeat from machine in 10 seconds. Please check connection."
+//     msgWindow.textContent = text
+//     msgWindow.scrollTop = msgWindow.scrollHeight
+//     lastHeartBeatTime = new Date().getTime();
+//   }
+// }
 
 
 var loadedValues = {};
@@ -321,7 +325,7 @@ function tabletShowMessage(msg, collecting) {
   }
 
   //These are used for populating the configuraiton popup
-  
+
   if (msg.startsWith('$/maslow_calibration_grid_size=')) {
     document.getElementById('gridSize').value = msg.substring(31, msg.length)
     loadedValues['gridSize'] = msg.substring(33, msg.length)
@@ -748,6 +752,9 @@ function tabletGetFileList(path) {
 }
 
 function tabletInit() {
+  // get grbl status
+  SendPrinterCommand('?');
+  togglePlay(true);
   // put in a timeout to allow things to settle. when they were here at startup ui froze from time to time.
   setTimeout(() => {
     tabletGetFileList('/');
@@ -1280,6 +1287,27 @@ function saveConfigValues(){
   loadCornerValues();
 
   hideModal('configuration-popup');
+}
+
+function togglePlay(play) {
+  document.getElementById('playButtonDiv').style.display = play ? 'block' : 'none';
+  document.getElementById('pauseButtonDiv').style.display = play ? 'none' : 'block';
+}
+
+function handlePlayPause() {
+  if (STATE==='Run' || STATE === 'Jog') {
+      pauseGCode();
+      // set pause button to play
+      togglePlay(true);
+  } else if (STATE === 'Idle') {
+      runGCode();
+      togglePlay(false);
+  } else if (STATE === 'Hold') {
+      resumeGCode();
+      togglePlay(false);
+  } else {
+      console.log('Play/Pause not allowed when state is ', STATE);
+  }
 }
 
 const onCalibrationButtonsClick = async (command, msg) => {
