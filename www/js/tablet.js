@@ -754,6 +754,8 @@ function tabletGetFileList(path) {
 function tabletInit() {
   // get grbl status
   SendPrinterCommand('?');
+  // print startup messages
+  SendPrinterCommand('$SS');
   togglePlay(true);
   // put in a timeout to allow things to settle. when they were here at startup ui froze from time to time.
   setTimeout(() => {
