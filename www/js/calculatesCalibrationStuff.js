@@ -1,4 +1,8 @@
 
+var tlZ = 100
+var trZ = 56
+var blZ = 34
+var brZ = 78
 
 //Establish initial guesses for the corners
 var initialGuess = {
@@ -410,10 +414,6 @@ function calculateAverage(array) {
  * @returns {Object} - An object containing the projected measurements
  */
 function projectMeasurement(measurement) {
-  const tlZ = 116
-  const trZ = 69
-  const blZ = 47
-  const brZ = 89
 
   const tl = Math.sqrt(Math.pow(measurement.tl, 2) - Math.pow(tlZ, 2))
   const tr = Math.sqrt(Math.pow(measurement.tr, 2) - Math.pow(trZ, 2))
