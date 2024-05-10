@@ -89,7 +89,6 @@ inputBlurred = function () {
 }
 
 zeroAxis = function (axis) {
-  console.log('Zeroing: ' + axis)
   tabletClick()
   setAxisByValue(axis, 0)
 }
@@ -377,7 +376,22 @@ function tabletShowMessage(msg, collecting) {
     initialGuess.br.x = parseFloat(msg.substring(13, msg.length))
     return;
   }
-
+  if (msg.startsWith('$/Maslow_tlZ=')) {
+      tlZ = parseFloat(msg.substring(13, msg.length))
+      return;
+  }
+  if (msg.startsWith('$/Maslow_trZ=')) {
+      trZ = parseFloat(msg.substring(13, msg.length))
+      return;
+  }
+  if (msg.startsWith('$/Maslow_blZ=')) {
+      blZ = parseFloat(msg.substring(13, msg.length))
+      return;
+  }
+  if (msg.startsWith('$/Maslow_brZ=')) {
+      brZ = parseFloat(msg.substring(13, msg.length))
+      return;
+  }
 
   let msgWindow = document.getElementById('messages')
   let text = msgWindow.textContent
@@ -388,8 +402,6 @@ function tabletShowMessage(msg, collecting) {
   if (msg.startsWith('error:')) {
     msg = '<span style="color:red;">' + msg + '</span>'
   }
-
-
 }
 
 function tabletShowResponse(response) {}
@@ -1150,7 +1162,6 @@ function showCalibrationPopup() {
 }
 
 function homeZ() {
-  console.log('Homing Z latest')
 
   var move = function (params) {
     params = params || {}
@@ -1227,6 +1238,12 @@ function loadCornerValues(){
   SendPrinterCommand('$/Maslow_trX')
   SendPrinterCommand('$/Maslow_trY')
   SendPrinterCommand('$/Maslow_brX')
+
+  //Load the z-axis offsets
+  SendPrinterCommand('$/Maslow_tlZ');
+  SendPrinterCommand('$/Maslow_trZ');
+  SendPrinterCommand('$/Maslow_blZ');
+  SendPrinterCommand('$/Maslow_brZ');
 }
 
 //Save the configuration values
