@@ -89,7 +89,6 @@ inputBlurred = function () {
 }
 
 zeroAxis = function (axis) {
-  console.log('Zeroing: ' + axis)
   tabletClick()
   setAxisByValue(axis, 0)
 }
@@ -379,22 +378,18 @@ function tabletShowMessage(msg, collecting) {
   }
   if (msg.startsWith('$/Maslow_tlZ=')) {
       tlZ = parseFloat(msg.substring(13, msg.length))
-      console.log("tlZ set to: " + tlZ);
       return;
   }
   if (msg.startsWith('$/Maslow_trZ=')) {
       trZ = parseFloat(msg.substring(13, msg.length))
-      console.log("trZ set to: " + trZ);
       return;
   }
   if (msg.startsWith('$/Maslow_blZ=')) {
       blZ = parseFloat(msg.substring(13, msg.length))
-      console.log("blZ set to: " + blZ);
       return;
   }
   if (msg.startsWith('$/Maslow_brZ=')) {
       brZ = parseFloat(msg.substring(13, msg.length))
-      console.log("brZ set to: " + brZ);
       return;
   }
 
@@ -1167,7 +1162,6 @@ function showCalibrationPopup() {
 }
 
 function homeZ() {
-  console.log('Homing Z latest')
 
   var move = function (params) {
     params = params || {}
