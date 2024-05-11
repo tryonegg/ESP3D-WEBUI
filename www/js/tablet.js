@@ -274,7 +274,16 @@ moveHome = function () {
 //     lastHeartBeatTime = new Date().getTime();
 //   }
 // }
-
+function saveSerialMessages() {
+  // save off the serial messages
+  const msgs = document.getElementById('messages').value;
+  const link = document.createElement('a');
+  link.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURI(msgs));
+  link.setAttribute('download', "Maslow-serial.log");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
 
 var loadedValues = {};
 function tabletShowMessage(msg, collecting) {
@@ -380,22 +389,7 @@ function tabletShowMessage(msg, collecting) {
     initialGuess.br.x = parseFloat(msg.substring(13, msg.length))
     return;
   }
-  if (msg.startsWith('$/Maslow_tlZ=')) {
-      tlZ = parseFloat(msg.substring(13, msg.length))
-      return;
-  }
-  if (msg.startsWith('$/Maslow_trZ=')) {
-      trZ = parseFloat(msg.substring(13, msg.length))
-      return;
-  }
-  if (msg.startsWith('$/Maslow_blZ=')) {
-      blZ = parseFloat(msg.substring(13, msg.length))
-      return;
-  }
-  if (msg.startsWith('$/Maslow_brZ=')) {
-      brZ = parseFloat(msg.substring(13, msg.length))
-      return;
-  }
+
 
   let msgWindow = document.getElementById('messages')
   let text = msgWindow.textContent
@@ -406,6 +400,8 @@ function tabletShowMessage(msg, collecting) {
   if (msg.startsWith('error:')) {
     msg = '<span style="color:red;">' + msg + '</span>'
   }
+
+
 }
 
 function tabletShowResponse(response) {}
@@ -764,13 +760,13 @@ function tabletGetFileList(path) {
 }
 
 function tabletInit() {
-  // get grbl status
-  SendPrinterCommand('?');
-  // print startup messages
-  SendPrinterCommand('$SS');
-  togglePlay(true);
+ togglePlay(true);
   // put in a timeout to allow things to settle. when they were here at startup ui froze from time to time.
   setTimeout(() => {
+    // get grbl status
+    SendRealtimeCmd(0x3f); // ?
+    // print startup messages in serial
+    SendPrinterCommand('$SS');
     tabletGetFileList('/');
     requestModes();
     loadConfigValues();
@@ -861,7 +857,7 @@ function runGCode() {
   setTimeout(() => {
     SendRealtimeCmd(0x7e)
   }, 1500)
-  expandVisualizer()
+  // expandVisualizer()
 }
 
 function tabletSelectGCodeFile(filename) {
@@ -1171,6 +1167,7 @@ function showCalibrationPopup() {
 }
 
 function homeZ() {
+  console.log('Homing Z latest')
 
   var move = function (params) {
     params = params || {}
@@ -1247,12 +1244,6 @@ function loadCornerValues(){
   SendPrinterCommand('$/Maslow_trX')
   SendPrinterCommand('$/Maslow_trY')
   SendPrinterCommand('$/Maslow_brX')
-
-  //Load the z-axis offsets
-  SendPrinterCommand('$/Maslow_tlZ');
-  SendPrinterCommand('$/Maslow_trZ');
-  SendPrinterCommand('$/Maslow_blZ');
-  SendPrinterCommand('$/Maslow_brZ');
 }
 
 //Save the configuration values
@@ -1313,20 +1304,33 @@ function togglePlay(play) {
   document.getElementById('pauseButtonDiv').style.display = play ? 'none' : 'block';
 }
 
-function handlePlayPause() {
+function togglePlayPause(fromPlay) {
+  if (fromPlay) {
+    if (STATE !== 'Idle' && STATE !== 'Hold') {
+      console.log('Can not play if not idle or hold.');
+      return;
+    }
+  } else {
+    // always pause
+    pauseGCode();
+    if (STATE !== 'Run' && STATE !== 'Jog') {
+      return;
+    }
+  }
+  if (!gCodeLoaded && STATE !== 'Jog') {
+    console.log('Nothing to do. no gcode loaded');
+    return;
+  }
   if (STATE==='Run' || STATE === 'Jog') {
       pauseGCode();
-      // set pause button to play
-      togglePlay(true);
-  } else if (STATE === 'Idle') {
+  } else if (STATE === 'Idle' && gCodeLoaded) {
       runGCode();
-      togglePlay(false);
   } else if (STATE === 'Hold') {
       resumeGCode();
-      togglePlay(false);
   } else {
       console.log('Play/Pause not allowed when state is ', STATE);
   }
+  togglePlay(!fromPlay)
 }
 
 const onCalibrationButtonsClick = async (command, msg) => {
