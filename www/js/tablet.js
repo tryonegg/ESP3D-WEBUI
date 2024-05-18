@@ -476,25 +476,25 @@ function setButton(name, isEnabled, color, text) {
   button.innerText = text
 }
 
-var leftButtonHandler
-function setLeftButton(isEnabled, color, text, click) {
-  //setButton('btn-start', isEnabled, color, text);
-  leftButtonHandler = click
+var playButtonHandler
+function setPlayButton(isEnabled, color, text, click) {
+  setButton('playBtn', isEnabled, color, text);
+  playButtonHandler = click
 }
-function doLeftButton() {
-  if (leftButtonHandler) {
-    leftButtonHandler()
+function doPlayButton() {
+  if (playButtonHandler) {
+    playButtonHandler()
   }
 }
 
-var rightButtonHandler
-function setRightButton(isEnabled, color, text, click) {
-  //setButton('btn-pause', isEnabled, color, text);
-  rightButtonHandler = click
+var pauseButtonHandler
+function setPauseButton(isEnabled, color, text, click) {
+  setButton('pauseBtn', isEnabled, color, text);
+  pauseButtonHandler = click
 }
-function doRightButton() {
-  if (rightButtonHandler) {
-    rightButtonHandler()
+function doPauseButton() {
+  if (pauseButtonHandler) {
+    pauseButtonHandler()
   }
 }
 
@@ -505,12 +505,12 @@ var gray = '#f6f6f6'
 function setRunControls() {
   if (gCodeLoaded) {
     // A GCode file is ready to go
-    setLeftButton(true, green, 'Start', runGCode)
-    setRightButton(false, gray, 'Pause', null)
+    setPlayButton(true, green, 'Start', runGCode)
+    setPauseButton(false, gray, 'Pause', null)
   } else {
     // Can't start because no GCode to run
-    setLeftButton(false, gray, 'Start', null)
-    setRightButton(false, gray, 'Pause', null)
+    setPlayButton(false, gray, 'Start', null)
+    setPauseButton(false, gray, 'Pause', null)
   }
 }
 
@@ -537,7 +537,6 @@ function tabletUpdateModal() {
     setJogSelector(modal.units)
   }
 }
-
 function tabletGrblState(grbl, response) {
   // tabletShowResponse(response)
   var stateName = grbl.stateName
@@ -581,25 +580,25 @@ function tabletGrblState(grbl, response) {
   switch (stateName) {
     case 'Sleep':
     case 'Alarm':
-      setLeftButton(true, gray, 'Start', null)
-      setRightButton(false, gray, 'Pause', null)
+      setPlayButton(true, gray, 'Start', null)
+      setPauseButton(false, gray, 'Pause', null)
       break
     case 'Idle':
       setRunControls()
       break
     case 'Hold':
-      setLeftButton(true, green, 'Resume', resumeGCode)
-      setRightButton(true, red, 'Stop', stopAndRecover)
+      setPlayButton(true, green, 'Resume', resumeGCode)
+      setPauseButton(true, red, 'Stop', stopAndRecover)
       break
     case 'Jog':
     case 'Home':
     case 'Run':
-      setLeftButton(false, gray, 'Start', null)
-      setRightButton(true, red, 'Pause', pauseGCode)
+      setPlayButton(false, gray, 'Start', null)
+      setPauseButton(true, red, 'Pause', pauseGCode)
       break
     case 'Check':
-      setLeftButton(true, gray, 'Start', null)
-      setRightButton(true, red, 'Stop', stopAndRecover)
+      setPlayButton(true, gray, 'Start', null)
+      setPauseButton(true, red, 'Stop', stopAndRecover)
       break
   }
 
@@ -760,7 +759,6 @@ function tabletGetFileList(path) {
 }
 
 function tabletInit() {
- togglePlay(true);
   // put in a timeout to allow things to settle. when they were here at startup ui froze from time to time.
   setTimeout(() => {
     // get grbl status
@@ -1040,7 +1038,7 @@ function handleKeyDown(event) {
       break
     case 'Escape':
     case 'Pause':
-      clickon('btn-pause')
+      clickon('pauseBtn')
       break
     case 'Shift':
       shiftDown()
@@ -1297,40 +1295,6 @@ function saveConfigValues(){
   loadCornerValues();
 
   hideModal('configuration-popup');
-}
-
-function togglePlay(play) {
-  document.getElementById('playButtonDiv').style.display = play ? 'block' : 'none';
-  document.getElementById('pauseButtonDiv').style.display = play ? 'none' : 'block';
-}
-
-function togglePlayPause(fromPlay) {
-  if (fromPlay) {
-    if (STATE !== 'Idle' && STATE !== 'Hold') {
-      console.log('Can not play if not idle or hold.');
-      return;
-    }
-  } else {
-    // always pause
-    pauseGCode();
-    if (STATE !== 'Run' && STATE !== 'Jog') {
-      return;
-    }
-  }
-  if (!gCodeLoaded && STATE !== 'Jog') {
-    console.log('Nothing to do. no gcode loaded');
-    return;
-  }
-  if (STATE==='Run' || STATE === 'Jog') {
-      pauseGCode();
-  } else if (STATE === 'Idle' && gCodeLoaded) {
-      runGCode();
-  } else if (STATE === 'Hold') {
-      resumeGCode();
-  } else {
-      console.log('Play/Pause not allowed when state is ', STATE);
-  }
-  togglePlay(!fromPlay)
 }
 
 const onCalibrationButtonsClick = async (command, msg) => {

@@ -2,7 +2,6 @@ var interval_status = -1
 var probe_progress_status = 0
 var grbl_error_msg = ''
 var WCO = undefined
-var STATE = 'Alarm'
 var OVR = { feed: undefined, rapid: undefined, spindle: undefined }
 var MPOS = [0, 0, 0]
 var WPOS = [0, 0, 0]
@@ -487,19 +486,15 @@ function pauseGCode() {
 }
 
 function resumeGCode() {
-  SendRealtimeCmd(0x7e)
+  SendRealtimeCmd(0x7e) // '~'
 }
 
 function stopGCode() {
-  grbl_reset()
+  grbl_reset() // 0x18, ctrl-x
 }
 
 function grblProcessStatus(response) {
   var grbl = parseGrblStatus(response)
-  if (grbl.stateName) {
-    STATE=grbl.stateName;
-    console.log('STATE=', STATE)
-  }
   // Record persistent values of data
   if (grbl.wco) {
     WCO = grbl.wco
