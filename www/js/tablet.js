@@ -235,6 +235,10 @@ sendMove = function (cmd) {
     'Z+': function () {
       jog({ Z: distance })
     },
+    'Z_TOP': function () {
+      // She's got legs ♫
+      move({ Z: 70 })
+    },
   }[cmd]
 
   fn && fn()
@@ -259,18 +263,27 @@ moveHome = function () {
 }
 
 
-setInterval(checkOnHeartbeat, 500);
-function checkOnHeartbeat() {
-  if (new Date().getTime() - lastHeartBeatTime > 10000) {
-    let msgWindow = document.getElementById('messages')
-    let text = msgWindow.textContent
-    text = text + '\n' + "No heartbeat from machine in 10 seconds. Please check connection."
-    msgWindow.textContent = text
-    msgWindow.scrollTop = msgWindow.scrollHeight
-    lastHeartBeatTime = new Date().getTime();
-  }
+// setInterval(checkOnHeartbeat, 500);
+// function checkOnHeartbeat() {
+//   if (new Date().getTime() - lastHeartBeatTime > 10000) {
+//     let msgWindow = document.getElementById('messages')
+//     let text = msgWindow.textContent
+//     text = text + '\n' + "No heartbeat from machine in 10 seconds. Please check connection."
+//     msgWindow.textContent = text
+//     msgWindow.scrollTop = msgWindow.scrollHeight
+//     lastHeartBeatTime = new Date().getTime();
+//   }
+// }
+function saveSerialMessages() {
+  // save off the serial messages
+  const msgs = document.getElementById('messages').value;
+  const link = document.createElement('a');
+  link.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURI(msgs));
+  link.setAttribute('download', "Maslow-serial.log");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 }
-
 
 var loadedValues = {};
 function tabletShowMessage(msg, collecting) {
@@ -320,7 +333,7 @@ function tabletShowMessage(msg, collecting) {
   }
 
   //These are used for populating the configuraiton popup
-  
+
   if (msg.startsWith('$/maslow_calibration_grid_size=')) {
     document.getElementById('gridSize').value = msg.substring(31, msg.length)
     loadedValues['gridSize'] = msg.substring(33, msg.length)
@@ -376,22 +389,7 @@ function tabletShowMessage(msg, collecting) {
     initialGuess.br.x = parseFloat(msg.substring(13, msg.length))
     return;
   }
-  if (msg.startsWith('$/Maslow_tlZ=')) {
-      tlZ = parseFloat(msg.substring(13, msg.length))
-      return;
-  }
-  if (msg.startsWith('$/Maslow_trZ=')) {
-      trZ = parseFloat(msg.substring(13, msg.length))
-      return;
-  }
-  if (msg.startsWith('$/Maslow_blZ=')) {
-      blZ = parseFloat(msg.substring(13, msg.length))
-      return;
-  }
-  if (msg.startsWith('$/Maslow_brZ=')) {
-      brZ = parseFloat(msg.substring(13, msg.length))
-      return;
-  }
+
 
   let msgWindow = document.getElementById('messages')
   let text = msgWindow.textContent
@@ -402,6 +400,8 @@ function tabletShowMessage(msg, collecting) {
   if (msg.startsWith('error:')) {
     msg = '<span style="color:red;">' + msg + '</span>'
   }
+
+
 }
 
 function tabletShowResponse(response) {}
@@ -476,25 +476,25 @@ function setButton(name, isEnabled, color, text) {
   button.innerText = text
 }
 
-var leftButtonHandler
-function setLeftButton(isEnabled, color, text, click) {
-  //setButton('btn-start', isEnabled, color, text);
-  leftButtonHandler = click
+var playButtonHandler
+function setPlayButton(isEnabled, color, text, click) {
+  setButton('playBtn', isEnabled, color, text);
+  playButtonHandler = click
 }
-function doLeftButton() {
-  if (leftButtonHandler) {
-    leftButtonHandler()
+function doPlayButton() {
+  if (playButtonHandler) {
+    playButtonHandler()
   }
 }
 
-var rightButtonHandler
-function setRightButton(isEnabled, color, text, click) {
-  //setButton('btn-pause', isEnabled, color, text);
-  rightButtonHandler = click
+var pauseButtonHandler
+function setPauseButton(isEnabled, color, text, click) {
+  setButton('pauseBtn', isEnabled, color, text);
+  pauseButtonHandler = click
 }
-function doRightButton() {
-  if (rightButtonHandler) {
-    rightButtonHandler()
+function doPauseButton() {
+  if (pauseButtonHandler) {
+    pauseButtonHandler()
   }
 }
 
@@ -505,12 +505,12 @@ var gray = '#f6f6f6'
 function setRunControls() {
   if (gCodeLoaded) {
     // A GCode file is ready to go
-    setLeftButton(true, green, 'Start', runGCode)
-    setRightButton(false, gray, 'Pause', null)
+    setPlayButton(true, green, 'Start', runGCode)
+    setPauseButton(false, gray, 'Pause', null)
   } else {
     // Can't start because no GCode to run
-    setLeftButton(false, gray, 'Start', null)
-    setRightButton(false, gray, 'Pause', null)
+    setPlayButton(false, gray, 'Start', null)
+    setPauseButton(false, gray, 'Pause', null)
   }
 }
 
@@ -537,7 +537,6 @@ function tabletUpdateModal() {
     setJogSelector(modal.units)
   }
 }
-
 function tabletGrblState(grbl, response) {
   // tabletShowResponse(response)
   var stateName = grbl.stateName
@@ -581,25 +580,25 @@ function tabletGrblState(grbl, response) {
   switch (stateName) {
     case 'Sleep':
     case 'Alarm':
-      setLeftButton(true, gray, 'Start', null)
-      setRightButton(false, gray, 'Pause', null)
+      setPlayButton(true, gray, 'Start', null)
+      setPauseButton(false, gray, 'Pause', null)
       break
     case 'Idle':
       setRunControls()
       break
     case 'Hold':
-      setLeftButton(true, green, 'Resume', resumeGCode)
-      setRightButton(true, red, 'Stop', stopAndRecover)
+      setPlayButton(true, green, 'Resume', resumeGCode)
+      setPauseButton(true, red, 'Stop', stopAndRecover)
       break
     case 'Jog':
     case 'Home':
     case 'Run':
-      setLeftButton(false, gray, 'Start', null)
-      setRightButton(true, red, 'Pause', pauseGCode)
+      setPlayButton(false, gray, 'Start', null)
+      setPauseButton(true, red, 'Pause', pauseGCode)
       break
     case 'Check':
-      setLeftButton(true, gray, 'Start', null)
-      setRightButton(true, red, 'Stop', stopAndRecover)
+      setPlayButton(true, gray, 'Start', null)
+      setPauseButton(true, red, 'Stop', stopAndRecover)
       break
   }
 
@@ -762,6 +761,10 @@ function tabletGetFileList(path) {
 function tabletInit() {
   // put in a timeout to allow things to settle. when they were here at startup ui froze from time to time.
   setTimeout(() => {
+    // get grbl status
+    SendRealtimeCmd(0x3f); // ?
+    // print startup messages in serial
+    SendPrinterCommand('$SS');
     tabletGetFileList('/');
     requestModes();
     loadConfigValues();
@@ -852,7 +855,7 @@ function runGCode() {
   setTimeout(() => {
     SendRealtimeCmd(0x7e)
   }, 1500)
-  expandVisualizer()
+  // expandVisualizer()
 }
 
 function tabletSelectGCodeFile(filename) {
@@ -1035,7 +1038,7 @@ function handleKeyDown(event) {
       break
     case 'Escape':
     case 'Pause':
-      clickon('btn-pause')
+      clickon('pauseBtn')
       break
     case 'Shift':
       shiftDown()
@@ -1162,6 +1165,7 @@ function showCalibrationPopup() {
 }
 
 function homeZ() {
+  console.log('Homing Z latest')
 
   var move = function (params) {
     params = params || {}
@@ -1238,12 +1242,6 @@ function loadCornerValues(){
   SendPrinterCommand('$/Maslow_trX')
   SendPrinterCommand('$/Maslow_trY')
   SendPrinterCommand('$/Maslow_brX')
-
-  //Load the z-axis offsets
-  SendPrinterCommand('$/Maslow_tlZ');
-  SendPrinterCommand('$/Maslow_trZ');
-  SendPrinterCommand('$/Maslow_blZ');
-  SendPrinterCommand('$/Maslow_brZ');
 }
 
 //Save the configuration values

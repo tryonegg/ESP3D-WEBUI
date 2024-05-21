@@ -486,16 +486,15 @@ function pauseGCode() {
 }
 
 function resumeGCode() {
-  SendRealtimeCmd(0x7e)
+  SendRealtimeCmd(0x7e) // '~'
 }
 
 function stopGCode() {
-  grbl_reset()
+  grbl_reset() // 0x18, ctrl-x
 }
 
 function grblProcessStatus(response) {
   var grbl = parseGrblStatus(response)
-
   // Record persistent values of data
   if (grbl.wco) {
     WCO = grbl.wco
@@ -518,7 +517,6 @@ function grblProcessStatus(response) {
       })
     }
   }
-
   show_grbl_position(WPOS, MPOS)
   show_grbl_status(grbl.stateName, grbl.message, grbl.sdName)
   show_grbl_SD(grbl.sdName, grbl.sdPercent)
