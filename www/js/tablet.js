@@ -407,7 +407,6 @@ function tabletShowMessage(msg, collecting) {
   }
   if (msg.startsWith('$/Maslow_Acceptable_Calibration_Threshold')) {
     acceptableCalibrationThreshold = parseFloat(msg.substring(42, msg.length))
-    console.log('Acceptable Calibration Threshold: ' + acceptableCalibrationThreshold)
     return;
   }
   if (msg.startsWith('error:')) {
