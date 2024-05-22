@@ -3,6 +3,7 @@ var tlZ = 100
 var trZ = 56
 var blZ = 34
 var brZ = 78
+var acceptableCalibrationThreshold = 0.5
 
 //Establish initial guesses for the corners
 var initialGuess = {
