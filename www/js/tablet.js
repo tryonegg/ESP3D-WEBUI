@@ -389,6 +389,9 @@ function tabletShowMessage(msg, collecting) {
     initialGuess.br.x = parseFloat(msg.substring(13, msg.length))
     return;
   }
+  if (msg.startsWith('$/Maslow_Acceptable_Calibration_Threshold')) {
+    
+  }
   if (msg.startsWith('error:')) {
     let parts = msg.split(":");
     let number = parseInt(parts[1], 10);
@@ -1246,6 +1249,7 @@ function loadConfigValues(){
   SendPrinterCommand('$/Maslow_Retract_Current_Threshold');
   SendPrinterCommand('$/Maslow_trX');
   SendPrinterCommand('$/Maslow_trY');
+  SendPrinterCommand('$/Maslow_Acceptable_Calibration_Threshold');
 }
 
 //Load all of the corner values
