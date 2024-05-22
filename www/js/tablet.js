@@ -389,6 +389,19 @@ function tabletShowMessage(msg, collecting) {
     initialGuess.br.x = parseFloat(msg.substring(13, msg.length))
     return;
   }
+  if (msg.startsWith('error:')) {
+    let parts = msg.split(":");
+    let number = parseInt(parts[1], 10);
+
+    switch (number) {
+      case 8:
+        msg = msg + " - " + "Command requires idle state. Unlock machine?";
+        break;
+      case 152:
+        msg = msg + " - " + "Configuration is invalid. Maslow.yaml file may be corrupt. Try restarting";
+    }
+  }
+
 
 
   let msgWindow = document.getElementById('messages')
