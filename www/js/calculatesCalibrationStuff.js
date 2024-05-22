@@ -3,6 +3,7 @@ var tlZ = 100
 var trZ = 56
 var blZ = 34
 var brZ = 78
+var acceptableCalibrationThreshold = 0.5
 
 //Establish initial guesses for the corners
 var initialGuess = {
@@ -545,7 +546,7 @@ function findMaxFitness(measurements) {
       else{
         var messagesBox = document.getElementById('messages')
 
-          if(1/bestGuess.fitness < 0.5){
+          if(1/bestGuess.fitness < acceptableCalibrationThreshold){
               messagesBox.value += '\nWARNING FITNESS TOO LOW. DO NOT USE THESE CALIBRATION VALUES!';
           }
 
@@ -562,7 +563,7 @@ function findMaxFitness(measurements) {
           messagesBox.scrollTop
           messagesBox.scrollTop = messagesBox.scrollHeight;
 
-          if(1/bestGuess.fitness > 0.5){
+          if(1/bestGuess.fitness > acceptableCalibrationThreshold){
               sendCommand('$/Maslow_tlX=' + bestGuess.tl.x.toFixed(1));
               sendCommand('$/Maslow_tlY=' + bestGuess.tl.y.toFixed(1));
               sendCommand('$/Maslow_trX=' + bestGuess.tr.x.toFixed(1));

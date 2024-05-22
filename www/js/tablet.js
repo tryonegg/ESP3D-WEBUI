@@ -389,8 +389,25 @@ function tabletShowMessage(msg, collecting) {
     initialGuess.br.x = parseFloat(msg.substring(13, msg.length))
     return;
   }
+  if (msg.startsWith('$/Maslow_tlZ=')) {
+    tlZ = parseFloat(msg.substring(13, msg.length))
+    return;
+  }
+  if (msg.startsWith('$/Maslow_trZ=')) {
+    trZ = parseFloat(msg.substring(13, msg.length))
+    return;
+  }
+  if (msg.startsWith('$/Maslow_blZ=')) {
+    blZ = parseFloat(msg.substring(13, msg.length))
+    return;
+  }
+  if (msg.startsWith('$/Maslow_brZ=')) {
+    brZ = parseFloat(msg.substring(13, msg.length))
+    return;
+  }
   if (msg.startsWith('$/Maslow_Acceptable_Calibration_Threshold')) {
-    
+    acceptableCalibrationThreshold = parseFloat(msg.substring(42, msg.length))
+    return;
   }
   if (msg.startsWith('error:')) {
     let parts = msg.split(":");
