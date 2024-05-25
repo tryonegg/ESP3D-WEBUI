@@ -285,6 +285,9 @@ function saveSerialMessages() {
   document.body.removeChild(link);
 }
 
+// from MINFO command
+var maslowStatus = { homed: false, extended: false};
+
 var loadedValues = {};
 function tabletShowMessage(msg, collecting) {
   if (
@@ -296,6 +299,21 @@ function tabletShowMessage(msg, collecting) {
     msg.startsWith('\r')
   ) {
     return
+  }
+
+  //This keeps track of when we saw the last heartbeat from the machine
+  if (msg.startsWith('MINFO: ')) {
+    maslowStatus = JSON.parse(msg.substring(7));
+    if (maslowStatus.homed) {
+      id('homed').innerText ='Maslow is Homed ☺';
+      id('homed').style="color: forestgreen";
+    } else{
+      id('homed').innerText = 'NOT HOMED!!!! Must re-zero the belts (remove, retract, extend, reattach, apply tension)';
+      id('homed').style="color: #c98200";
+      // TODO: disable movement / loading, etc
+      console.log("NOT HOMED!")
+    }
+    return;
   }
 
   //This keeps track of when we saw the last heartbeat from the machine
@@ -798,6 +816,8 @@ function tabletInit() {
     SendRealtimeCmd(0x3f); // ?
     // print startup messages in serial
     SendPrinterCommand('$SS');
+    // get maslow info
+    SendPrinterCommand('$MINFO');
     tabletGetFileList('/');
     requestModes();
     loadConfigValues();
@@ -1341,6 +1361,10 @@ const onCalibrationButtonsClick = async (command, msg) => {
     text = text + '\n' + "Index.html Version: " + versionNumber
     msgWindow.textContent = text
     msgWindow.scrollTop = msgWindow.scrollHeight
+  }
+
+  if (command != '$MINFO') {
+    setTimeout(() => {sendCommand('$MINFO');}, 1000)
   }
 }
 
