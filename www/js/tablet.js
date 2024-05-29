@@ -162,6 +162,22 @@ function long_jog(target) {
   sendCommand(cmd)
 }
 
+checkHomed = function () {
+  
+  if(!maslowStatus.homed){
+    alert("Maslow does not know belt lengths. Please retract and extend before continuing.")
+    
+    //Write to the console too incase the system allerts are not visible
+    let msgWindow = document.getElementById('messages')
+    let text = msgWindow.textContent
+    text = text + '\n' + "Maslow does not know belt lengths. Please retract and extend before continuing."
+    msgWindow.textContent = text
+    msgWindow.scrollTop = msgWindow.scrollHeight
+
+  }
+  return maslowStatus.homed
+}
+
 sendMove = function (cmd) {
   tabletClick()
   var jog = function (params) {
@@ -206,28 +222,44 @@ sendMove = function (cmd) {
       move({ Z: 0 })
     },
     'X-Y+': function () {
-      jog({ X: -distance, Y: distance })
+      if(checkHomed()){
+        jog({ X: -distance, Y: distance })
+      }
     },
     'X+Y+': function () {
-      jog({ X: distance, Y: distance })
+      if(checkHomed()){
+        jog({ X: distance, Y: distance })
+      }
     },
     'X-Y-': function () {
-      jog({ X: -distance, Y: -distance })
+      if(checkHomed()){
+        jog({ X: -distance, Y: -distance })
+      }
     },
     'X+Y-': function () {
-      jog({ X: distance, Y: -distance })
+      if(checkHomed()){
+        jog({ X: distance, Y: -distance })
+      }
     },
     'X-': function () {
-      jog({ X: -distance })
+      if(checkHomed()){
+        jog({ X: -distance })
+      }
     },
     'X+': function () {
-      jog({ X: distance })
+      if(checkHomed()){
+        jog({ X: distance })
+      }
     },
     'Y-': function () {
-      jog({ Y: -distance })
+      if(checkHomed()){
+        jog({ Y: -distance })
+      }
     },
     'Y+': function () {
-      jog({ Y: distance })
+      if(checkHomed()){
+        jog({ Y: distance })
+      }
     },
     'Z-': function () {
       jog({ Z: -distance })
@@ -245,6 +277,10 @@ sendMove = function (cmd) {
 }
 
 moveHome = function () {
+
+  if(!checkHomed()){
+    return;
+  }
 
   //We want to move to the opposite of the machine's current X,Y cordinates
   var x = parseFloat(id('mpos-x').innerText)
@@ -304,15 +340,6 @@ function tabletShowMessage(msg, collecting) {
   //This keeps track of when we saw the last heartbeat from the machine
   if (msg.startsWith('MINFO: ')) {
     maslowStatus = JSON.parse(msg.substring(7));
-    if (maslowStatus.homed) {
-      id('homed').innerText ='Maslow is Homed ☺';
-      id('homed').style="color: forestgreen";
-    } else{
-      id('homed').innerText = 'NOT HOMED!!!! Must re-zero the belts (remove, retract, extend, reattach, apply tension)';
-      id('homed').style="color: #c98200";
-      // TODO: disable movement / loading, etc
-      console.log("NOT HOMED!")
-    }
     return;
   }
 
