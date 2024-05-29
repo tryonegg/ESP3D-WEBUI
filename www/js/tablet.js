@@ -162,6 +162,22 @@ function long_jog(target) {
   sendCommand(cmd)
 }
 
+checkHomed = function () {
+  
+  if(!maslowStatus.homed){
+    alert("Maslow does not know belt lengths. Please retract and extend before continuing.")
+    
+    // Write to the console too in case the system alerts are not visible
+    let msgWindow = document.getElementById('messages')
+    let text = msgWindow.textContent
+    text = text + '\n' + "Maslow does not know belt lengths. Please retract and extend before continuing."
+    msgWindow.textContent = text
+    msgWindow.scrollTop = msgWindow.scrollHeight
+
+  }
+  return maslowStatus.homed
+}
+
 sendMove = function (cmd) {
   tabletClick()
   var jog = function (params) {
@@ -206,28 +222,44 @@ sendMove = function (cmd) {
       move({ Z: 0 })
     },
     'X-Y+': function () {
-      jog({ X: -distance, Y: distance })
+      if(checkHomed()){
+        jog({ X: -distance, Y: distance })
+      }
     },
     'X+Y+': function () {
-      jog({ X: distance, Y: distance })
+      if(checkHomed()){
+        jog({ X: distance, Y: distance })
+      }
     },
     'X-Y-': function () {
-      jog({ X: -distance, Y: -distance })
+      if(checkHomed()){
+        jog({ X: -distance, Y: -distance })
+      }
     },
     'X+Y-': function () {
-      jog({ X: distance, Y: -distance })
+      if(checkHomed()){
+        jog({ X: distance, Y: -distance })
+      }
     },
     'X-': function () {
-      jog({ X: -distance })
+      if(checkHomed()){
+        jog({ X: -distance })
+      }
     },
     'X+': function () {
-      jog({ X: distance })
+      if(checkHomed()){
+        jog({ X: distance })
+      }
     },
     'Y-': function () {
-      jog({ Y: -distance })
+      if(checkHomed()){
+        jog({ Y: -distance })
+      }
     },
     'Y+': function () {
-      jog({ Y: distance })
+      if(checkHomed()){
+        jog({ Y: distance })
+      }
     },
     'Z-': function () {
       jog({ Z: -distance })
@@ -245,6 +277,10 @@ sendMove = function (cmd) {
 }
 
 moveHome = function () {
+
+  if(!checkHomed()){
+    return;
+  }
 
   //We want to move to the opposite of the machine's current X,Y cordinates
   var x = parseFloat(id('mpos-x').innerText)
@@ -285,6 +321,9 @@ function saveSerialMessages() {
   document.body.removeChild(link);
 }
 
+// from MINFO command
+var maslowStatus = { homed: false, extended: false};
+
 var loadedValues = {};
 function tabletShowMessage(msg, collecting) {
   if (
@@ -296,6 +335,12 @@ function tabletShowMessage(msg, collecting) {
     msg.startsWith('\r')
   ) {
     return
+  }
+
+  //This keeps track of when we saw the last heartbeat from the machine
+  if (msg.startsWith('MINFO: ')) {
+    maslowStatus = JSON.parse(msg.substring(7));
+    return;
   }
 
   //This keeps track of when we saw the last heartbeat from the machine
@@ -793,6 +838,8 @@ function tabletInit() {
     SendRealtimeCmd(0x3f); // ?
     // print startup messages in serial
     SendPrinterCommand('$SS');
+    // get maslow info
+    SendPrinterCommand('$MINFO');
     tabletGetFileList('/');
     requestModes();
     loadConfigValues();
@@ -1336,6 +1383,10 @@ const onCalibrationButtonsClick = async (command, msg) => {
     text = text + '\n' + "Index.html Version: " + versionNumber
     msgWindow.textContent = text
     msgWindow.scrollTop = msgWindow.scrollHeight
+  }
+
+  if (command != '$MINFO') {
+    setTimeout(() => {sendCommand('$MINFO');}, 1000)
   }
 }
 
