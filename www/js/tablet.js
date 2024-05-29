@@ -167,7 +167,7 @@ checkHomed = function () {
   if(!maslowStatus.homed){
     alert("Maslow does not know belt lengths. Please retract and extend before continuing.")
     
-    //Write to the console too incase the system allerts are not visible
+    // Write to the console too in case the system alerts are not visible
     let msgWindow = document.getElementById('messages')
     let text = msgWindow.textContent
     text = text + '\n' + "Maslow does not know belt lengths. Please retract and extend before continuing."
