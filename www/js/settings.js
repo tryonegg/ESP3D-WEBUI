@@ -231,33 +231,14 @@ function build_control_from_pos(pos, extra) {
   return build_control_from_index(get_index_from_eeprom_pos(pos), extra)
 }
 
-/** Send a command to call Config/Overwrite */
+/** Send a command to call Config/Overwrite.
+ * 
+ * If the configuration is invalid, e.g. because the ESP32 performed a panic reset,
+ * Then the error code 153 will be returned via the socket.
+ * @see tablet.js tabletShowMessage()
+ */
 function saveMaslowYaml() {
-  const overwriteConfigMessage = (result) => {
-    var messagesBox = document.getElementById('messages');
-    if (messagesBox) {
-      messagesBox.textContent += '\n' + result;
-    }
-
-    return !!messagesBox;
-  }
-
-  /** Ignore any response_text returned */
-  const setOverwriteConfigSucceeded = (_) => {
-    const successMessage = 'These values have been saved for you.';
-    if (!overwriteConfigMessage(successMessage)) {
-      console.info(successMessage);
-    }
-  }
-
-  const setOverwriteConfigFailed = (error_code, response) => {
-    const failureMessage = 'The values could not be saved, because of a problem when they were initialy loaded. You need to restart to resolve this.';
-    overwriteConfigMessage(failureMessage);
-    console.error("Error " + error_code + " :" + response);
-    console.error(failureMessage);
-  }
-
-  SendGetHttp('/command?plain=' + encodeURIComponent("$CO"), setOverwriteConfigSucceeded, setOverwriteConfigFailed);
+  SendGetHttp('/command?plain=' + encodeURIComponent("$CO"));
 }
 
 function build_HTML_setting_list(filter) {
