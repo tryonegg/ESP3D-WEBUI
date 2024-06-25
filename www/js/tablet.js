@@ -8,6 +8,13 @@ var lastHeartBeatTime = new Date().getTime();
 
 var versionNumber = 0.78
 
+//Print the version number to the console
+let msgWindow = document.getElementById('messages')
+let text = msgWindow.textContent
+text = text + '\n' + "Index.html Version: " + versionNumber
+msgWindow.textContent = text
+msgWindow.scrollTop = msgWindow.scrollHeight
+
 function beep(vol, freq, duration) {
   if (snd == null) {
     if (sndok) {
