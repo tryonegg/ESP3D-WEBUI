@@ -91,6 +91,12 @@ inputBlurred = function () {
 zeroAxis = function (axis) {
   tabletClick()
   setAxisByValue(axis, 0)
+
+  let msgWindow = document.getElementById('messages')
+  let text = msgWindow.textContent
+  text += '\n' + "Home pos set for: " + axis
+  msgWindow.textContent = text
+  msgWindow.scrollTop = msgWindow.scrollHeight
 }
 
 toggleUnits = function () {
@@ -187,6 +193,13 @@ sendMove = function (cmd) {
       s += key + params[key]
     }
     jogTo(s)
+
+    let msgWindow = document.getElementById('messages')
+    let text = msgWindow.textContent
+    text += '\n' + "Jog: " + s
+    msgWindow.textContent = text
+    msgWindow.scrollTop = msgWindow.scrollHeight
+
   }
   var move = function (params) {
     params = params || {}
@@ -562,6 +575,13 @@ function doPlayButton() {
   if (playButtonHandler) {
     playButtonHandler()
   }
+
+  let msgWindow = document.getElementById('messages')
+  let text = msgWindow.textContent
+  text += '\n' + "Starting File: " + document.getElementById('filelist').options[selectElement.selectedIndex].text
+  msgWindow.textContent = text
+  msgWindow.scrollTop = msgWindow.scrollHeight
+
 }
 
 var pauseButtonHandler
