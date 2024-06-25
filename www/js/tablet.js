@@ -349,6 +349,10 @@ function tabletShowMessage(msg, collecting) {
     return
   }
 
+  if(msg.startsWith('[GC')){
+    return
+  }
+
   //These are used for generating the working area in the background
   if (msg.startsWith('$/axes/x/max_travel_mm=')) {
     displayer.setXTravel(parseFloat(msg.substring(23, msg.length)))
