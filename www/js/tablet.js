@@ -8,6 +8,13 @@ var lastHeartBeatTime = new Date().getTime();
 
 var versionNumber = 0.78
 
+//Print the version number to the console
+let msgWindow = document.getElementById('messages')
+let text = msgWindow.textContent
+text = text + '\n' + "Index.html Version: " + versionNumber
+msgWindow.textContent = text
+msgWindow.scrollTop = msgWindow.scrollHeight
+
 function beep(vol, freq, duration) {
   if (snd == null) {
     if (sndok) {
@@ -91,6 +98,12 @@ inputBlurred = function () {
 zeroAxis = function (axis) {
   tabletClick()
   setAxisByValue(axis, 0)
+
+  let msgWindow = document.getElementById('messages')
+  let text = msgWindow.textContent
+  text += '\n' + "Home pos set for: " + axis
+  msgWindow.textContent = text
+  msgWindow.scrollTop = msgWindow.scrollHeight
 }
 
 toggleUnits = function () {
@@ -187,6 +200,13 @@ sendMove = function (cmd) {
       s += key + params[key]
     }
     jogTo(s)
+
+    let msgWindow = document.getElementById('messages')
+    let text = msgWindow.textContent
+    text += '\n' + "Jog: " + s
+    msgWindow.textContent = text
+    msgWindow.scrollTop = msgWindow.scrollHeight
+
   }
   var move = function (params) {
     params = params || {}
@@ -346,6 +366,10 @@ function tabletShowMessage(msg, collecting) {
   //This keeps track of when we saw the last heartbeat from the machine
   if(msg.startsWith('[MSG:INFO: Heartbeat')){
     lastHeartBeatTime = new Date().getTime();
+    return
+  }
+
+  if(msg.startsWith('[GC')){
     return
   }
 
@@ -558,6 +582,13 @@ function doPlayButton() {
   if (playButtonHandler) {
     playButtonHandler()
   }
+
+  let msgWindow = document.getElementById('messages')
+  let text = msgWindow.textContent
+  text += '\n' + "Starting File: " + document.getElementById('filelist').options[selectElement.selectedIndex].text
+  msgWindow.textContent = text
+  msgWindow.scrollTop = msgWindow.scrollHeight
+
 }
 
 var pauseButtonHandler
