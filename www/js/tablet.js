@@ -488,7 +488,7 @@ function tabletShowMessage(msg, collecting) {
   if (msg.startsWith('error:')) {
     const msgExtra = {
       "8": " - Command requires idle state. Unlock machine?",
-      "152": " - Configuration is invalid. Maslow.yaml file may be corrupt. Try restarting",
+      "152": " - Configuration is invalid. Maslow.yaml file may be corrupt. Turning off and back on again can often fix this issue.",
       "153": " - Configuration is invalid. ESP32 probably did a panic reset. Config changes cannot be saved. Try restarting",
     };
 
