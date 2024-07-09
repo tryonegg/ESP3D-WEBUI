@@ -192,6 +192,7 @@ checkHomed = function () {
 }
 
 sendMove = function (cmd) {
+  console.log("Send move called");
   tabletClick()
   var jog = function (params) {
     params = params || {}
@@ -218,6 +219,10 @@ sendMove = function (cmd) {
   }
 
   var distance = Number(id('disM').innerText) || 0
+
+  if (cmd.includes('Z') && distance > 75) {
+    alert("Can't move the z-axis that far");
+  }
 
   var fn = {
     G28: function () {
