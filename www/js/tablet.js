@@ -1164,7 +1164,6 @@ window.addEventListener('keydown', handleKeyDown)
 window.addEventListener('keyup', handleKeyUp)
 
 numpad.attach({ target: 'disM', axis: 'D' })
-numpad.attach({ target: 'disZ', axis: 'Z' })
 //numpad.attach({target: "wpos-y", axis: "Y"});
 //numpad.attach({target: "wpos-z", axis: "Z"});
 //numpad.attach({target: "wpos-a", axis: "A"});
@@ -1219,10 +1218,6 @@ function fullscreenIfMobile() {
   }
 }
 
-function showZaxisPopup() {
-  document.getElementById('z-axis-popup').style.display = 'block'
-}
-
 function showCalibrationPopup() {
   document.getElementById('calibration-popup').style.display = 'block'
 }
@@ -1251,13 +1246,6 @@ function homeZ() {
 }
 
 document.addEventListener('click', function (event) {
-  if (
-    !document.getElementById('z-axis-popup').contains(event.target) &&
-    !document.getElementById('zBtn').contains(event.target) &&
-    !document.getElementById('numPad').contains(event.target)
-  ) {
-    document.getElementById('z-axis-popup').style.display = 'none'
-  }
   if (
     !document.getElementById('calibration-popup').contains(event.target) &&
     !document.getElementById('calibrationBTN').contains(event.target) &&
