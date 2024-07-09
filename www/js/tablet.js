@@ -95,6 +95,39 @@ inputBlurred = function () {
   isInputFocused = false
 }
 
+//Timer function counting down from 5
+var timeoutID = null
+var timer = function () {
+  var buttonText = document.getElementById('defineHomeBTN').textContent
+  if (buttonText > 0) {
+    document.getElementById('defineHomeBTN').textContent = buttonText - 1
+    timeoutID = setTimeout(timer, 1000)
+  }
+  else {
+    zeroAxis('X')
+    zeroAxis('Y')
+    document.getElementById('defineHomeBTN').textContent = 'Define Home'
+    setTimeout(refreshGcode, 100)
+  }
+}
+
+//Click down starts the timer function and sets the button text to 5
+setHomeClickDown = function () {
+  document.getElementById('defineHomeBTN').textContent = 5
+  timer()
+}
+
+//Click up stops the timer function and sets the button text to 'Define Home'
+setHomeClickUp = function () {
+  document.getElementById('defineHomeBTN').textContent = 'Define Home';
+  
+  //Cancel the timer
+  if (timeoutID != null) {
+    clearTimeout(timeoutID)
+  }
+
+}
+
 zeroAxis = function (axis) {
   tabletClick()
   setAxisByValue(axis, 0)
