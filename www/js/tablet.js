@@ -218,9 +218,6 @@ sendMove = function (cmd) {
   }
 
   var distance = Number(id('disM').innerText) || 0
-  if (cmd.includes('Z')) {
-    distance = Number(id('disZ').innerText) || 0
-  }
 
   var fn = {
     G28: function () {

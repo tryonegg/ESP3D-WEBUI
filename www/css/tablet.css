@@ -75,7 +75,7 @@ html {
   color: #7a7a7a;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 75% 25%;
+  grid-template-columns: 70% 30%;
 }
 
 .maslow-grid-container {
