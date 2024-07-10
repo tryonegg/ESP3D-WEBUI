@@ -82,6 +82,9 @@ def resolve_mdns(hostname):
 fluidnc_ip = ''
 def set_fluidnc_ip():
     global fluidnc_ip
+    if 'FLUID_IP' in os.environ:
+        fluidnc_ip = os.environ['FLUID_IP']
+        print("Proxying to FluidNC at", fluidnc_ip)
     if len(sys.argv) == 2:
         fluidnc_ip = sys.argv[1]
         print(            "Proxying to FluidNC at", fluidnc_ip)
@@ -112,8 +115,8 @@ def fluidnc_websocket():
 python_path = sys.executable
 script_path = os.path.realpath(__file__)
 domain = 'localhost'
-http_port = '8080'
-ws_port = '8081'
+http_port = os.environ.get('PORT') or '8080'
+ws_port = os.environ.get('WSPORT') or '8081'
 
 ### Flask Stuff
 app = Flask(__name__)
