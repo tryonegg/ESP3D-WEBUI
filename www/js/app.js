@@ -395,7 +395,6 @@ function initUI() {
   if (typeof id('FW_VERSION') != 'undefined') id('FW_VERSION').innerHTML = fw_version
   // Get the element with id="defaultOpen" and click on it
   id('tablettablink').click()
-  onReportType({ value: 'auto' })
 
   if (typeof id('grblcontroltablink') !== 'undefined') {
     id('grblcontroltablink').click()
@@ -405,6 +404,8 @@ function initUI() {
   console.log(JSON.stringify(translated_list))
   //endRemoveIf(production)
   initUI_2()
+
+  setTimeout(tryAutoReport, 500); //Not sure why this needs a delay but it seems like a hack
 }
 
 function initUI_2() {

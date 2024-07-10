@@ -225,6 +225,7 @@ checkHomed = function () {
 }
 
 sendMove = function (cmd) {
+  console.log("Send move called");
   tabletClick()
   var jog = function (params) {
     params = params || {}
@@ -251,8 +252,9 @@ sendMove = function (cmd) {
   }
 
   var distance = Number(id('disM').innerText) || 0
-  if (cmd.includes('Z')) {
-    distance = Number(id('disZ').innerText) || 0
+
+  if (cmd.includes('Z') && distance > 75) {
+    alert("Can't move the z-axis that far");
   }
 
   var fn = {
@@ -486,7 +488,7 @@ function tabletShowMessage(msg, collecting) {
   if (msg.startsWith('error:')) {
     const msgExtra = {
       "8": " - Command requires idle state. Unlock machine?",
-      "152": " - Configuration is invalid. Maslow.yaml file may be corrupt. Try restarting",
+      "152": " - Configuration is invalid. Maslow.yaml file may be corrupt. Turning off and back on again can often fix this issue.",
       "153": " - Configuration is invalid. ESP32 probably did a panic reset. Config changes cannot be saved. Try restarting",
     };
 
@@ -1195,7 +1197,6 @@ window.addEventListener('keydown', handleKeyDown)
 window.addEventListener('keyup', handleKeyUp)
 
 numpad.attach({ target: 'disM', axis: 'D' })
-numpad.attach({ target: 'disZ', axis: 'Z' })
 //numpad.attach({target: "wpos-y", axis: "Y"});
 //numpad.attach({target: "wpos-z", axis: "Z"});
 //numpad.attach({target: "wpos-a", axis: "A"});
@@ -1250,10 +1251,6 @@ function fullscreenIfMobile() {
   }
 }
 
-function showZaxisPopup() {
-  document.getElementById('z-axis-popup').style.display = 'block'
-}
-
 function showCalibrationPopup() {
   document.getElementById('calibration-popup').style.display = 'block'
 }
@@ -1282,13 +1279,6 @@ function homeZ() {
 }
 
 document.addEventListener('click', function (event) {
-  if (
-    !document.getElementById('z-axis-popup').contains(event.target) &&
-    !document.getElementById('zBtn').contains(event.target) &&
-    !document.getElementById('numPad').contains(event.target)
-  ) {
-    document.getElementById('z-axis-popup').style.display = 'none'
-  }
   if (
     !document.getElementById('calibration-popup').contains(event.target) &&
     !document.getElementById('calibrationBTN').contains(event.target) &&
