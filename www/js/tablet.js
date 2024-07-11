@@ -255,6 +255,7 @@ sendMove = function (cmd) {
 
   if (cmd.includes('Z') && distance > 75) {
     alert("Can't move the z-axis that far");
+    return;
   }
 
   var fn = {
