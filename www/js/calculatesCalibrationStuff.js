@@ -598,7 +598,6 @@ function findMaxFitness(measurements) {
                 guess: bestGuess
               }, true);
           }
-        alert('Calibration complete. You do not need to do calibration ever again unless your frame changes size. You might want to store a backup of your maslow.yaml file in case you need to restore it later.');
       }
   }
 
