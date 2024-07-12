@@ -496,6 +496,12 @@ function tabletShowMessage(msg, collecting) {
     msg += msgExtra[msg.split(":")[1]] || "";
   }
 
+  //Catch the calibration complete message and alert the user
+  if(msg.startsWith('[MSG:INFO: Calibration complete')){
+    alert('Calibration complete. You do not need to do calibration ever again unless your frame changes size. You might want to store a backup of your maslow.yaml file in case you need to restore it later.');
+  }
+    
+
   let msgWindow = document.getElementById('messages')
   let text = msgWindow.textContent
   text += '\n' + msg
