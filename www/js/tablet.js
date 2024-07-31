@@ -95,37 +95,61 @@ inputBlurred = function () {
   isInputFocused = false
 }
 
-//Timer function counting down from 5
-var timeoutID = null
-var timer = function () {
-  var buttonText = document.getElementById('defineHomeBTN').textContent
-  if (buttonText > 0) {
-    document.getElementById('defineHomeBTN').textContent = buttonText - 1
-    timeoutID = setTimeout(timer, 1000)
+// Define XY Home functions
+let xyHomeTimerId = null;
+const xyHomeBtnId = "defineHomeBTN";
+const xyHomeLabelDefault = "Define XY Home";
+const xyHomeLabelInstr = "Press+Hold Tap_x2";
+const xyHomeLabelRedefined = "XY Home Redefined";
+
+const getXYHomeBtnText = () => document.getElementById(xyHomeBtnId).textContent || "";
+const setXYHomeBtnText = (xyText = xyHomeLabelDefault) =>  document.getElementById(xyHomeBtnId).textContent = xyText;
+
+const clearXYHomeTimer = () => {
+  if (xyHomeTimerId) {
+    clearTimeout(xyHomeTimerId);
   }
-  else {
-    zeroAxis('X')
-    zeroAxis('Y')
-    document.getElementById('defineHomeBTN').textContent = 'Define Home'
-    setTimeout(refreshGcode, 100)
+  xyHomeTimerId = null;
+  // Reset the button label
+  setTimeout(setXYHomeBtnText, 1000);
+}
+
+const setXYHome = () => {
+  clearXYHomeTimer();
+  zeroAxis('X');
+  zeroAxis('Y');
+  // This changed label will only show for 1 second before being reset
+  setXYHomeBtnText(xyHomeLabelRedefined);
+  setTimeout(refreshGcode, 100);
+}
+
+const xyHomeTimer = () => {
+  const buttonText = getXYHomeBtnText();
+  const buttonValue = isNaN(+buttonText) ? 0 : +buttonText;
+  if (buttonValue > 1) {
+    setXYHomeBtnText(buttonValue - 1);
+    xyHomeTimerId = setTimeout(xyHomeTimer, 1000);
+  } else if (buttonValue === 1) {
+    // We're actually now at 0 in the countdown
+    // Note: nanosecond-scale possible race condition here - quite frankly not a major issue user experience wise
+    setXYHome();
+  } else {
+    // The user clicked / tapped once or didn't press+hold for 5 full seconds
+    setTimeout(setXYHomeBtnText, 1000);
   }
 }
 
-//Click down starts the timer function and sets the button text to 5
-setHomeClickDown = function () {
-  document.getElementById('defineHomeBTN').textContent = 5
-  timer()
+/** Click down starts the xyHomeTimer function and sets the button text to 5 */
+const setHomeClickDown = () => {
+  setXYHomeBtnText(5);
+  xyHomeTimer();
 }
 
-//Click up stops the timer function and sets the button text to 'Define Home'
-setHomeClickUp = function () {
-  document.getElementById('defineHomeBTN').textContent = 'Define Home';
-  
-  //Cancel the timer
-  if (timeoutID != null) {
-    clearTimeout(timeoutID)
+/** Click up cancels the xyHomeTimer and cleans up */
+const setHomeClickUp = () => {
+  if (xyHomeTimerId != null) {
+    setXYHomeBtnText(xyHomeLabelInstr);
   }
-
 }
 
 zeroAxis = function (axis) {

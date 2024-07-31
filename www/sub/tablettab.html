@@ -55,8 +55,8 @@
           <div class="maslow-grid-item maslow-grid-item-btn" style="background-color: #f2f0e4;" id="disM">100</div>
           <div class="maslow-grid-item maslow-grid-item-btn" style="background-color: #f2f0e4;" id="units" title="Toggle Units"
             onclick="toggleUnits()">mm</div>
-          <div class="maslow-grid-item maslow-grid-item-btn" id="defineHomeBTN" style="background-color: #f2f0e4;"
-            onmousedown="setHomeClickDown();" onmouseup="setHomeClickUp();" title="Press and hold">Define XY Home</div>
+          <div class="maslow-grid-item maslow-grid-item-btn" style="background-color: #f2f0e4;" id="defineHomeBTN"
+            onmousedown="setHomeClickDown();" onmouseup="setHomeClickUp();" ondblclick="setXYHome();" title="Press and hold, or tap twice">Define XY Home</div>
           <div class="maslow-grid-item maslow-grid-item-btn"></div>
         </div>
         <div style="grid-template-columns: 80% 20%;" class="maslow-grid-container tablettab-controls-item" style="height: 60px;">
@@ -114,7 +114,6 @@
           <button onclick="saveSerialMessages()" class="btn btn-primary">Save Serial</button>
       </div>
     </div>
-
   </div>
 
     <div id="calibration-popup" class="calibration-modal-container" onclick="hideModal('calibration-popup')">
@@ -132,8 +131,6 @@
                   <button class="calibration-modal-button" onclick="onCalibrationButtonsClick('$CAL','Calibrate'); hideModal('configuration-popup')">Calibrate</button>
                   <button class="calibration-modal-button" onclick="onCalibrationButtonsClick('$TKSLK','Apply Tension'); hideModal('configuration-popup')">Apply Tension</button>
                 </div>
-
-
               </div>
               <div class="buttons-row">
                 <!-- <button class="calibration-modal-button" onclick="onCalibrationButtonsClick('$TKSLK','Home Z');">Home Z</button> -->
