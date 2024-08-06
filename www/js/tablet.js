@@ -249,7 +249,6 @@ checkHomed = function () {
 }
 
 sendMove = function (cmd) {
-  console.log("Send move called");
   tabletClick()
   var jog = function (params) {
     params = params || {}
@@ -277,9 +276,8 @@ sendMove = function (cmd) {
 
   var distance = Number(id('disM').innerText) || 0
 
-  if (cmd.includes('Z') && distance > 75) {
-    alert("Can't move the z-axis that far");
-    return;
+  if (cmd.includes('Z')) {
+      distance = Number(id('disZ').innerText) || 0;
   }
 
   var fn = {
@@ -1228,6 +1226,7 @@ window.addEventListener('keydown', handleKeyDown)
 window.addEventListener('keyup', handleKeyUp)
 
 numpad.attach({ target: 'disM', axis: 'D' })
+numpad.attach({ target: 'disZ', axis: 'Z' })
 //numpad.attach({target: "wpos-y", axis: "Y"});
 //numpad.attach({target: "wpos-z", axis: "Z"});
 //numpad.attach({target: "wpos-a", axis: "A"});
