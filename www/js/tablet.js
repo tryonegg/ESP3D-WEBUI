@@ -670,11 +670,26 @@ function stopAndRecover() {
 
 var oldCannotClick = null
 
+function scaleUnits(target) {
+    //Scale the units to move when jogging down or up by 25 to keep them reasonable
+    let disMElement = id(target);
+    let currentValue = Number(disMElement.innerText);
+
+    if (!isNaN(currentValue)) {
+        disMElement.innerText = modal.units == 'G20' ? currentValue / 25 : currentValue * 25;
+    } else {
+        console.error('Invalid number in disM element');
+    }
+}
+
+
 function tabletUpdateModal() {
   var newUnits = modal.units == 'G21' ? 'mm' : 'Inch'
   if (getText('units') != newUnits) {
     setText('units', newUnits)
     setJogSelector(modal.units)
+    scaleUnits("disM")
+    scaleUnits("disZ")
   }
 }
 function tabletGrblState(grbl, response) {
