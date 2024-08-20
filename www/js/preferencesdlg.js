@@ -57,8 +57,8 @@ function initpreferences() {
                                             \"autoreport_interval\":\"50\",\
                                             \"interval_positions\":\"3\",\
                                             \"interval_status\":\"3\",\
-                                            \"xy_feedrate\":\"1000\",\
-                                            \"z_feedrate\":\"100\",\
+                                            \"xy_feedrate\":\"2000\",\
+                                            \"z_feedrate\":\"300\",\
                                             \"a_feedrate\":\"100\",\
                                             \"b_feedrate\":\"100\",\
                                             \"c_feedrate\":\"100\",\
