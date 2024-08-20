@@ -183,6 +183,7 @@ var numpad = {
 
   setCoordinate: function(){
     numpad.nowTarget.textContent = numpad.hdisplay.value;
+    saveJogDists();
     //setAxisByValue(numpad.nowTarget.dataset.axis, numpad.hdisplay.value);
     numpad.hide();
   },

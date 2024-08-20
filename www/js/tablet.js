@@ -1246,6 +1246,24 @@ numpad.attach({ target: 'disZ', axis: 'Z' })
 //numpad.attach({target: "wpos-z", axis: "Z"});
 //numpad.attach({target: "wpos-a", axis: "A"});
 
+function saveJogDists(){
+  localStorage.setItem("disM", id('disM').innerText);
+  localStorage.setItem("disZ", id('disZ').innerText);
+}
+
+function loadJogDists(){
+
+  let disM = localStorage.getItem("disM");
+  if(disM != null){
+    id('disM').innerText = disM;
+  }
+  let disZ = localStorage.getItem("disZ");
+  if(disZ != null){
+    id('disZ').innerText = disZ;
+  }
+}
+loadJogDists();
+
 function fullscreenIfMobile() {
   if (/Mobi|Android/i.test(navigator.userAgent)) {
     toggleFullscreen()
