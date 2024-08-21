@@ -6,7 +6,7 @@ var sndok = true
 
 var lastHeartBeatTime = new Date().getTime();
 
-var versionNumber = 0.82
+var versionNumber = 0.83
 
 //Print the version number to the console
 let msgWindow = document.getElementById('messages')
