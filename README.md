@@ -1,3 +1,9 @@
+# How to build:
+
+Building a new index.html.gz file should be pretty straight forward. Just run the command  'gulp package -en' from the command line an a updated index.html.gz file will be created in the 'dist' folder which can be uploaded to your machine.
+
+If you run into any specific issues or questions ask in the Maslow forums and we can answer them.
+
 # ESP3D-WEBUI 
 [Latest stable release ![Release Version](https://img.shields.io/github/v/release/luc-github/ESP3D-WEBUI?color=green&include_prereleases&style=plastic) ![Release Date](https://img.shields.io/github/release-date/luc-github/ESP3D-WEBUI.svg?style=plastic)](https://github.com/luc-github/ESP3D-WEBUI/releases/latest/) [![Travis (.org) branch](https://img.shields.io/travis/luc-github/ESP3D-WEBUI/2.1?style=plastic)](https://travis-ci.org/github/luc-github/ESP3D-WEBUI)   
 
