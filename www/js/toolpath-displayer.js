@@ -3,8 +3,10 @@
 var root = window;
 
 var canvas = id("small-toolpath");
-canvas.width = 800;
-canvas.height = 400;
+const scale = window.devicePixelRatio;
+const width = window.innerWidth; 
+canvas.width = width * scale;
+canvas.height = (width / 2) * scale;
 var tp = canvas.getContext("2d", { willReadFrequently: true });
 var tpRect;
 
