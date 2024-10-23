@@ -1,0 +1,93 @@
+.maslow-z-up {
+}
+.maslow-z-up svg{
+	width: 26px;
+}
+
+.maslow-z-down {
+}
+.maslow-z-down svg{
+	transform: rotate(180deg);
+	width: 26px;
+}
+
+.maslow-z-distance {
+}
+
+.maslow-z-sethome {
+}
+
+.maslow-move-upleft {
+}
+.maslow-move-upleft svg{
+	transform: rotate(180deg);
+}
+
+.maslow-move-up {
+}
+.maslow-move-up svg{
+	transform: rotate(-90deg);
+}
+
+.maslow-move-upright {
+}
+.maslow-move-upright svg{
+	transform: rotate(-90deg);
+}
+
+.maslow-move-left {
+}
+.maslow-move-left svg{
+	transform: rotate(180deg);
+}
+
+
+.maslow-move-right {
+}
+
+.maslow-move-downleft {
+}
+.maslow-move-downleft svg{
+	transform: rotate(90deg);
+}
+
+.maslow-move-down {
+}
+.maslow-move-down svg{
+	transform: rotate(90deg);
+}
+
+
+.maslow-move-downright {
+}
+
+.maslow-move-home {
+}
+.maslow-move-distance {
+}
+.maslow-set-home {
+}
+
+.maslow-config {
+}
+
+.maslow-choose-file {
+}
+.maslow-upload {
+}
+
+.maslow-position {
+}
+
+
+.maslow-play {
+}
+
+.maslow-pause {
+}
+
+.maslow-stop {
+}
+
+.system-status {
+}

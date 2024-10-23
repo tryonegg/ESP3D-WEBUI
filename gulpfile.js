@@ -12,8 +12,11 @@ var gulp = require('gulp'),
   htmlmin = require('gulp-htmlmin'),
   replace = require('gulp-replace'),
   fs = require('fs'),
+  rename = require('gulp-rename'),
   smoosher = require('gulp-smoosher')
-size = require('gulp-filesize')
+  size = require('gulp-filesize'),
+  svgmin = require( 'gulp-svgmin' ),
+  svgstore = require( 'gulp-svgstore' );
 
 var fl_lang = false
 var en_lang = false
@@ -115,6 +118,64 @@ function replaceSVG() {
     )
     .pipe(gulp.dest('dist'))
 }
+
+function makeMaslowSVGSprite(  ) {
+    // sprite all the svgs except for the jogdials
+    return gulp.src( [ 
+      'www/images/*.svg',
+      '!www/images/jogdial.svg',
+      '!www/images/jogdial1.svg',
+      '!www/images/jogdial2.svg' 
+    ] )
+    .pipe(
+      svgmin(
+        {
+          plugins: [
+            {
+              name: 'removeViewBox',
+              active: false,
+            },
+            {
+              name: 'cleanupIDs',
+              active: false,
+            },
+            'removeDesc',
+            'removeTitle'
+          ]					
+        },
+        function ( file ) {
+          var prefix = path.basename( file.relative, path.extname( file.relative ) );
+          return {
+            plugins: [ {
+              cleanupIDs: {
+                prefix: prefix + '-',
+                minify: true
+              }
+            } ]
+          };
+        }
+      )
+    )
+    .pipe( svgstore( {
+      inlineSvg: true
+    } ) )
+    .pipe( rename('maslow.svg') )
+    .pipe( gulp.dest( 'dist/images/' ) );
+    
+}
+
+function inlineMaslowSVGSprite(  ) {
+  return gulp
+  .src('dist/index.html')
+  .pipe(
+    replace(/<!-- replaceSVG -->maslow<!-- \/replaceSVG -->/g, function (match, p1) {
+      return fs.readFileSync('dist/images/maslow.svg', 'utf8')
+    })
+  )
+  .pipe(gulp.dest('dist')) ;
+return cb;
+}
+
 
 function clearlang() {
   // fetch command line arguments
@@ -352,8 +413,10 @@ gulp.task(minifyApp)
 gulp.task(smoosh)
 gulp.task(clean2)
 gulp.task(clearlang)
+gulp.task(makeMaslowSVGSprite)
+gulp.task(inlineMaslowSVGSprite)
 
-var defaultSeries = gulp.series(clean, lint, Copy, concatApp, minifyApp, includehtml, includehtml, smoosh)
+var defaultSeries = gulp.series(clean, lint, Copy, concatApp, minifyApp, includehtml, includehtml, makeMaslowSVGSprite, inlineMaslowSVGSprite, smoosh)
 //var packageSeries = gulp.series(clean,  lint, Copy, concatApp, minifyApp, smoosh, compress);
 var packageSeries = gulp.series(
   clean,
@@ -362,6 +425,8 @@ var packageSeries = gulp.series(
   concatApp,
   includehtml,
   includehtml,
+  makeMaslowSVGSprite, 
+  inlineMaslowSVGSprite,
   replaceVersion,
   replaceSVG,
   clearlang,
@@ -377,11 +442,13 @@ var package2Series = gulp.series(
   concatApp,
   includehtml,
   includehtml,
+  makeMaslowSVGSprite, 
+  inlineMaslowSVGSprite,
   replaceVersion,
   replaceSVG,
   smoosh
 )
-var package2testSeries = gulp.series(clean, lint, Copytest, concatApptest, includehtml, includehtml, replaceSVG, smoosh)
+var package2testSeries = gulp.series(clean, lint, Copytest, concatApptest, includehtml, includehtml, replaceSVG, makeMaslowSVGSprite, inlineMaslowSVGSprite, smoosh)
 
 gulp.task('default', defaultSeries)
 gulp.task('package', packageSeries)
